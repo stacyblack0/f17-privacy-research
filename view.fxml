@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <right>
+      <ScrollBar orientation="VERTICAL" BorderPane.alignment="CENTER" />
+   </right>
+   <center>
+      <Pane prefHeight="275.0" prefWidth="586.0" BorderPane.alignment="CENTER">
+         <children>
+            <Text layoutX="50.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create a new rule:" />
+            <Text layoutX="68.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Share" />
+            <TextField id="informationBox" fx:id="informationBox" layoutX="105.0" layoutY="73.0" prefHeight="25.0" prefWidth="115.0" promptText="Information" />
+            <Text layoutX="71.0" layoutY="126.0" strokeType="OUTSIDE" strokeWidth="0.0" text="with" />
+            <TextField id="recipientBox" fx:id="recipientBox" layoutX="105.0" layoutY="109.0" prefHeight="25.0" prefWidth="115.0" promptText="Recipient" />
+            <Text layoutX="67.0" layoutY="184.0" strokeType="OUTSIDE" strokeWidth="0.0" text="when" />
+            <TextField id="conditionBox" fx:id="operandBox1" layoutX="104.0" layoutY="167.0" prefHeight="25.0" prefWidth="115.0" promptText="Operand 1" />
+            <Button id="saveButton" fx:id="saveButton" layoutX="70.0" layoutY="340.0" mnemonicParsing="false" text="Save rule" />
+            <Text layoutX="71.0" layoutY="387.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rules saved:" wrappingWidth="64.41796875" />
+            <Text fx:id="ruleCount" layoutX="152.0" layoutY="387.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+            <TextField fx:id="operationBox1" layoutX="186.0" layoutY="198.0" prefHeight="25.0" prefWidth="33.0" promptText="op" />
+            <TextField id="conditionBox" fx:id="operandBox2" layoutX="104.0" layoutY="229.0" prefHeight="25.0" prefWidth="115.0" promptText="Operand 2" />
+            <Button fx:id="addButton" layoutX="181.0" layoutY="262.0" mnemonicParsing="false" text="Add" />
+            <Text fill="#a4a4a4" layoutX="68.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Propositions -----------------" />
+            <Text fill="#a4a4a4" layoutX="70.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-------------------------------" />
+            <Text fill="#a4a4a4" layoutX="71.0" layoutY="328.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-------------------------------" />
+            <Text layoutX="96.0" layoutY="308.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Propositions saved:" wrappingWidth="103.41796875" />
+            <Text fx:id="conditionCount" layoutX="213.0" layoutY="308.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+            <!--<TextField fx:id="operationBox2" disable="true" layoutX="139.0" layoutY="262.0" prefHeight="25.0" prefWidth="33.0" promptText="op" />-->
+         </children>
+      </Pane>
+   </center>
+</BorderPane>
