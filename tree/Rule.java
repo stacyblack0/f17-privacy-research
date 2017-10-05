@@ -40,6 +40,16 @@ public class Rule {
 		return conditionSet;
 	}
 
+	public boolean isRule(RecipientSet recipientSet, Info info) {
+
+		String setString1 = recipientSet.toString();
+		String setString2 = this.recipientSet.toString();
+		String infoString1 = info.toString();
+		String infoString2 = this.info.toString();
+
+		return setString1.equals(setString2) && infoString1.equals(infoString2);
+	}
+
 	/**
 	 * For testing the data structure.
 	 */

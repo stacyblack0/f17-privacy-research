@@ -11,6 +11,8 @@ public class Condition {
 	private Proposition proposition1; // First proposition, i.e. "Time == night"
 	private String operator; // Operator, i.e. "and", "^"
 	private Proposition proposition2; // Second proposition, i.e. "Day != weekend"
+	private Temporal temporal;
+	private Environmental environmental;
 
 	/**
 	 * The constructor. Creates a new condition with two given propositions

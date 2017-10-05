@@ -7,7 +7,7 @@ package tree;
  */
 public class Info {
 
-	private String information; // The information to be shared/not shared
+	private String information; // the information to be shared/not shared
 
 	public Info(String information) {
 		this.information = information;

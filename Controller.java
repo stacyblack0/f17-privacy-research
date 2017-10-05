@@ -74,7 +74,7 @@ public class Controller {
 
 
 		RuleWriter writer = new RuleWriter();
-		RuleMaker maker = new RuleMaker();
+		RuleHandler handler = new RuleHandler();
 		ConditionSet conditions = new ConditionSet();
 
 		// makes it so the information text field is not selected on launch
@@ -91,7 +91,7 @@ public class Controller {
 			@Override
 			public void handle(ActionEvent event) {
 				ConditionSet temp = resetCondition(conditions);
-				maker.createRule(informationBox.getText(), recipientBox.getText(), temp);
+				handler.createRule(informationBox.getText(), recipientBox.getText(), temp);
 				writer.writeToFile(informationBox.getText(), recipientBox.getText(), temp.toString());
 				conditionCount.setText("0");
 				incrRuleCount();

@@ -9,7 +9,7 @@ import java.util.HashSet;
  */
 public class RecipientSet {
 
-	protected HashSet<Object> set; // The set of recipients
+	protected HashSet<Object> set; // the set of recipients
 
 	public RecipientSet() {
 		set = new HashSet<>();
@@ -35,6 +35,23 @@ public class RecipientSet {
 	 */
 	public void addAll(RecipientSet recipientSet) {
 		set.addAll(recipientSet.getSet());
+	}
+
+	/**
+	 * Checks if a given recipient name is in the set.
+	 *
+	 * @param recipient the given recipient name
+	 * @return true if the given recipient is in the set, false otherwise
+	 */
+	public boolean inSet(String recipient) {
+
+		for (Object o : set) {
+			if (recipient.equals(o.toString())) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

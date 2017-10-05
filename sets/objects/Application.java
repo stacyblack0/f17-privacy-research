@@ -26,6 +26,6 @@ public class Application {
 	 * For testing.
 	 */
 	public void eval() {
-		System.out.println(application);
+		System.out.println(toString());
 	}
 }

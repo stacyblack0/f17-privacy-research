@@ -21,6 +21,6 @@ public class Service {
 	 * For testing.
 	 */
 	public void eval() {
-		System.out.println(service);
+		System.out.println(toString());
 	}
 }

@@ -7,8 +7,8 @@ package sets.objects;
  */
 public class Person {
 
-	private String firstName; // Person's first name
-	private String lastName;  // Person's last name
+	private String firstName; // person's first name
+	private String lastName;  // person's last name
 
 	/**
 	 * The constructor, given a first name and a last name.
@@ -29,6 +29,6 @@ public class Person {
 	 * For testing.
 	 */
 	public void eval() {
-		System.out.println(firstName + " " + lastName);
+		System.out.println(toString());
 	}
 }
