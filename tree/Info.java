@@ -17,10 +17,14 @@ public class Info {
 		return information;
 	}
 
+	public String toString() {
+		return "Information: " + information;
+	}
+
 	/**
 	 * For testing.
 	 */
 	public void eval() {
-		System.out.println("Information: " + information);
+		System.out.println(toString());
 	}
 }

@@ -102,7 +102,7 @@ public class RuleHandler {
 
 		LinkedHashSet<Rule> temp = new LinkedHashSet<>();
 
-		//find all sets a given individual is a part of
+		// find the sets a given individual is a part of, then find rules
 		if (recipientSet.inSet(name)) {
 			if (applicationSet.inSet(name)) {
 				temp.addAll(findRules(applicationSet, information));
@@ -116,6 +116,7 @@ public class RuleHandler {
 				if (friendSet.inSet(name)) {
 					temp.addAll(findRules(friendSet, information));
 				}
+				temp.addAll(findRules(peopleSet, information));
 			} else if (serviceSet.inSet(name)) {
 				temp.addAll(findRules(serviceSet, information));
 			}
@@ -147,10 +148,12 @@ public class RuleHandler {
 	 */
 	private RecipientSet checkRecipient(String recipient) {
 
-		if (recipient.equals("application")) {
+		if (recipient.equals("applications")) {
 			return applicationSet;
-		} else if (recipient.equals("service")) {
+		} else if (recipient.equals("services")) {
 			return serviceSet;
+		} else if (recipient.equals("people")) {
+			return peopleSet;
 		} else {
 			if (recipient.equals("family")) {
 				return familySet;

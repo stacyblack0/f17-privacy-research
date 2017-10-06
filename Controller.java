@@ -7,9 +7,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import tree.ConditionSet;
 import tree.Condition;
+import tree.ConditionSet;
 import tree.Proposition;
+import tree.Rule;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,6 +26,15 @@ public class Controller {
 	private URL location;
 
 	@FXML
+	private TextField nameBox;
+
+	@FXML
+	private Button findButton;
+
+	@FXML
+	private Text foundCount;
+
+	@FXML
 	private TextField informationBox;
 
 	@FXML
@@ -32,6 +42,9 @@ public class Controller {
 
 	@FXML
 	private TextField operandBox2;
+
+	@FXML
+	private TextField informationBox2;
 
 	@FXML
 	private Button addButton;
@@ -61,17 +74,20 @@ public class Controller {
 	@FXML
 	void initialize() throws IOException {
 
+		assert nameBox != null : "fx:id=\"nameBox\" was not injected: check your FXML file 'view.fxml'.";
+		assert findButton != null : "fx:id=\"findButton\" was not injected: check your FXML file 'view.fxml'.";
+		assert foundCount != null : "fx:id=\"ruleCount2\" was not injected: check your FXML file 'view.fxml'.";
+		assert addButton != null : "fx:id=\"addButton\" was not injected: check your FXML file 'view.fxml'.";
+		assert operandBox1 != null : "fx:id=\"operandBox1\" was not injected: check your FXML file 'view.fxml'.";
+		assert informationBox2 != null : "fx:id=\"informationBox2\" was not injected: check your FXML file 'view.fxml'.";
+		assert recipientBox != null : "fx:id=\"recipientBox\" was not injected: check your FXML file 'view.fxml'.";
 		assert informationBox != null : "fx:id=\"informationBox\" was not injected: check your FXML file 'view.fxml'.";
 		assert ruleCount != null : "fx:id=\"ruleCount\" was not injected: check your FXML file 'view.fxml'.";
 		assert operandBox2 != null : "fx:id=\"operandBox2\" was not injected: check your FXML file 'view.fxml'.";
-		assert addButton != null : "fx:id=\"addButton\" was not injected: check your FXML file 'view.fxml'.";
-		assert operandBox1 != null : "fx:id=\"operandBox1\" was not injected: check your FXML file 'view.fxml'.";
 		assert saveButton != null : "fx:id=\"saveButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert conditionCount != null : "fx:id=\"conditionCount\" was not injected: check your FXML file 'view.fxml'.";
-//		assert operationBox2 != null : "fx:id=\"operationBox2\" was not injected: check your FXML file 'view.fxml'.";
 		assert operationBox1 != null : "fx:id=\"operationBox1\" was not injected: check your FXML file 'view.fxml'.";
-		assert recipientBox != null : "fx:id=\"recipientBox\" was not injected: check your FXML file 'view.fxml'.";
-
+//		assert operationBox2 != null : "fx:id=\"operationBox2\" was not injected: check your FXML file 'view.fxml'.";
 
 		RuleWriter writer = new RuleWriter();
 		RuleHandler handler = new RuleHandler();
@@ -90,27 +106,45 @@ public class Controller {
 		saveButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+
 				ConditionSet temp = resetCondition(conditions);
 				handler.createRule(informationBox.getText(), recipientBox.getText(), temp);
 				writer.writeToFile(informationBox.getText(), recipientBox.getText(), temp.toString());
+
 				conditionCount.setText("0");
 				incrRuleCount();
 				clearTextBoxes();
 				informationBox.requestFocus(); // select information text field
-//				maker.eval(); // for testing; see console output; recipient must be entered as family, friends, or colleagues
+//				handler.eval(); // for testing; see console output; recipient must be entered as family, friends, or colleagues
 			}
 		});
 
 		addButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+
 				Proposition proposition = new Proposition(operandBox1.getText(), operationBox1.getText(), operandBox2.getText());
 				Condition condition = new Condition(proposition, null, null);
 				conditions.addToSet(condition);
+
 				incrConditionCount();
 				clearPropositionBoxes();
 //				operationBox2.setDisable(false);
 				operandBox1.requestFocus(); // select first condition text field
+			}
+		});
+
+		findButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+
+				String name = nameBox.getText();
+				String info = informationBox2.getText();
+				LinkedHashSet<Rule> temp = handler.findAllRules(name, info);
+
+				foundCount.setText("" + temp.size());
+				clearFindBoxes();
+				nameBox.requestFocus(); // select first condition text field
 			}
 		});
 
@@ -127,6 +161,11 @@ public class Controller {
 				Bindings.isEmpty(operandBox1.textProperty())
 						.or(Bindings.isEmpty(operationBox1.textProperty()))
 						.or(Bindings.isEmpty(operandBox2.textProperty()))
+		);
+
+		findButton.disableProperty().bind(
+				Bindings.isEmpty(nameBox.textProperty())
+						.or(Bindings.isEmpty(informationBox2.textProperty()))
 		);
 	}
 
@@ -165,6 +204,14 @@ public class Controller {
 		operationBox1.clear();
 		operandBox2.clear();
 //		operationBox2.clear();
+	}
+
+	/**
+	 * Clears GUI find text boxes of text.
+	 */
+	private void clearFindBoxes() {
+		nameBox.clear();
+		informationBox2.clear();
 	}
 
 	/**
