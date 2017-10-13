@@ -14,7 +14,7 @@ public class PeopleSet extends RecipientSet {
 	}
 
 	public String toString() {
-		return "People";
+		return "people";
 	}
 
 	/**

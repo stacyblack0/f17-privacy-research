@@ -14,7 +14,7 @@ public class ServiceSet extends RecipientSet {
 	}
 
 	public String toString() {
-		return "Services";
+		return "services";
 	}
 
 	/**

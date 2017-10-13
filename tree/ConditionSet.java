@@ -35,6 +35,19 @@ public class ConditionSet {
 		set.add(condition);
 	}
 
+	/**
+	 * Adds a set of conditions to the set.
+	 *
+	 * @param conditionSet the set of conditions to be added
+	 */
+	public void addToSet(ConditionSet conditionSet) {
+		for (Condition c : set) {
+			System.out.println(c.toString());
+		}
+		set.addAll(conditionSet.getSet());
+
+	}
+
 	public LinkedHashSet<Condition> getSet() {
 		return set;
 	}
@@ -45,13 +58,13 @@ public class ConditionSet {
 
 	public String toString() {
 
-		String str = " ";
+		StringBuilder str = new StringBuilder(" ");
 
 		for (Condition c : set) {
-			str += c.toString() + " ";
+			str.append(c.toString()).append(" ");
 		}
 
-		return str;
+		return str.toString();
 	}
 
 	/**

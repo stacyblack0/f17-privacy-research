@@ -55,14 +55,45 @@ public class RuleHandler {
 	 * @param recipient the given recipient
 	 * @param conditions the given conditions
 	 */
-	public void createRule(String information, String recipient, ConditionSet conditions) {
+	public Rule createRule(String information, String recipient, ConditionSet conditions) {
 
 		Info info = new Info(information);
-		RecipientSet recipientSet = checkRecipient(recipient);
+		RecipientSet recipientSet = checkRecipient(recipient); // local recipientSet variable
+		Rule rule = findRule(recipientSet, information);
 //		ConditionNode conditionNode = new ConditionNode(condition);
 
-		Rule rule = new Rule(info, recipientSet, conditions);
-		policy.addRule(rule);
+		if (rule == null) {
+			rule = new Rule(info, recipientSet, conditions);
+			policy.addRule(rule);
+		} else {
+			ConditionSet conditionSet = rule.getConditionSet();
+			conditionSet.addToSet(conditions);
+		}
+
+		return rule;
+	}
+
+	/**
+	 * Given a set of recipients and information, finds all rules that
+	 * apply to that set of recipients and information.
+	 *
+	 * @param recipient the given set of recipients
+	 * @param information the given information
+	 * @return the set of rules applying to the given set of recipients and
+	 * information
+	 */
+	private Rule findRule(RecipientSet recipient, String information) {
+
+		Info info = new Info(information);
+		LinkedHashSet<Rule> ruleset = policy.getRuleset();
+
+		for (Rule r : ruleset) {
+			if (r.isRule(recipient, info)) {
+				return r;
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -148,18 +179,20 @@ public class RuleHandler {
 	 */
 	private RecipientSet checkRecipient(String recipient) {
 
-		if (recipient.equals("applications")) {
+		String lower = recipient.toLowerCase();
+
+		if (lower.equals("applications")) {
 			return applicationSet;
-		} else if (recipient.equals("services")) {
+		} else if (lower.equals("services")) {
 			return serviceSet;
-		} else if (recipient.equals("people")) {
+		} else if (lower.equals("people")) {
 			return peopleSet;
 		} else {
-			if (recipient.equals("family")) {
+			if (lower.equals("family")) {
 				return familySet;
-			} else if (recipient.equals("friends")) {
+			} else if (lower.equals("friends")) {
 				return friendSet;
-			} else if (recipient.equals("colleagues")) {
+			} else if (lower.equals("colleagues")) {
 				return colleagueSet;
 			}
 		}

@@ -2,9 +2,9 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import tree.Condition;
@@ -32,7 +32,22 @@ public class Controller {
 	private Button findButton;
 
 	@FXML
-	private Text foundCount;
+	private Button checkButton;
+
+	@FXML
+	private Button addButton;
+
+	@FXML
+	private TextField informationBox2;
+
+	@FXML
+	private TextField informationBox1;
+
+	@FXML
+	private Text validCount;
+
+	@FXML
+	private TextField recipientBox;
 
 	@FXML
 	private TextField informationBox;
@@ -41,16 +56,16 @@ public class Controller {
 	private Text ruleCount;
 
 	@FXML
+	private Text foundCount1;
+
+	@FXML
 	private TextField operandBox2;
 
 	@FXML
-	private TextField informationBox2;
+	private Text foundCount2;
 
 	@FXML
-	private Button addButton;
-
-	@FXML
-	private TextField operandBox1;
+	private ChoiceBox<String> operandDropdown;
 
 	@FXML
 	private Button saveButton;
@@ -58,36 +73,42 @@ public class Controller {
 	@FXML
 	private Text conditionCount;
 
-//	@FXML
-//	private TextField operationBox2;
-
 	@FXML
 	private TextField operationBox1;
 
 	@FXML
-	private TextField recipientBox;
+	private TextField nameBox2;
 
 	@FXML
 	void a4a4a4(ActionEvent event) {
 
 	}
+
 	@FXML
 	void initialize() throws IOException {
 
 		assert nameBox != null : "fx:id=\"nameBox\" was not injected: check your FXML file 'view.fxml'.";
 		assert findButton != null : "fx:id=\"findButton\" was not injected: check your FXML file 'view.fxml'.";
-		assert foundCount != null : "fx:id=\"ruleCount2\" was not injected: check your FXML file 'view.fxml'.";
+		assert checkButton != null : "fx:id=\"checkButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert addButton != null : "fx:id=\"addButton\" was not injected: check your FXML file 'view.fxml'.";
-		assert operandBox1 != null : "fx:id=\"operandBox1\" was not injected: check your FXML file 'view.fxml'.";
 		assert informationBox2 != null : "fx:id=\"informationBox2\" was not injected: check your FXML file 'view.fxml'.";
+		assert informationBox1 != null : "fx:id=\"informationBox1\" was not injected: check your FXML file 'view.fxml'.";
+		assert validCount != null : "fx:id=\"validCount\" was not injected: check your FXML file 'view.fxml'.";
 		assert recipientBox != null : "fx:id=\"recipientBox\" was not injected: check your FXML file 'view.fxml'.";
 		assert informationBox != null : "fx:id=\"informationBox\" was not injected: check your FXML file 'view.fxml'.";
 		assert ruleCount != null : "fx:id=\"ruleCount\" was not injected: check your FXML file 'view.fxml'.";
+		assert foundCount1 != null : "fx:id=\"foundCount1\" was not injected: check your FXML file 'view.fxml'.";
 		assert operandBox2 != null : "fx:id=\"operandBox2\" was not injected: check your FXML file 'view.fxml'.";
+		assert foundCount2 != null : "fx:id=\"foundCount2\" was not injected: check your FXML file 'view.fxml'.";
+		assert operandDropdown != null : "fx:id=\"operandDropdown\" was not injected: check your FXML file 'view.fxml'.";
 		assert saveButton != null : "fx:id=\"saveButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert conditionCount != null : "fx:id=\"conditionCount\" was not injected: check your FXML file 'view.fxml'.";
 		assert operationBox1 != null : "fx:id=\"operationBox1\" was not injected: check your FXML file 'view.fxml'.";
-//		assert operationBox2 != null : "fx:id=\"operationBox2\" was not injected: check your FXML file 'view.fxml'.";
+		assert nameBox2 != null : "fx:id=\"nameBox2\" was not injected: check your FXML file 'view.fxml'.";
+
+		operandDropdown.getItems().addAll("time", "date");
+		operandDropdown.getSelectionModel().select("time");
+
 
 		RuleWriter writer = new RuleWriter();
 		RuleHandler handler = new RuleHandler();
@@ -103,49 +124,41 @@ public class Controller {
 			}
 		});
 
-		saveButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
+		saveButton.setOnAction(event -> {
 
-				ConditionSet temp = resetCondition(conditions);
-				handler.createRule(informationBox.getText(), recipientBox.getText(), temp);
-				writer.writeToFile(informationBox.getText(), recipientBox.getText(), temp.toString());
+			ConditionSet temp = resetCondition(conditions);
+			Rule rule = handler.createRule(informationBox.getText(), recipientBox.getText(), temp);
+//			writer.writeToFile(informationBox.getText(), recipientBox.getText(), temp.toString());
+			writer.writeToFile(rule);
 
-				conditionCount.setText("0");
-				incrRuleCount();
-				clearTextBoxes();
-				informationBox.requestFocus(); // select information text field
-//				handler.eval(); // for testing; see console output; recipient must be entered as family, friends, or colleagues
-			}
+			conditionCount.setText("0");
+			incrRuleCount();
+			clearTextBoxes();
+			informationBox.requestFocus(); // select information text field
+//			handler.eval(); // for testing; see console output; recipient must be entered as family, friends, or colleagues
 		});
 
-		addButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
+		addButton.setOnAction(event -> {
 
-				Proposition proposition = new Proposition(operandBox1.getText(), operationBox1.getText(), operandBox2.getText());
-				Condition condition = new Condition(proposition, null, null);
-				conditions.addToSet(condition);
+			Proposition proposition = new Proposition(operandDropdown.getValue(), operationBox1.getText(), operandBox2.getText());
+			Condition condition = new Condition(proposition, null, null);
+			conditions.addToSet(condition);
 
-				incrConditionCount();
-				clearPropositionBoxes();
-//				operationBox2.setDisable(false);
-				operandBox1.requestFocus(); // select first condition text field
-			}
+			incrConditionCount();
+			clearPropositionBoxes();
+//			operationBox2.setDisable(false);
+			operandDropdown.requestFocus(); // select first condition text field
 		});
 
-		findButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
+		findButton.setOnAction(event -> {
 
-				String name = nameBox.getText();
-				String info = informationBox2.getText();
-				LinkedHashSet<Rule> temp = handler.findAllRules(name, info);
+			String name = nameBox.getText();
+			String info = informationBox2.getText();
+			LinkedHashSet<Rule> temp = handler.findAllRules(name, info);
 
-				foundCount.setText("" + temp.size());
-				clearFindBoxes();
-				nameBox.requestFocus(); // select first condition text field
-			}
+			foundCount1.setText("" + temp.size());
+			clearFindBoxes();
+			nameBox.requestFocus(); // select first condition text field
 		});
 
 		// disable save button when all text fields are not filled in and when no conditions are saved
@@ -158,14 +171,14 @@ public class Controller {
 
 		// disable add button when all condition text fields are not filled in
 		addButton.disableProperty().bind(
-				Bindings.isEmpty(operandBox1.textProperty())
-						.or(Bindings.isEmpty(operationBox1.textProperty()))
+				Bindings.isEmpty((operationBox1.textProperty()))
 						.or(Bindings.isEmpty(operandBox2.textProperty()))
 		);
 
+		// disable find button when all condition text fields are not filled in
 		findButton.disableProperty().bind(
 				Bindings.isEmpty(nameBox.textProperty())
-						.or(Bindings.isEmpty(informationBox2.textProperty()))
+						.or(Bindings.isEmpty(informationBox1.textProperty()))
 		);
 	}
 
@@ -200,10 +213,8 @@ public class Controller {
 	 * Clears GUI proposition text boxes of text.
 	 */
 	private void clearPropositionBoxes() {
-		operandBox1.clear();
 		operationBox1.clear();
 		operandBox2.clear();
-//		operationBox2.clear();
 	}
 
 	/**

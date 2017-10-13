@@ -14,7 +14,7 @@ public class ApplicationSet extends RecipientSet {
 	}
 
 	public String toString() {
-		return "Applications";
+		return "applications";
 	}
 
 	/**

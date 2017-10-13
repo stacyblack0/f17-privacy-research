@@ -14,7 +14,7 @@ public class FamilySet extends PeopleSet {
 	}
 
 	public String toString() {
-		return "People > Family";
+		return "family";
 	}
 
 	/**

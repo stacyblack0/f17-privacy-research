@@ -1,3 +1,5 @@
+import tree.Rule;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -29,6 +31,20 @@ public class RuleWriter {
 	public void writeToFile(String information, String recipient, String condition) {
 		try {
 			writer.write(recipient + " E " + information + " U (" + condition + ")\n");
+			writer.flush(); // BufferedWriter writes everything on close(). This forces writing to file.
+		} catch (IOException io) {
+			System.out.println("file not found!");
+		}
+	}
+
+	/**
+	 * Writes a given rule to file, using E notation.
+	 *
+	 * @param rule the rule to write to file
+	 */
+	public void writeToFile(Rule rule) {
+		try {
+			writer.write(rule.toString());
 			writer.flush(); // BufferedWriter writes everything on close(). This forces writing to file.
 		} catch (IOException io) {
 			System.out.println("file not found!");

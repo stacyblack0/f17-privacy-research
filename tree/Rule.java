@@ -50,6 +50,10 @@ public class Rule {
 		return setString1.equals(setString2) && infoString1.equals(infoString2);
 	}
 
+	public String toString() {
+		return recipientSet.toString() + " E " + info.getInformation() + " U (" + conditionSet.toString() + ")\n";
+	}
+
 	/**
 	 * For testing the data structure.
 	 */
