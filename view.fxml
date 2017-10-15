@@ -44,14 +44,13 @@
             <Text layoutX="71.0" layoutY="387.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rules saved:" wrappingWidth="64.41796875" />
             <Text fx:id="ruleCount" layoutX="152.0" layoutY="387.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
             <TextField fx:id="operationBox1" layoutX="186.0" layoutY="198.0" prefHeight="25.0" prefWidth="33.0" promptText="op" />
-            <TextField id="conditionBox" fx:id="operandBox2" layoutX="104.0" layoutY="229.0" prefHeight="25.0" prefWidth="115.0" promptText="Operand 2" />
             <Button fx:id="addButton" layoutX="181.0" layoutY="262.0" mnemonicParsing="false" text="Add" />
             <Text fill="#a4a4a4" layoutX="68.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Propositions -----------------" />
             <Text fill="#a4a4a4" layoutX="70.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-------------------------------" />
             <Text fill="#a4a4a4" layoutX="71.0" layoutY="328.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-------------------------------" />
             <Text layoutX="96.0" layoutY="308.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Propositions saved:" wrappingWidth="103.41796875" />
             <Text fx:id="conditionCount" layoutX="213.0" layoutY="308.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-             <TextField fx:id="nameBox" layoutX="311.0" layoutY="76.0" prefHeight="25.0" prefWidth="95.0"
+             <TextField fx:id="nameBox1" layoutX="311.0" layoutY="76.0" prefHeight="25.0" prefWidth="95.0"
                         promptText="Name"/>
              <TextField fx:id="informationBox1" layoutX="418.0" layoutY="76.0" prefHeight="25.0" prefWidth="95.0"
                         promptText="Information"/>
@@ -61,7 +60,7 @@
              <Button fx:id="findButton" layoutX="475.0" layoutY="114.0" mnemonicParsing="false" text="Find"/>
              <Text layoutX="424.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rules found:"/>
              <Text fx:id="foundCount1" layoutX="506.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0"/>
-             <ChoiceBox fx:id="operandDropdown" layoutX="106.0" layoutY="167.0" prefHeight="25.0" prefWidth="114.0"/>
+             <ChoiceBox fx:id="operandDropdown1" layoutX="106.0" layoutY="167.0" prefHeight="25.0" prefWidth="114.0"/>
              <Text fx:id="foundCount2" layoutX="506.0" layoutY="337.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0"/>
              <Text layoutX="424.0" layoutY="337.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rules found:"/>
              <Button fx:id="checkButton" layoutX="465.0" layoutY="291.0" mnemonicParsing="false" text="Check"/>
@@ -74,6 +73,7 @@
                         promptText="Name"/>
              <Text layoutX="427.0" layoutY="357.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rules valid:"/>
              <Text fx:id="validCount" layoutX="506.0" layoutY="357.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0"/>
+             <ChoiceBox fx:id="operandDropdown2" layoutX="106.0" layoutY="228.0" prefHeight="25.0" prefWidth="114.0"/>
             <!--<TextField fx:id="operationBox2" disable="true" layoutX="139.0" layoutY="262.0" prefHeight="25.0" prefWidth="33.0" promptText="op" />-->
          </children>
       </Pane>

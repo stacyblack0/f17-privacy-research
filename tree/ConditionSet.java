@@ -41,11 +41,7 @@ public class ConditionSet {
 	 * @param conditionSet the set of conditions to be added
 	 */
 	public void addToSet(ConditionSet conditionSet) {
-		for (Condition c : set) {
-			System.out.println(c.toString());
-		}
 		set.addAll(conditionSet.getSet());
-
 	}
 
 	public LinkedHashSet<Condition> getSet() {

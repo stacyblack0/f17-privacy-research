@@ -1,9 +1,7 @@
 import sets.*;
-import tree.ConditionSet;
-import tree.Info;
-import tree.Policy;
-import tree.Rule;
+import tree.*;
 
+import java.util.Calendar;
 import java.util.LinkedHashSet;
 
 /**
@@ -60,7 +58,6 @@ public class RuleHandler {
 		Info info = new Info(information);
 		RecipientSet recipientSet = checkRecipient(recipient); // local recipientSet variable
 		Rule rule = findRule(recipientSet, information);
-//		ConditionNode conditionNode = new ConditionNode(condition);
 
 		if (rule == null) {
 			rule = new Rule(info, recipientSet, conditions);
@@ -74,8 +71,8 @@ public class RuleHandler {
 	}
 
 	/**
-	 * Given a set of recipients and information, finds all rules that
-	 * apply to that set of recipients and information.
+	 * Given a set of recipients and information, finds the rule (if any)
+	 * that applies to that set of recipients and information.
 	 *
 	 * @param recipient the given set of recipients
 	 * @param information the given information
@@ -97,30 +94,6 @@ public class RuleHandler {
 	}
 
 	/**
-	 * Given a set of recipients and information, finds all rules that
-	 * apply to that set of recipients and information.
-	 *
-	 * @param recipient the given set of recipients
-	 * @param information the given information
-	 * @return the set of rules applying to the given set of recipients and
-	 * information
-	 */
-	private LinkedHashSet<Rule> findRules(RecipientSet recipient, String information) {
-
-		Info info = new Info(information);
-		LinkedHashSet<Rule> ruleset = policy.getRuleset();
-		LinkedHashSet<Rule> temp = new LinkedHashSet<>();
-
-		for (Rule r : ruleset) {
-			if (r.isRule(recipient, info)) {
-				temp.add(r);
-			}
-		}
-
-		return temp;
-	}
-
-	/**
 	 * Given the name of an individual recipient and information, returns
 	 * all the rules that apply to that recipient and information.
 	 *
@@ -131,29 +104,42 @@ public class RuleHandler {
 	 */
 	public LinkedHashSet<Rule> findAllRules(String name, String information) {
 
-		LinkedHashSet<Rule> temp = new LinkedHashSet<>();
+		LinkedHashSet<Rule> result = new LinkedHashSet<>();
+		Rule rule;
 
 		// find the sets a given individual is a part of, then find rules
 		if (recipientSet.inSet(name)) {
 			if (applicationSet.inSet(name)) {
-				temp.addAll(findRules(applicationSet, information));
+				if ((rule = findRule(applicationSet, information)) != null) {
+					result.add(rule);
+				}
 			} else if (peopleSet.inSet(name)) {
 				if (colleagueSet.inSet(name)) {
-					temp.addAll(findRules(colleagueSet, information));
+					if ((rule = findRule(colleagueSet, information)) != null) {
+						result.add(rule);
+					}
 				}
 				if (familySet.inSet(name)) {
-					temp.addAll(findRules(familySet, information));
+					if ((rule = findRule(familySet, information)) != null) {
+						result.add(rule);
+					}
 				}
 				if (friendSet.inSet(name)) {
-					temp.addAll(findRules(friendSet, information));
+					if ((rule = findRule(friendSet, information)) != null) {
+						result.add(rule);
+					}
 				}
-				temp.addAll(findRules(peopleSet, information));
+				if ((rule = findRule(peopleSet, information)) != null) {
+					result.add(rule);
+				}
 			} else if (serviceSet.inSet(name)) {
-				temp.addAll(findRules(serviceSet, information));
+				if ((rule = findRule(serviceSet, information)) != null) {
+					result.add(rule);
+				}
 			}
 		}
 
-		return temp;
+		return result;
 	}
 
 	/**
@@ -168,6 +154,41 @@ public class RuleHandler {
 	public boolean hasRule(String name, String information) {
 		LinkedHashSet<Rule> temp = findAllRules(name, information);
 		return temp.size() > 0;
+	}
+
+	/**
+	 * Given a set of rules, checks each rule to see if it is currently
+	 * (based on the computer's system time) valid, and returns valid rules
+	 * as a set.
+	 *
+	 * @param rules the given set of rules
+	 * @param metadata metadata used to compare system time to a rule's
+	 * specified time
+	 * @return the set of valid rules
+	 */
+	public LinkedHashSet<Rule> findValidRules(LinkedHashSet<Rule> rules, Metadata metadata) {
+
+		LinkedHashSet<Rule> result = new LinkedHashSet<>();
+		Calendar calendar = Calendar.getInstance();
+
+		for (Rule r : rules) {
+			for (Condition c : r.getConditionSet().getSet()) {
+
+				Proposition proposition = c.getProposition1();
+//				String operand1 = prop.getOperand1(); // TODO: figure out how to handle time/day, maybe combine them?
+				String operand2 = proposition.getOperand2();
+				MetadataItem item = metadata.getSet().get(operand2);
+				int field = item.getField();
+				int currentValue = calendar.get(field);
+
+				if (item.withinTimeSpan(currentValue)) {
+					result.add(r);
+				}
+
+			}
+		}
+
+		return result;
 	}
 
 	/**

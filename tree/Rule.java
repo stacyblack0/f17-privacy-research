@@ -40,12 +40,22 @@ public class Rule {
 		return conditionSet;
 	}
 
+	/**
+	 * Checks if this rule matches a given set of recipients and
+	 * information.
+	 *
+	 * @param recipientSet the given set of recipients
+	 * @param info the given information
+	 * @return true if the rule has the same set of recipients and
+	 * information, false otherwise
+	 */
 	public boolean isRule(RecipientSet recipientSet, Info info) {
 
 		String setString1 = recipientSet.toString();
 		String setString2 = this.recipientSet.toString();
 		String infoString1 = info.toString();
 		String infoString2 = this.info.toString();
+//		System.out.println(setString1 + " " + setString2 + " " + infoString1 + " " + infoString2);
 
 		return setString1.equals(setString2) && infoString1.equals(infoString2);
 	}

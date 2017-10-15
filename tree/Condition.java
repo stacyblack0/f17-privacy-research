@@ -20,12 +20,20 @@ public class Condition {
 	 *
 	 * @param proposition1 the first proposition
 	 * @param operator the operator
-	 * @param proposition2 the second operand
+	 * @param proposition2 the second proposition
 	 */
 	public Condition(Proposition proposition1, String operator, Proposition proposition2) {
 		this.proposition1 = proposition1;
 		this.operator = operator;
 		this.proposition2 = proposition2;
+	}
+
+	public Proposition getProposition1() {
+		return proposition1;
+	}
+
+	public Proposition getProposition2() {
+		return proposition2;
 	}
 
 	public String toString() {

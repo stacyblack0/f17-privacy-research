@@ -14,6 +14,7 @@ import tree.Rule;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
 
@@ -26,7 +27,10 @@ public class Controller {
 	private URL location;
 
 	@FXML
-	private TextField nameBox;
+	private ChoiceBox<String> operandDropdown1;
+
+	@FXML
+	private TextField nameBox1;
 
 	@FXML
 	private Button findButton;
@@ -50,6 +54,9 @@ public class Controller {
 	private TextField recipientBox;
 
 	@FXML
+	private ChoiceBox<String> operandDropdown2;
+
+	@FXML
 	private TextField informationBox;
 
 	@FXML
@@ -59,13 +66,7 @@ public class Controller {
 	private Text foundCount1;
 
 	@FXML
-	private TextField operandBox2;
-
-	@FXML
 	private Text foundCount2;
-
-	@FXML
-	private ChoiceBox<String> operandDropdown;
 
 	@FXML
 	private Button saveButton;
@@ -87,7 +88,8 @@ public class Controller {
 	@FXML
 	void initialize() throws IOException {
 
-		assert nameBox != null : "fx:id=\"nameBox\" was not injected: check your FXML file 'view.fxml'.";
+		assert operandDropdown1 != null : "fx:id=\"operandDropdown1\" was not injected: check your FXML file 'view.fxml'.";
+		assert nameBox1 != null : "fx:id=\"nameBox1\" was not injected: check your FXML file 'view.fxml'.";
 		assert findButton != null : "fx:id=\"findButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert checkButton != null : "fx:id=\"checkButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert addButton != null : "fx:id=\"addButton\" was not injected: check your FXML file 'view.fxml'.";
@@ -95,20 +97,35 @@ public class Controller {
 		assert informationBox1 != null : "fx:id=\"informationBox1\" was not injected: check your FXML file 'view.fxml'.";
 		assert validCount != null : "fx:id=\"validCount\" was not injected: check your FXML file 'view.fxml'.";
 		assert recipientBox != null : "fx:id=\"recipientBox\" was not injected: check your FXML file 'view.fxml'.";
+		assert operandDropdown2 != null : "fx:id=\"operandDropdown2\" was not injected: check your FXML file 'view.fxml'.";
 		assert informationBox != null : "fx:id=\"informationBox\" was not injected: check your FXML file 'view.fxml'.";
 		assert ruleCount != null : "fx:id=\"ruleCount\" was not injected: check your FXML file 'view.fxml'.";
 		assert foundCount1 != null : "fx:id=\"foundCount1\" was not injected: check your FXML file 'view.fxml'.";
-		assert operandBox2 != null : "fx:id=\"operandBox2\" was not injected: check your FXML file 'view.fxml'.";
 		assert foundCount2 != null : "fx:id=\"foundCount2\" was not injected: check your FXML file 'view.fxml'.";
-		assert operandDropdown != null : "fx:id=\"operandDropdown\" was not injected: check your FXML file 'view.fxml'.";
 		assert saveButton != null : "fx:id=\"saveButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert conditionCount != null : "fx:id=\"conditionCount\" was not injected: check your FXML file 'view.fxml'.";
 		assert operationBox1 != null : "fx:id=\"operationBox1\" was not injected: check your FXML file 'view.fxml'.";
 		assert nameBox2 != null : "fx:id=\"nameBox2\" was not injected: check your FXML file 'view.fxml'.";
 
-		operandDropdown.getItems().addAll("time", "date");
-		operandDropdown.getSelectionModel().select("time");
+		operandDropdown1.getItems().addAll("time", "day");
+		operandDropdown1.getSelectionModel().select("time");
 
+		// TODO: read metadata from a file instead?
+		Metadata metadata = new Metadata();
+		MetadataItem meta1 = new MetadataItem("business hours", Calendar.HOUR_OF_DAY, 8, 16); // 8AM - 4:59PM
+		MetadataItem meta2 = new MetadataItem("weekend", Calendar.DAY_OF_WEEK, Calendar.SATURDAY, Calendar.SUNDAY);
+		MetadataItem meta3 = new MetadataItem("day", Calendar.HOUR_OF_DAY, 8, 19);   // 8AM - 7:59PM
+		MetadataItem meta4 = new MetadataItem("night", Calendar.HOUR_OF_DAY, 20, 7); // 8PM - 7:59AM
+		metadata.addToSet(meta1);
+		metadata.addToSet(meta2);
+		metadata.addToSet(meta3);
+		metadata.addToSet(meta4);
+
+		for (String key : metadata.getSet().keySet()) {
+			operandDropdown2.getItems().add(key);
+		}
+
+		operandDropdown2.getSelectionModel().select("business hours");
 
 		RuleWriter writer = new RuleWriter();
 		RuleHandler handler = new RuleHandler();
@@ -140,25 +157,36 @@ public class Controller {
 
 		addButton.setOnAction(event -> {
 
-			Proposition proposition = new Proposition(operandDropdown.getValue(), operationBox1.getText(), operandBox2.getText());
+			Proposition proposition = new Proposition(operandDropdown1.getValue(), operationBox1.getText(), operandDropdown2.getValue());
 			Condition condition = new Condition(proposition, null, null);
 			conditions.addToSet(condition);
 
 			incrConditionCount();
 			clearPropositionBoxes();
 //			operationBox2.setDisable(false);
-			operandDropdown.requestFocus(); // select first condition text field
+			operandDropdown1.requestFocus(); // select first condition text field
 		});
 
 		findButton.setOnAction(event -> {
 
-			String name = nameBox.getText();
-			String info = informationBox2.getText();
+			String name = nameBox1.getText();
+			String info = informationBox1.getText();
 			LinkedHashSet<Rule> temp = handler.findAllRules(name, info);
 
 			foundCount1.setText("" + temp.size());
 			clearFindBoxes();
-			nameBox.requestFocus(); // select first condition text field
+			nameBox1.requestFocus(); // select first condition text field
+		});
+
+		checkButton.setOnAction(event -> {
+
+			LinkedHashSet<Rule> temp1 = handler.findAllRules(nameBox2.getText(), informationBox2.getText());
+			LinkedHashSet<Rule> temp2 = handler.findValidRules(temp1, metadata);
+
+			foundCount2.setText("" + temp1.size());
+			validCount.setText("" + temp2.size());
+			clearCheckBoxes();
+			nameBox2.requestFocus();
 		});
 
 		// disable save button when all text fields are not filled in and when no conditions are saved
@@ -172,13 +200,19 @@ public class Controller {
 		// disable add button when all condition text fields are not filled in
 		addButton.disableProperty().bind(
 				Bindings.isEmpty((operationBox1.textProperty()))
-						.or(Bindings.isEmpty(operandBox2.textProperty()))
+//						.or(Bindings.equal("", operandDropdown2.valueProperty()))
 		);
 
 		// disable find button when all condition text fields are not filled in
 		findButton.disableProperty().bind(
-				Bindings.isEmpty(nameBox.textProperty())
+				Bindings.isEmpty(nameBox1.textProperty())
 						.or(Bindings.isEmpty(informationBox1.textProperty()))
+		);
+
+		// disable check button when all condition text fields are not filled in
+		checkButton.disableProperty().bind(
+				Bindings.isEmpty(nameBox2.textProperty())
+						.or(Bindings.isEmpty(informationBox2.textProperty()))
 		);
 	}
 
@@ -214,21 +248,29 @@ public class Controller {
 	 */
 	private void clearPropositionBoxes() {
 		operationBox1.clear();
-		operandBox2.clear();
+//		operandBox2.clear();
 	}
 
 	/**
 	 * Clears GUI find text boxes of text.
 	 */
 	private void clearFindBoxes() {
-		nameBox.clear();
+		nameBox1.clear();
+		informationBox1.clear();
+	}
+
+	/**
+	 * Clears GUI check text boxes of text.
+	 */
+	private void clearCheckBoxes() {
+		nameBox2.clear();
 		informationBox2.clear();
 	}
 
 	/**
 	 * Grabs the set of conditions from the given ConditionNode and returns
-	 * them in a new ConditionNode, before resetting the given ConditionNode's
-	 * set.
+	 * them in a new ConditionNode, before resetting the given
+	 * ConditionNode's set.
 	 *
 	 * @param conditionSet the ConditionNode to be reset
 	 * @return a new ConditionNode containing the old ConditionNode's set

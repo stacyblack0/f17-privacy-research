@@ -26,6 +26,14 @@ public class Proposition {
 		this.operand2 = operand2;
 	}
 
+	public String getOperand1() {
+		return operand1;
+	}
+
+	public String getOperand2() {
+		return operand2;
+	}
+
 	public String toString() {
 		return "(" + operand1 + " " + operator + " " + operand2 + ")";
 	}
