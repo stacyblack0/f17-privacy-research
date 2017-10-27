@@ -23,6 +23,8 @@ public class RuleHandler {
 	private FriendSet friendSet;
 	private ServiceSet serviceSet;
 
+	private LinkedHashSet<HistoryNode> history; // all history actions
+
 	/**
 	 * The constructor. Initializes all sets.
 	 */
@@ -43,6 +45,8 @@ public class RuleHandler {
 		InitializeSets.InitRecipients(recipientSet, applicationSet, peopleSet, serviceSet);
 
 //		InitializeSets.testSets(applicationSet, peopleSet, colleagueSet, familySet, friendSet, serviceSet); // for testing
+
+		history = new LinkedHashSet<>();
 	}
 
 	/**
@@ -219,6 +223,16 @@ public class RuleHandler {
 		}
 
 		return null;
+	}
+
+	public void addHistory(String name, String information, Calendar env) {
+		HistoryNode node = new HistoryNode(name, information, env);
+		history.add(node);
+//		String regex = "[ab]+";
+//		Pattern pattern = Pattern.compile(regex);
+//		String history = "aaaaaaaa";
+//		boolean match = history.matches(regex);
+//		System.out.println(match);
 	}
 
 	/**
