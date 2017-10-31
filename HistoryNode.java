@@ -5,11 +5,21 @@ import java.util.Calendar;
  */
 public class HistoryNode {
 
-	private String action; // the info-sharing action
-	private Calendar env; // the environmental variables at the time the info was shared
+	private String name;
+	private String information;
+	private Calendar env;  // the environmental variables at the time the info was shared
 
 	public HistoryNode(String name, String information, Calendar env) {
-		action = name + " K " + information;
+		this.name = name;
+		this.information = information;
 		this.env = env;
+	}
+
+	public Calendar getEnv() {
+		return env;
+	}
+
+	public String toString() {
+		return name + " K " + information;
 	}
 }

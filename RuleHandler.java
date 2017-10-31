@@ -47,6 +47,7 @@ public class RuleHandler {
 //		InitializeSets.testSets(applicationSet, peopleSet, colleagueSet, familySet, friendSet, serviceSet); // for testing
 
 		history = new LinkedHashSet<>();
+		HistoryTester();
 	}
 
 	/**
@@ -225,14 +226,71 @@ public class RuleHandler {
 		return null;
 	}
 
+	public void HistoryTester() {
+
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+		Calendar cal3 = Calendar.getInstance();
+		Calendar cal4 = Calendar.getInstance();
+		Calendar cal5 = Calendar.getInstance();
+		Calendar cal6 = Calendar.getInstance();
+		Calendar cal7 = Calendar.getInstance();
+
+		// less than 24 hours ago
+		cal1.add(Calendar.HOUR, -2);
+		cal2.add(Calendar.HOUR, -5);
+		cal3.add(Calendar.HOUR, -10);
+		cal4.add(Calendar.HOUR, -12);
+		cal5.add(Calendar.HOUR, -22);
+		// 24 hours and greater ago
+		cal6.add(Calendar.HOUR, -24);
+		cal7.add(Calendar.HOUR, -30);
+
+		addHistory("A", "location", cal1);
+		addHistory("B", "location", cal2);
+		addHistory("C", "location", cal3);
+		addHistory("D", "location", cal4);
+		addHistory("E", "location", cal5);
+		addHistory("F", "location", cal6);
+		addHistory("G", "location", cal7);
+
+		regexMatch24Hours("(A K location).*(D K location).*");
+		regexMatch24Hours("(D K location).*(D K location).*");
+	}
+
 	public void addHistory(String name, String information, Calendar env) {
 		HistoryNode node = new HistoryNode(name, information, env);
 		history.add(node);
-//		String regex = "[ab]+";
-//		Pattern pattern = Pattern.compile(regex);
-//		String history = "aaaaaaaa";
-//		boolean match = history.matches(regex);
-//		System.out.println(match);
+	}
+
+	/**
+	 * Checks to see if a given regex is valid for the past 24 hours.
+	 *
+	 * @param regex the given regex
+	 * @return true if the regex is valid; false otherwise
+	 */
+	public boolean regexMatch24Hours(String regex) {
+
+		StringBuilder substr = new StringBuilder();
+		Calendar current = Calendar.getInstance(); // the current time
+		current.add(Calendar.HOUR, -24);           // roll calendar back 24 hours
+
+		for (HistoryNode h : history) {
+
+			Calendar env = h.getEnv();
+
+			if (env.getTimeInMillis() > current.getTimeInMillis()) {
+				substr.append(h.toString()).append(" -> "); // += "(" + h.toString() + ") -> "
+			}
+		}
+
+		String temp = substr.toString();
+
+		System.out.println("regex: " + regex);
+		System.out.println("history substring: " + temp);
+		System.out.println(temp.matches(regex));
+
+		return temp.matches(regex);
 	}
 
 	/**
