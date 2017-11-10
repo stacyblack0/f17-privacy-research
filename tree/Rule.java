@@ -14,6 +14,7 @@ public class Rule {
 	private Info info;
 	private RecipientSet recipientSet;
 	private ConditionSet conditionSet;
+	private String regex;
 
 	/**
 	 * The constructor. Makes a new rule.
@@ -26,6 +27,22 @@ public class Rule {
 		this.info = info;
 		this.recipientSet = recipientSet;
 		this.conditionSet = conditionSet;
+		this.regex = "";
+	}
+
+	/**
+	 * The constructor. Makes a new rule that uses a regex.
+	 *
+	 * @param info the information
+	 * @param recipientSet the recipient set
+	 * @param conditionSet the condition to share the information
+	 * @param regex a string depicting a regular expression
+	 */
+	public Rule(Info info, RecipientSet recipientSet, ConditionSet conditionSet, String regex) {
+		this.info = info;
+		this.recipientSet = recipientSet;
+		this.conditionSet = conditionSet;
+		this.regex = regex;
 	}
 
 	public Info getInfo() {
@@ -38,6 +55,15 @@ public class Rule {
 
 	public ConditionSet getConditionSet() {
 		return conditionSet;
+	}
+
+	public String getRegex() {
+		return regex;
+	}
+
+	public int getRecipientID() {
+		// TODO: set up assignation of recipient IDs
+		return 0;
 	}
 
 	/**
