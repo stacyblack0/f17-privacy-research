@@ -17,6 +17,7 @@ public class RuleWriter {
 	private Statement statement = null;
 	private PreparedStatement preparedStatement = null;
 	private ResultSet resultSet = null;
+	private DataAccess dataAccess;
 
 	/**
 	 * The constructor.
@@ -24,6 +25,7 @@ public class RuleWriter {
 	public RuleWriter() throws IOException {
 		FileWriter file = new FileWriter("policy.txt", true);
 		writer = new BufferedWriter(file);
+		dataAccess = new DataAccess();
 	}
 
 	private void createConnection() throws Exception {
@@ -32,7 +34,7 @@ public class RuleWriter {
 		Class.forName("org.mariadb.jdbc.Driver");
 
 		// Setup the connection with the DB
-		connect = DriverManager.getConnection("jdbc:mariadb://localhost/library?" + "user=msandbox&password=123" + "");
+		connect = DriverManager.getConnection("jdbc:mariadb://localhost/db?" + "user=root&password=password" + "");
 	}
 
 	/**
@@ -57,19 +59,7 @@ public class RuleWriter {
 	 * @param rule the rule to write to file
 	 */
 	public void writeToFile(Rule rule) {
-		try {
-			createConnection();
-			preparedStatement = connect.prepareStatement("insert into Rules(RecipientSetID,Info,Regex) values (?,?,?);");
-			preparedStatement.setInt(1, rule.getRecipientID());
-			preparedStatement.setString(2, rule.getInfo().toString());
-			preparedStatement.setString(3, rule.getRegex());
-			preparedStatement.executeUpdate();
-			connect.commit();
-			connect.close();
-		} catch (Exception e) {
-			System.out.println(e.toString());
-		}
-
+		dataAccess.insertRule(rule);
 //		try {
 //			writer.write(rule.toString());
 //			writer.flush(); // BufferedWriter writes everything on close(). This forces writing to file.

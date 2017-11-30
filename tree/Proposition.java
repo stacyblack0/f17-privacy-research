@@ -37,11 +37,4 @@ public class Proposition {
 	public String toString() {
 		return "(" + operand1 + " " + operator + " " + operand2 + ")";
 	}
-
-	/**
-	 * For testing.
-	 */
-	public void eval() {
-		System.out.println("(" + operand1 + " " + operator + " " + operand2 + ")");
-	}
 }

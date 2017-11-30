@@ -43,11 +43,4 @@ public class Condition {
 			return "[" + proposition1 + "]";
 		}
 	}
-
-	/**
-	 * For testing.
-	 */
-	public void eval() {
-		System.out.println("[" + proposition1 + " " + operator + " " + proposition2 + "]");
-	}
 }

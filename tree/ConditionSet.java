@@ -62,14 +62,4 @@ public class ConditionSet {
 
 		return str.toString();
 	}
-
-	/**
-	 * For testing.
-	 */
-	public void eval() {
-		System.out.println("Conditions:");
-		for (Condition c : set) {
-			c.eval();
-		}
-	}
 }

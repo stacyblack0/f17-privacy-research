@@ -1,6 +1,7 @@
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,7 +15,6 @@ import tree.Rule;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
 
@@ -110,24 +110,15 @@ public class Controller {
 		operandDropdown1.getItems().addAll("time", "day");
 		operandDropdown1.getSelectionModel().select("time");
 
-		// TODO: read metadata from a file instead?
-		Metadata metadata = new Metadata();
-		MetadataItem meta1 = new MetadataItem("business hours", Calendar.HOUR_OF_DAY, 8, 16); // 8AM - 4:59PM
-		MetadataItem meta2 = new MetadataItem("weekend", Calendar.DAY_OF_WEEK, Calendar.SATURDAY, Calendar.SUNDAY);
-		MetadataItem meta3 = new MetadataItem("day", Calendar.HOUR_OF_DAY, 8, 19);   // 8AM - 7:59PM
-		MetadataItem meta4 = new MetadataItem("night", Calendar.HOUR_OF_DAY, 20, 7); // 8PM - 7:59AM
-		metadata.addToSet(meta1);
-		metadata.addToSet(meta2);
-		metadata.addToSet(meta3);
-		metadata.addToSet(meta4);
+		DataAccess dataAccess = new DataAccess();
+		ObservableList<MetadataItem> metadata = dataAccess.selectMetadata();
 
-		for (String key : metadata.getSet().keySet()) {
-			operandDropdown2.getItems().add(key);
+		for (MetadataItem meta : metadata) {
+			operandDropdown2.getItems().add(meta.getName());
 		}
 
 		operandDropdown2.getSelectionModel().select("business hours");
 
-		RuleWriter writer = new RuleWriter();
 		RuleHandler handler = new RuleHandler();
 		ConditionSet conditions = new ConditionSet();
 
@@ -144,9 +135,7 @@ public class Controller {
 		saveButton.setOnAction(event -> {
 
 			ConditionSet temp = resetCondition(conditions);
-			Rule rule = handler.createRule(informationBox.getText(), recipientBox.getText(), temp);
-//			writer.writeToFile(informationBox.getText(), recipientBox.getText(), temp.toString());
-			writer.writeToFile(rule);
+			handler.createRule(informationBox.getText(), recipientBox.getText(), temp);
 
 			conditionCount.setText("0");
 			incrRuleCount();
@@ -171,7 +160,7 @@ public class Controller {
 
 			String name = nameBox1.getText();
 			String info = informationBox1.getText();
-			LinkedHashSet<Rule> temp = handler.findAllRules(name, info);
+			ObservableList<Rule> temp = handler.findAllRules(name, info);
 
 			foundCount1.setText("" + temp.size());
 			clearFindBoxes();
@@ -180,8 +169,8 @@ public class Controller {
 
 		checkButton.setOnAction(event -> {
 
-			LinkedHashSet<Rule> temp1 = handler.findAllRules(nameBox2.getText(), informationBox2.getText());
-			LinkedHashSet<Rule> temp2 = handler.findValidRules(temp1, metadata);
+			ObservableList<Rule> temp1 = handler.findAllRules(nameBox2.getText(), informationBox2.getText());
+			ObservableList<Rule> temp2 = handler.findValidRules(temp1, metadata);
 
 			foundCount2.setText("" + temp1.size());
 			validCount.setText("" + temp2.size());

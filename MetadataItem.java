@@ -33,6 +33,14 @@ public class MetadataItem {
 		return field;
 	}
 
+	public int getStart() {
+		return start;
+	}
+
+	public int getEnd() {
+		return end;
+	}
+
 	/**
 	 * Checks if a given time is within the set time span, using two
 	 * conditions: start is less than end (e.g. MONDAY - FRIDAY), or start
