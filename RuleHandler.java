@@ -83,24 +83,24 @@ public class RuleHandler {
 	 * as a set.
 	 *
 	 * @param rules the given set of rules
-	 * @param metadata metadata used to compare system time to a rule's
+	 * @param metadataSet metadata used to compare system time to a rule's
 	 * specified time
 	 * @return the set of valid rules
 	 */
-	public ObservableList<Rule> findValidRules(ObservableList<Rule> rules, ObservableList<MetadataItem> metadata) {
+	public ObservableList<Rule> findValidRules(ObservableList<Rule> rules, ObservableList<Metadata> metadataSet) {
 
 //		ObservableList<Rule> result = new FXCollections.observableArrayList();
 		ObservableList<Rule> result = null;
 		Calendar calendar = Calendar.getInstance();
 
 		for (Rule r : rules) {
-			// will implement different condition checking later
+			// TODO: implement different condition checking later
 //			for (Condition c : r.getConditionSet().getSet()) {
 //
 //				Proposition proposition = c.getProposition1();
 ////				String operand1 = prop.getOperand1(); // TODO: figure out how to handle time/day, maybe combine them?
 //				String operand2 = proposition.getOperand2();
-//				MetadataItem item = metadata.getSet().get(operand2);
+//				Metadata item = metadata.getSet().get(operand2);
 //				int field = item.getField();
 //				int currentValue = calendar.get(field);
 //
@@ -161,7 +161,7 @@ public class RuleHandler {
 		StringBuilder builder = new StringBuilder();
 		Calendar current = Calendar.getInstance(); // the current time
 		current.add(Calendar.HOUR, -24);           // roll calendar back 24 hours
-		ObservableList<HistoryNode> history = dataAccess.selectHistoryWithin(current);
+		ObservableList<HistoryNode> history = dataAccess.selectHistoryAfter(current);
 
 		// build string from list of history nodes
 		for (HistoryNode h : history) {

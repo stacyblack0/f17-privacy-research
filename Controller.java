@@ -111,10 +111,10 @@ public class Controller {
 		operandDropdown1.getSelectionModel().select("time");
 
 		DataAccess dataAccess = new DataAccess();
-		ObservableList<MetadataItem> metadata = dataAccess.selectMetadata();
+		ObservableList<Metadata> metadataSet = dataAccess.selectMetadata();
 
-		for (MetadataItem meta : metadata) {
-			operandDropdown2.getItems().add(meta.getName());
+		for (Metadata m : metadataSet) {
+			operandDropdown2.getItems().add(m.getName());
 		}
 
 		operandDropdown2.getSelectionModel().select("business hours");
@@ -170,7 +170,7 @@ public class Controller {
 		checkButton.setOnAction(event -> {
 
 			ObservableList<Rule> temp1 = handler.findAllRules(nameBox2.getText(), informationBox2.getText());
-			ObservableList<Rule> temp2 = handler.findValidRules(temp1, metadata);
+			ObservableList<Rule> temp2 = handler.findValidRules(temp1, metadataSet);
 
 			foundCount2.setText("" + temp1.size());
 			validCount.setText("" + temp2.size());

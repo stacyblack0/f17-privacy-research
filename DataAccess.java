@@ -14,33 +14,20 @@ public class DataAccess {
 	private ResultSet resultSet = null;
 
 	private void createConnection() throws Exception {
-		// This will load the MariaDB "driver"
+		// loads the MariaDB "driver"
 		Class.forName("org.mariadb.jdbc.Driver");
 
-		// Setup the connection with the DB
+		// sets up the connection with the DB
 		connect = DriverManager.getConnection("jdbc:mariadb://localhost/db?"
-				+ "user=root&password=password" +
-				"");
-	}
-
-	public void select() throws Exception {
-		createConnection();
-		preparedStatement = connect.prepareStatement("select  * from rulle;");
-		resultSet = preparedStatement.executeQuery();
-		while (resultSet.next()) {
-			String AuthorName = resultSet.getString("id");
-			String Title = resultSet.getString("name");
-			System.out.println(AuthorName + " " + Title);
-		}
-		connect.close();
+				+ "user=root&password=password");
 	}
 
 	public void insertRule(Rule rule) {
 		try {
-			int id = selectRecipientIDbyName(rule.getRecipientSet());
 			createConnection();
-			preparedStatement = connect.prepareStatement("INSERT INTO Rules(RecipientSetID,Info,Regex) VALUES (?,?,?);");
-			preparedStatement.setInt(1, id);
+			preparedStatement = connect.prepareStatement("INSERT INTO Rules (RecipientSetID,Info,Regex) " +
+					"VALUES ((SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?),?,?);");
+			preparedStatement.setString(1, rule.getRecipientSet());
 			preparedStatement.setString(2, rule.getInfo());
 			preparedStatement.setString(3, rule.getRegex());
 			preparedStatement.executeUpdate();
@@ -54,7 +41,7 @@ public class DataAccess {
 	public void insertHistory(HistoryNode node) {
 		try {
 			createConnection();
-			preparedStatement = connect.prepareStatement("INSERT INTO History(InfoShareEvent,TimeInMillis) VALUES (?,?);");
+			preparedStatement = connect.prepareStatement("INSERT INTO History (InfoShareEvent,TimeInMillis) VALUES (?,?);");
 			preparedStatement.setString(1, node.toString());
 			preparedStatement.setLong(2, node.getTimeInMillis());
 			preparedStatement.executeUpdate();
@@ -65,14 +52,14 @@ public class DataAccess {
 		}
 	}
 
-	public void insertMetadata(MetadataItem metadataItem) {
+	public void insertMetadata(Metadata metadata) {
 		try {
 			createConnection();
-			preparedStatement = connect.prepareStatement("INSERT INTO Metadata(MetadataName,Field,Start,End) VALUES (?,?,?,?);");
-			preparedStatement.setString(1, metadataItem.getName());
-			preparedStatement.setInt(2, metadataItem.getField());
-			preparedStatement.setInt(3, metadataItem.getStart());
-			preparedStatement.setInt(4, metadataItem.getEnd());
+			preparedStatement = connect.prepareStatement("INSERT INTO Metadata (MetadataName,Field,Start,End) VALUES (?,?,?,?);");
+			preparedStatement.setString(1, metadata.getName());
+			preparedStatement.setInt(2, metadata.getField());
+			preparedStatement.setInt(3, metadata.getStart());
+			preparedStatement.setInt(4, metadata.getEnd());
 			preparedStatement.executeUpdate();
 			connect.commit();
 			connect.close();
@@ -84,8 +71,8 @@ public class DataAccess {
 	public Rule selectRulebyRecInfo(String recipientSet, String information) {
 		try {
 			createConnection();
-			preparedStatement = connect.prepareStatement("SELECT * FROM Rules r JOIN RecipientSet rs on r.RecipientSetID=" +
-					"rs.ID WHERE rs.RecipientSetName=? AND r.Info=?;");
+			preparedStatement = connect.prepareStatement("SELECT * FROM Rules r JOIN RecipientSets rs on r.RecipientSetID=" +
+					"rs.RecipientSetID WHERE rs.RecipientSetName=? AND r.Info=?;");
 			preparedStatement.setString(1, recipientSet);
 			preparedStatement.setString(2, information);
 			resultSet = preparedStatement.executeQuery();
@@ -105,8 +92,9 @@ public class DataAccess {
 	public ObservableList<Rule> selectRulesbyIndiInfo(String individual, String information) {
 		try {
 			createConnection();
-			preparedStatement = connect.prepareStatement("SELECT * FROM Rules r JOIN RecipientSet rs on r.RecipientSetID=" +
-					"rs.ID JOIN Individuals i on rs.ID=i.RecipientSetID WHERE i.IndividualName=? AND r.Info=?;");
+			preparedStatement = connect.prepareStatement("SELECT * FROM Rules r JOIN RecipientSets rs on r.RecipientSetID=" +
+					"rs.RecipientSetID JOIN Individuals i on rs.RecipientSetID=i.RecipientSetID WHERE i.IndividualName=? " +
+					"AND r.Info=?;");
 			preparedStatement.setString(1, individual);
 			preparedStatement.setString(2, information);
 			resultSet = preparedStatement.executeQuery();
@@ -131,7 +119,7 @@ public class DataAccess {
 	 * @param cal a calendar set to the given time
 	 * @return all history entries at or later than the given time
 	 */
-	public ObservableList<HistoryNode> selectHistoryWithin(Calendar cal) {
+	public ObservableList<HistoryNode> selectHistoryAfter(Calendar cal) {
 		try {
 			createConnection();
 			preparedStatement = connect.prepareStatement("SELECT * FROM History WHERE TimeInMillis>=?;");
@@ -151,18 +139,18 @@ public class DataAccess {
 		return null;
 	}
 
-	public ObservableList<MetadataItem> selectMetadata() {
+	public ObservableList<Metadata> selectMetadata() {
 		try {
 			createConnection();
 			preparedStatement = connect.prepareStatement("SELECT * FROM Metadata;");
 			resultSet = preparedStatement.executeQuery();
-			ObservableList<MetadataItem> data = FXCollections.observableArrayList();
+			ObservableList<Metadata> data = FXCollections.observableArrayList();
 			while (resultSet.next()) {
-				String name = resultSet.getString("Name");
+				String name = resultSet.getString("MetadataName");
 				int field = resultSet.getInt("Field");
 				int start = resultSet.getInt("Start");
 				int end = resultSet.getInt("End");
-				data.add(new MetadataItem(name, field, start, end));
+				data.add(new Metadata(name, field, start, end));
 			}
 			connect.close();
 			return data;
@@ -170,23 +158,5 @@ public class DataAccess {
 			System.out.println(e.toString());
 		}
 		return null;
-	}
-
-	public int selectRecipientIDbyName(String name) {
-		try {
-			createConnection();
-			preparedStatement = connect.prepareStatement("SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?;");
-			preparedStatement.setString(1, name);
-			resultSet = preparedStatement.executeQuery();
-			int result = -1;
-			while (resultSet.next()) { // should loop 1 or fewer times
-				result = resultSet.getInt("RecipientSetID");
-			}
-			connect.close();
-			return result;
-		} catch (Exception e) {
-			System.out.println(e.toString());
-		}
-		return -1;
 	}
 }
