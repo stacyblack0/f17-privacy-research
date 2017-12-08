@@ -44,11 +44,11 @@ INSERT INTO Individuals (IndividualName,RecipientSetID) VALUES ('Joe Brown',
 INSERT INTO Individuals (IndividualName,RecipientSetID) VALUES ('Google Drive',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='cloud' AND Type='services'));
 
-INSERT INTO Rules (Info,Regex,RecipientSetID) VALUES ('location','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','time=day', '',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='family' AND Type='people'));
-INSERT INTO Rules (Info,Regex,RecipientSetID) VALUES ('location','.*(Adela Jones K location).*',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','','.*(Adela Jones K location).*',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='friends' AND Type='people'));
-INSERT INTO Rules (Info,Regex,RecipientSetID) VALUES ('location','.*(Uber K location).*',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','','.*(Uber K location).*',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='transportation' AND Type='applications'));
 
 INSERT INTO History (InfoShareEvent,TimeInMillis) VALUES ('Adela Jones K location','14568465');
@@ -62,3 +62,8 @@ INSERT INTO Metadata (MetadataName,Field,Start,End) VALUES ('weekend','7','7','1
 INSERT INTO Metadata (MetadataName,Field,Start,End) VALUES ('day','11','8','19');
 -- 11 = Calendar.HOUR_OF_DAY, 20 = 8PM, 7 = 7:59AM
 INSERT INTO Metadata (MetadataName,Field,Start,End) VALUES ('night','11','20','7');
+
+INSERT INTO Information (InformationName) VALUES ('location');
+INSERT INTO Information (InformationName) VALUES ('health information');
+INSERT INTO Information (InformationName) VALUES ('financial information');
+INSERT INTO Information (InformationName) VALUES ('mutual friends');

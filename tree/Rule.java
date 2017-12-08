@@ -38,6 +38,7 @@ public class Rule {
 	public Rule(String info, String recipientSet, String regex) {
 		information = info;
 		this.recipientSet = recipientSet;
+		this.conditionSet = new ConditionSet();
 		this.regex = regex;
 	}
 

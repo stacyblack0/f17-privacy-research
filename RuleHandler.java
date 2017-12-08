@@ -31,8 +31,8 @@ public class RuleHandler {
 	 * @param recipient the given recipient
 	 * @param conditions the given conditions
 	 */
-	public Rule createRule(String information, String recipient, ConditionSet conditions) {
-		Rule rule = new Rule(information, recipient, "");
+	public Rule createRule(String information, String recipient, ConditionSet conditions, String regex) {
+		Rule rule = new Rule(information, recipient, conditions, regex);
 		dataAccess.insertRule(rule);
 		return rule;
 	}

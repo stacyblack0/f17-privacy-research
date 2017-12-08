@@ -9,7 +9,7 @@ CREATE TABLE RecipientSets (
 	Type VARCHAR(50) NOT NULL
 );
 
---create index idx_RecipientSetID on RecipientSet(RecipientSetID);
+-- create index idx_RecipientSetID on RecipientSet(RecipientSetID);
 
 
 CREATE TABLE Individuals (
@@ -20,19 +20,20 @@ CREATE TABLE Individuals (
 		REFERENCES RecipientSets (RecipientSetID)
 );
 
---create index idx_IndividualsID on Individuals(IndividualsID);
+-- create index idx_IndividualsID on Individuals(IndividualsID);
 
 
 CREATE TABLE Rules (
 	RuleID INT auto_increment NOT NULL PRIMARY KEY,
 	RecipientSetID INT NOT NULL,
 	Info VARCHAR(50) NOT NULL,
+	Conditions VARCHAR(128) NOT NULL,
 	Regex VARCHAR(128) NOT NULL,
 	FOREIGN KEY (RecipientSetID)
 		REFERENCES RecipientSets (RecipientSetID)
 );
 
---create index idx_RulesID on Rules(RulesID);
+-- create index idx_RulesID on Rules(RulesID);
 
 
 CREATE TABLE History (
@@ -41,7 +42,7 @@ CREATE TABLE History (
 	TimeInMillis BIGINT(19) NOT NULL
 );
 
---create index idx_HistoryID on History(HistoryID);
+-- create index idx_HistoryID on History(HistoryID);
 
 
 CREATE TABLE Metadata (
@@ -52,4 +53,10 @@ CREATE TABLE Metadata (
 	End INT(3) NOT NULL
 );
 
---create index idx_MetadataID on Metadata(MetadataID);
+-- create index idx_MetadataID on Metadata(MetadataID);
+
+
+CREATE TABLE Information (
+	InformationID INT auto_increment NOT NULL PRIMARY KEY,
+	InformationName VARCHAR(50) NOT NULL UNIQUE
+);

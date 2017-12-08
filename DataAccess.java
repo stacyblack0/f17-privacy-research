@@ -25,11 +25,12 @@ public class DataAccess {
 	public void insertRule(Rule rule) {
 		try {
 			createConnection();
-			preparedStatement = connect.prepareStatement("INSERT INTO Rules (RecipientSetID,Info,Regex) " +
-					"VALUES ((SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?),?,?);");
+			preparedStatement = connect.prepareStatement("INSERT INTO Rules (RecipientSetID,Info,Conditions,Regex) " +
+					"VALUES ((SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?),?,?,?);");
 			preparedStatement.setString(1, rule.getRecipientSet());
 			preparedStatement.setString(2, rule.getInfo());
-			preparedStatement.setString(3, rule.getRegex());
+			preparedStatement.setString(3, rule.getConditionSet().toString());
+			preparedStatement.setString(4, rule.getRegex());
 			preparedStatement.executeUpdate();
 			connect.commit();
 			connect.close();
@@ -151,6 +152,62 @@ public class DataAccess {
 				int start = resultSet.getInt("Start");
 				int end = resultSet.getInt("End");
 				data.add(new Metadata(name, field, start, end));
+			}
+			connect.close();
+			return data;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return null;
+	}
+
+	public ObservableList<String> selectInformation() {
+		try {
+			createConnection();
+			preparedStatement = connect.prepareStatement("SELECT InformationName FROM Information;");
+			resultSet = preparedStatement.executeQuery();
+			ObservableList<String> data = FXCollections.observableArrayList();
+			while (resultSet.next()) {
+				String name = resultSet.getString("InformationName");
+				data.add(name);
+			}
+			connect.close();
+			return data;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return null;
+	}
+
+	public ObservableList<String> selectRecipients() {
+		try {
+			createConnection();
+			preparedStatement = connect.prepareStatement("SELECT RecipientSetName FROM RecipientSets;");
+			resultSet = preparedStatement.executeQuery();
+			ObservableList<String> data = FXCollections.observableArrayList();
+			while (resultSet.next()) {
+				String name = resultSet.getString("RecipientSetName");
+				data.add(name);
+			}
+			connect.close();
+			return data;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return null;
+	}
+
+	public ObservableList<String> selectIndiByRecSet(String recipientSet) {
+		try {
+			createConnection();
+			preparedStatement = connect.prepareStatement("SELECT IndividualName FROM Individuals i WHERE i.RecipientSetID=" +
+					"(SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?);");
+			preparedStatement.setString(1, recipientSet);
+			resultSet = preparedStatement.executeQuery();
+			ObservableList<String> data = FXCollections.observableArrayList();
+			while (resultSet.next()) {
+				String name = resultSet.getString("IndividualName");
+				data.add(name);
 			}
 			connect.close();
 			return data;
