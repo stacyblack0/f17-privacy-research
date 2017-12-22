@@ -15,7 +15,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		Parent root = FXMLLoader.load(getClass().getResource("view.fxml"));
-		Scene scene = new Scene(root, 600, 450);
+		Scene scene = new Scene(root, 680, 620);
 		//scene.getStylesheets().add(Main.class.getResource("../view/application.css").toExternalForm());
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Privacy Rule Creator");

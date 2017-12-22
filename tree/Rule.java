@@ -11,7 +11,7 @@ public class Rule {
 
 	private String information;
 	private String recipientSet;
-	private ConditionSet conditionSet;
+	private String conditions;
 	private String regex;
 
 	/**
@@ -19,41 +19,13 @@ public class Rule {
 	 *
 	 * @param information the information
 	 * @param recipientSet the recipient set
-	 * @param conditionSet the condition to share the information
-	 */
-	public Rule(String information, String recipientSet, ConditionSet conditionSet) {
-		this.information = information;
-		this.recipientSet = recipientSet;
-		this.conditionSet = conditionSet;
-		this.regex = "";
-	}
-
-	/**
-	 * The constructor. Makes a new rule that uses a regex.
-	 *
-	 * @param info the information
-	 * @param recipientSet the recipient set
+	 * @param conditions the conditions to share the information
 	 * @param regex a string depicting a regular expression
 	 */
-	public Rule(String info, String recipientSet, String regex) {
-		information = info;
-		this.recipientSet = recipientSet;
-		this.conditionSet = new ConditionSet();
-		this.regex = regex;
-	}
-
-	/**
-	 * The constructor. Makes a new rule that uses a regex.
-	 *
-	 * @param information the information
-	 * @param recipientSet the recipient set
-	 * @param conditionSet the condition to share the information
-	 * @param regex a string depicting a regular expression
-	 */
-	public Rule(String information, String recipientSet, ConditionSet conditionSet, String regex) {
+	public Rule(String information, String recipientSet, String conditions, String regex) {
 		this.information = information;
 		this.recipientSet = recipientSet;
-		this.conditionSet = conditionSet;
+		this.conditions = conditions;
 		this.regex = regex;
 	}
 
@@ -65,8 +37,8 @@ public class Rule {
 		return recipientSet;
 	}
 
-	public ConditionSet getConditionSet() {
-		return conditionSet;
+	public String getConditions() {
+		return conditions;
 	}
 
 	public String getRegex() {
@@ -74,6 +46,6 @@ public class Rule {
 	}
 
 	public String toString() {
-		return recipientSet + " E " + information + " U (" + conditionSet.toString() + ")\n";
+		return recipientSet + " E " + information + " U ( " + conditions + " ) {regex: " + regex + " }\n";
 	}
 }

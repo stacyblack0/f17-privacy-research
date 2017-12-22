@@ -1,12 +1,10 @@
 import javafx.collections.ObservableList;
-import tree.ConditionSet;
 import tree.Rule;
 
 import java.util.Calendar;
 
 /**
- * This class creates a policy tree by adding rules with specific
- * parameters. It also holds all initialized sets of recipients.
+ * This class handles the creation and checking of rules.
  *
  * @author Stacy Black
  */
@@ -31,7 +29,7 @@ public class RuleHandler {
 	 * @param recipient the given recipient
 	 * @param conditions the given conditions
 	 */
-	public Rule createRule(String information, String recipient, ConditionSet conditions, String regex) {
+	public Rule createRule(String information, String recipient, String conditions, String regex) {
 		Rule rule = new Rule(information, recipient, conditions, regex);
 		dataAccess.insertRule(rule);
 		return rule;
@@ -113,6 +111,7 @@ public class RuleHandler {
 		return result;
 	}
 
+	//	just a tester function
 	public void HistoryTester() {
 
 		Calendar cal1 = Calendar.getInstance();

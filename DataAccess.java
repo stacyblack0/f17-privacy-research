@@ -29,7 +29,7 @@ public class DataAccess {
 					"VALUES ((SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?),?,?,?);");
 			preparedStatement.setString(1, rule.getRecipientSet());
 			preparedStatement.setString(2, rule.getInfo());
-			preparedStatement.setString(3, rule.getConditionSet().toString());
+			preparedStatement.setString(3, rule.getConditions());
 			preparedStatement.setString(4, rule.getRegex());
 			preparedStatement.executeUpdate();
 			connect.commit();
@@ -69,6 +69,29 @@ public class DataAccess {
 		}
 	}
 
+	public ObservableList<Rule> selectRulesbyRec(String recipientSet) {
+		try {
+			createConnection();
+			preparedStatement = connect.prepareStatement("SELECT * FROM Rules r JOIN RecipientSets rs on r.RecipientSetID=" +
+					"rs.RecipientSetID WHERE rs.RecipientSetName=?;");
+			preparedStatement.setString(1, recipientSet);
+			resultSet = preparedStatement.executeQuery();
+			ObservableList<Rule> data = FXCollections.observableArrayList();
+			while (resultSet.next()) {
+				String information = resultSet.getString("Info");
+				String setName = resultSet.getString("RecipientSetName");
+				String conditions = resultSet.getString("Conditions");
+				String regex = resultSet.getString("Regex");
+				data.add(new Rule(information, setName, conditions, regex));
+			}
+			connect.close();
+			return data;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return null;
+	}
+
 	public Rule selectRulebyRecInfo(String recipientSet, String information) {
 		try {
 			createConnection();
@@ -79,8 +102,9 @@ public class DataAccess {
 			resultSet = preparedStatement.executeQuery();
 			Rule rule = null;
 			while (resultSet.next()) { // should loop 1 or fewer times
+				String conditions = resultSet.getString("Conditions");
 				String regex = resultSet.getString("Regex");
-				rule = new Rule(information, recipientSet, regex);
+				rule = new Rule(information, recipientSet, conditions, regex);
 			}
 			connect.close();
 			return rule;
@@ -102,8 +126,9 @@ public class DataAccess {
 			ObservableList<Rule> data = FXCollections.observableArrayList();
 			while (resultSet.next()) {
 				String setName = resultSet.getString("RecipientSetName");
+				String conditions = resultSet.getString("Conditions");
 				String regex = resultSet.getString("Regex");
-				data.add(new Rule(information, setName, regex));
+				data.add(new Rule(information, setName, conditions, regex));
 			}
 			connect.close();
 			return data;

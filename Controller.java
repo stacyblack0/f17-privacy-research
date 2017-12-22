@@ -1,9 +1,7 @@
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import tree.Condition;
 import tree.ConditionSet;
@@ -11,17 +9,9 @@ import tree.Proposition;
 import tree.Rule;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.LinkedHashSet;
-import java.util.ResourceBundle;
 
 public class Controller {
-
-	@FXML
-	private ResourceBundle resources;
-
-	@FXML
-	private URL location;
 
 	@FXML
 	private ChoiceBox<String> operandDropdown1;
@@ -33,13 +23,13 @@ public class Controller {
 	private ChoiceBox<String> informationDropdown3;
 
 	@FXML
+	private TextField regexBox;
+
+	@FXML
 	private ChoiceBox<String> informationDropdown2;
 
 	@FXML
 	private ChoiceBox<String> informationDropdown1;
-
-	@FXML
-	private TextField regexBox;
 
 	@FXML
 	private ChoiceBox<String> nameDropdown1;
@@ -60,13 +50,16 @@ public class Controller {
 	private Text validCount;
 
 	@FXML
-	private ChoiceBox<String> recipientDropdown3;
+	private Button showAllButton;
 
 	@FXML
 	private ChoiceBox<String> recipientDropdown2;
 
 	@FXML
 	private ChoiceBox<String> operandDropdown2;
+
+	@FXML
+	private ChoiceBox<String> recipientDropdown3;
 
 	@FXML
 	private Text ruleCount;
@@ -78,7 +71,7 @@ public class Controller {
 	private Text foundCount2;
 
 	@FXML
-	private ChoiceBox<String> infoDropdown1;
+	private TreeView<String> rulePane;
 
 	@FXML
 	private Button saveButton;
@@ -100,21 +93,23 @@ public class Controller {
 		assert operandDropdown1 != null : "fx:id=\"operandDropdown1\" was not injected: check your FXML file 'view.fxml'.";
 		assert recipientDropdown1 != null : "fx:id=\"recipientDropdown1\" was not injected: check your FXML file 'view.fxml'.";
 		assert informationDropdown3 != null : "fx:id=\"informationDropdown3\" was not injected: check your FXML file 'view.fxml'.";
+		assert regexBox != null : "fx:id=\"regexBox\" was not injected: check your FXML file 'view.fxml'.";
 		assert informationDropdown2 != null : "fx:id=\"informationDropdown2\" was not injected: check your FXML file 'view.fxml'.";
 		assert informationDropdown1 != null : "fx:id=\"informationDropdown1\" was not injected: check your FXML file 'view.fxml'.";
-		assert regexBox != null : "fx:id=\"regexBox\" was not injected: check your FXML file 'view.fxml'.";
 		assert nameDropdown1 != null : "fx:id=\"nameDropdown1\" was not injected: check your FXML file 'view.fxml'.";
 		assert findButton != null : "fx:id=\"findButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert checkButton != null : "fx:id=\"checkButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert nameDropdown2 != null : "fx:id=\"nameDropdown2\" was not injected: check your FXML file 'view.fxml'.";
 		assert addButton != null : "fx:id=\"addButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert validCount != null : "fx:id=\"validCount\" was not injected: check your FXML file 'view.fxml'.";
-		assert recipientDropdown3 != null : "fx:id=\"recipientDropdown3\" was not injected: check your FXML file 'view.fxml'.";
+		assert showAllButton != null : "fx:id=\"showAllButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert recipientDropdown2 != null : "fx:id=\"recipientDropdown2\" was not injected: check your FXML file 'view.fxml'.";
 		assert operandDropdown2 != null : "fx:id=\"operandDropdown2\" was not injected: check your FXML file 'view.fxml'.";
+		assert recipientDropdown3 != null : "fx:id=\"recipientDropdown3\" was not injected: check your FXML file 'view.fxml'.";
 		assert ruleCount != null : "fx:id=\"ruleCount\" was not injected: check your FXML file 'view.fxml'.";
 		assert foundCount1 != null : "fx:id=\"foundCount1\" was not injected: check your FXML file 'view.fxml'.";
 		assert foundCount2 != null : "fx:id=\"foundCount2\" was not injected: check your FXML file 'view.fxml'.";
+		assert rulePane != null : "fx:id=\"rulePane\" was not injected: check your FXML file 'view.fxml'.";
 		assert saveButton != null : "fx:id=\"saveButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert conditionCount != null : "fx:id=\"conditionCount\" was not injected: check your FXML file 'view.fxml'.";
 		assert operationBox1 != null : "fx:id=\"operationBox1\" was not injected: check your FXML file 'view.fxml'.";
@@ -187,7 +182,7 @@ public class Controller {
 		saveButton.setOnAction(event -> {
 
 			ConditionSet temp = resetCondition(conditions);
-			handler.createRule(informationDropdown1.getValue(), recipientDropdown1.getValue(), temp, regexBox.getText());
+			handler.createRule(informationDropdown1.getValue(), recipientDropdown1.getValue(), temp.toString(), regexBox.getText());
 
 			conditionCount.setText("0");
 			incrRuleCount();
@@ -215,6 +210,16 @@ public class Controller {
 			ObservableList<Rule> temp = handler.findAllRules(name, info);
 
 			foundCount1.setText("" + temp.size());
+
+			TreeItem<String> rootNode = new TreeItem<>("Matching rules");
+			rootNode.setExpanded(true);
+			rulePane.setRoot(rootNode);
+
+			for (Rule r : temp) {
+				TreeItem<String> leaf = new TreeItem<>(r.toString());
+				rootNode.getChildren().add(leaf);
+			}
+
 			clearFindBoxes();
 //			nameBox1.requestFocus(); // select first condition text field
 		});
@@ -228,6 +233,28 @@ public class Controller {
 			validCount.setText("" + temp2.size());
 			clearCheckBoxes();
 //			nameBox2.requestFocus();
+		});
+
+		showAllButton.setOnAction(event -> {
+
+			TreeItem<String> rootNode = new TreeItem<>("All rules");
+			rootNode.setExpanded(true);
+			rulePane.setRoot(rootNode);
+
+			ObservableList<String> recipients = dataAccess.selectRecipients();
+
+			for (String s : recipients) {
+
+				TreeItem<String> leaf = new TreeItem<>(s);
+				rootNode.getChildren().add(leaf);
+				leaf.setExpanded(true);
+
+				ObservableList<Rule> rules = dataAccess.selectRulesbyRec(s);
+
+				for (Rule r : rules) {
+					leaf.getChildren().add(new TreeItem<>(r.getInfo() + " -> " + r.toString()));
+				}
+			}
 		});
 
 		// disable save button when all text fields are not filled in and when no conditions are saved
