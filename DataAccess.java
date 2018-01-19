@@ -1,5 +1,6 @@
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import tree.Rule;
 
 import java.sql.*;
@@ -233,6 +234,30 @@ public class DataAccess {
 			while (resultSet.next()) {
 				String name = resultSet.getString("IndividualName");
 				data.add(name);
+			}
+			connect.close();
+			return data;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return null;
+	}
+
+	public ObservableMap<String, String> selectIntersections() {
+		try {
+			createConnection();
+			preparedStatement = connect.prepareStatement("SELECT a.IndividualName,b.RecipientSetID,c.RecipientSetName" +
+					"FROM (SELECT IndividualName, RecipientSetID, COUNT(IndividualName)" +
+							"FROM individuals GROUP BY IndividualName HAVING COUNT(IndividualName)>1) AS a" +
+					"JOIN individuals AS b ON a.IndividualName=b.IndividualName" +
+					"JOIN recipientsets AS c ON b.RecipientSetID=c.RecipientSetID" +
+					"ORDER BY b.IndividualName;");
+			resultSet = preparedStatement.executeQuery();
+			ObservableMap<String, String> data = FXCollections.observableArrayList();
+			while (resultSet.next()) {
+				String name = resultSet.getString("IndividualName");
+				String recipientSEt = resultSet.getString("RecipientSetName");
+				data.add(name, recipientSet);
 			}
 			connect.close();
 			return data;

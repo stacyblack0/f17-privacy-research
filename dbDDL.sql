@@ -9,8 +9,6 @@ CREATE TABLE RecipientSets (
 	Type VARCHAR(50) NOT NULL
 );
 
--- create index idx_RecipientSetID on RecipientSet(RecipientSetID);
-
 
 CREATE TABLE Individuals (
 	IndividualID INT auto_increment NOT NULL PRIMARY KEY,
@@ -19,8 +17,6 @@ CREATE TABLE Individuals (
 	FOREIGN KEY (RecipientSetID)
 		REFERENCES RecipientSets (RecipientSetID)
 );
-
--- create index idx_IndividualsID on Individuals(IndividualsID);
 
 
 CREATE TABLE Rules (
@@ -33,16 +29,12 @@ CREATE TABLE Rules (
 		REFERENCES RecipientSets (RecipientSetID)
 );
 
--- create index idx_RulesID on Rules(RulesID);
-
 
 CREATE TABLE History (
 	HistoryID INT auto_increment NOT NULL PRIMARY KEY,
 	InfoShareEvent VARCHAR(128) NOT NULL,
 	TimeInMillis BIGINT(19) NOT NULL
 );
-
--- create index idx_HistoryID on History(HistoryID);
 
 
 CREATE TABLE Metadata (
@@ -52,8 +44,6 @@ CREATE TABLE Metadata (
 	Start INT(3) NOT NULL,
 	End INT(3) NOT NULL
 );
-
--- create index idx_MetadataID on Metadata(MetadataID);
 
 
 CREATE TABLE Information (
