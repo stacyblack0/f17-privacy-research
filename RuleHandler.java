@@ -1,7 +1,12 @@
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import tree.Rule;
 
 import java.util.Calendar;
+
 
 /**
  * This class handles the creation and checking of rules.
@@ -11,6 +16,7 @@ import java.util.Calendar;
 public class RuleHandler {
 
 	private DataAccess dataAccess;
+	private ExpressionParser parser;
 
 	/**
 	 * The constructor. Initializes the data access object.
@@ -19,6 +25,7 @@ public class RuleHandler {
 //		HistoryTester();
 		// initialize sets?
 		dataAccess = new DataAccess();
+		parser = new SpelExpressionParser();
 	}
 
 	/**
@@ -87,25 +94,21 @@ public class RuleHandler {
 	 */
 	public ObservableList<Rule> findValidRules(ObservableList<Rule> rules, ObservableList<Metadata> metadataSet) {
 
-//		ObservableList<Rule> result = new FXCollections.observableArrayList();
-		ObservableList<Rule> result = null;
-		Calendar calendar = Calendar.getInstance();
+		ObservableList<Rule> result = FXCollections.observableArrayList();
+		Environment env = new Environment(); //current state of system
 
 		for (Rule r : rules) {
-			// TODO: implement different condition checking later
-//			for (Condition c : r.getConditionSet().getSet()) {
-//
-//				Proposition proposition = c.getProposition1();
-////				String operand1 = prop.getOperand1(); // TODO: figure out how to handle time/day, maybe combine them?
-//				String operand2 = proposition.getOperand2();
-//				Metadata item = metadata.getSet().get(operand2);
-//				int field = item.getField();
-//				int currentValue = calendar.get(field);
-//
-//				if (item.withinTimeSpan(currentValue)) {
-//					result.add(r);
-//				}
-//			}
+
+			String conditions = r.getConditions();
+
+			Expression exp = parser.parseExpression(conditions);
+			boolean isValid = exp.getValue(env, Boolean.class);
+
+			if (isValid) {
+				result.add(r);
+			}
+
+//			System.out.println(isValid);
 		}
 
 		return result;

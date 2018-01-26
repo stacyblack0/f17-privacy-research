@@ -13,6 +13,7 @@ public class Condition {
 	private Proposition proposition2; // Second proposition, i.e. "Day != weekend"
 	private Temporal temporal;
 	private Environmental environmental;
+	private String condition;
 
 	/**
 	 * The constructor. Creates a new condition with two given propositions
@@ -28,6 +29,10 @@ public class Condition {
 		this.proposition2 = proposition2;
 	}
 
+	public Condition(String condition) {
+		this.condition = condition;
+	}
+
 	public Proposition getProposition1() {
 		return proposition1;
 	}
@@ -37,10 +42,11 @@ public class Condition {
 	}
 
 	public String toString() {
-		if (operator != null && proposition2 != null) {
-			return "[" + proposition1 + " " + operator + " " + proposition2 + "]";
-		} else {
-			return "[" + proposition1 + "]";
-		}
+//		if (operator != null && proposition2 != null) {
+//			return "[" + proposition1 + " " + operator + " " + proposition2 + "]";
+//		} else {
+//			return "[" + proposition1 + "]";
+//		}
+		return condition;
 	}
 }

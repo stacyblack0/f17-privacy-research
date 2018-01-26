@@ -54,10 +54,15 @@ public class ConditionSet {
 
 	public String toString() {
 
-		StringBuilder str = new StringBuilder(" ");
+		StringBuilder str = new StringBuilder("");
+		int i = 1;
 
 		for (Condition c : set) {
-			str.append(c.toString()).append(" ");
+			str.append(c.toString());
+			if (i < set.size()) {
+				str.append(" and ");
+				i++;
+			}
 		}
 
 		return str.toString();

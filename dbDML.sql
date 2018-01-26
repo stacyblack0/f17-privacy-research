@@ -150,15 +150,15 @@ INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends
 INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','','.*(Candy Crush K email address).*',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='gaming' AND Type='applications'));
 
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('credit card number','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('credit card number','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='shopping' AND Type='applications'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('shopping history','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('shopping history','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='shopping' AND Type='applications'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('home address','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('home address','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='shopping' AND Type='applications'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='shopping' AND Type='applications'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='shopping' AND Type='applications'));
 
 INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','','.*(Facebook K location).*',
@@ -176,126 +176,126 @@ INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number',
 INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','','.*(Facebook K email address).*',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='social media' AND Type='applications'));
 
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','time=business hours','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','(time > 7 and time < 17)','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='colleagues' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('work schedule','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('work schedule','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='colleagues' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='colleagues' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='colleagues' AND Type='people'));
 
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('home address','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('home address','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='family' AND Type='people'));
 
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('health information','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('health information','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('social security number','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('social security number','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('credit card number','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('credit card number','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('banking history','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('banking history','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('personal planner','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('personal planner','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('shopping history','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('shopping history','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('home address','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('home address','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('license plate number','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('license plate number','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
 
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','time=weekend','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','(day > 6 or day < 2)','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='extended family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','time=weekend','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','(day > 6 or day < 2)','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='extended family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('home address','time=night','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('home address','(time > 19 or time < 8)','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='extended family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='extended family' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='extended family' AND Type='people'));
 
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','time=day','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','(time > 7 and time < 17)','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='acquaintances' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='acquaintances' AND Type='people'));
 
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','time=day','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','(time > 7 and time < 17)','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='friends' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='friends' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='friends' AND Type='people'));
 
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','When I make a post to Instagram','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','(time > 7 and time < 17)','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='instagram friends' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='instagram friends' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='instagram friends' AND Type='people'));
 
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','any time','.*(Adela Jones K location).*',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','true','.*(Adela Jones K location).*',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('personal planner','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('personal planner','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('home address','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('home address','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','any time','',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
-
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','time=weekend','',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('health information','time=weekend','',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','time=weekend','',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('personal planner','time=weekend','',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('home address','time=weekend','',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','any time','',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
 
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','(day > 6 or day < 2)','',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('health information','(day > 6 or day < 2)','',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','(day > 6 or day < 2)','',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('personal planner','(day > 6 or day < 2)','',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('home address','(day > 6 or day < 2)','',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','true','',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','true','',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
+
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='google services' AND Type='services'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('credit card number','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('credit card number','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='google services' AND Type='services'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('banking history','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('banking history','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='google services' AND Type='services'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='google services' AND Type='services'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('personal planner','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('personal planner','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='google services' AND Type='services'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('shopping history','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('shopping history','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='google services' AND Type='services'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('home address','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('home address','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='google services' AND Type='services'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='google services' AND Type='services'));
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','any time','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='google services' AND Type='services'));
 
 

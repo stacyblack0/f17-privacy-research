@@ -253,14 +253,14 @@ public class DataAccess {
 					"JOIN recipientsets AS c ON b.RecipientSetID=c.RecipientSetID" +
 					"ORDER BY b.IndividualName;");
 			resultSet = preparedStatement.executeQuery();
-			ObservableMap<String, String> data = FXCollections.observableArrayList();
-			while (resultSet.next()) {
-				String name = resultSet.getString("IndividualName");
-				String recipientSEt = resultSet.getString("RecipientSetName");
-				data.add(name, recipientSet);
-			}
-			connect.close();
-			return data;
+//			ObservableMap<String, String> data = FXCollections.observableMap();
+//			while (resultSet.next()) {
+//				String name = resultSet.getString("IndividualName");
+//				String recipientSet = resultSet.getString("RecipientSetName");
+//				data.add(name, recipientSet);
+//			}
+//			connect.close();
+//			return data;
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}

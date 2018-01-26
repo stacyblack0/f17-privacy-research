@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
 	<top>
 		<MenuBar BorderPane.alignment="CENTER">
@@ -27,55 +25,125 @@
 			</menus>
 		</MenuBar>
 	</top>
-	<right>
-		<ScrollBar orientation="VERTICAL" BorderPane.alignment="CENTER" />
-	</right>
 	<center>
-		<Pane prefHeight="577.0" prefWidth="786.0" BorderPane.alignment="CENTER">
-			<children>
-				<Text layoutX="31.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create a new rule:" />
-				<Text layoutX="49.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Share" />
-				<Text layoutX="52.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="with" />
-				<Text layoutX="48.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="when" />
-				<Button id="saveButton" fx:id="saveButton" layoutX="52.0" layoutY="368.0" mnemonicParsing="false" text="Save rule" />
-				<Text layoutX="53.0" layoutY="415.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rules saved:" wrappingWidth="64.41796875" />
-				<Text fx:id="ruleCount" layoutX="134.0" layoutY="415.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-				<TextField fx:id="operationBox1" layoutX="167.0" layoutY="190.0" prefHeight="25.0" prefWidth="33.0" promptText="op" />
-				<Button fx:id="addButton" layoutX="162.0" layoutY="254.0" mnemonicParsing="false" text="Add" />
-				<Text fill="#a4a4a4" layoutX="49.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Propositions -----------------" />
-				<Text fill="#a4a4a4" layoutX="51.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-------------------------------" />
-				<Text fill="#a4a4a4" layoutX="52.0" layoutY="320.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-------------------------------" />
-				<Text layoutX="77.0" layoutY="300.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Propositions saved:" wrappingWidth="103.41796875" />
-				<Text fx:id="conditionCount" layoutX="194.0" layoutY="300.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-				<Text fill="#a4a4a4" layoutX="224.0" layoutY="258.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-------------------------------------------------" />
-				<Text layoutX="239.0" layoutY="236.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Find rule(s):" />
-				<Button fx:id="findButton" layoutX="421.0" layoutY="305.0" mnemonicParsing="false" text="Find" />
-				<Text layoutX="370.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rules found:" />
-				<Text fx:id="foundCount1" layoutX="452.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-				<ChoiceBox fx:id="operandDropdown1" layoutX="87.0" layoutY="159.0" prefHeight="25.0" prefWidth="114.0" />
-				<Text fx:id="foundCount2" layoutX="452.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-				<Text layoutX="370.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rules found:" />
-				<Button fx:id="checkButton" layoutX="411.0" layoutY="103.0" mnemonicParsing="false" text="Check" />
-				<Text layoutX="239.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Check rule validity:" />
-				<Text fill="#a4a4a4" layoutX="224.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-------------------------------------------------" />
-				<Text layoutX="373.0" layoutY="169.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rules valid:" />
-				<Text fx:id="validCount" layoutX="452.0" layoutY="169.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-				<ChoiceBox fx:id="operandDropdown2" layoutX="87.0" layoutY="220.0" prefHeight="25.0" prefWidth="114.0" />
-				<ChoiceBox fx:id="informationDropdown1" layoutX="87.0" layoutY="65.0" prefHeight="25.0" prefWidth="114.0" />
-				<ChoiceBox fx:id="recipientDropdown1" layoutX="87.0" layoutY="101.0" prefHeight="25.0" prefWidth="114.0" />
-				<ChoiceBox fx:id="recipientDropdown2" layoutX="224.0" layoutY="266.0" prefHeight="25.0" prefWidth="114.0" />
-				<ChoiceBox fx:id="nameDropdown1" layoutX="224.0" layoutY="299.0" prefHeight="25.0" prefWidth="114.0" />
-				<ChoiceBox fx:id="informationDropdown2" layoutX="345.0" layoutY="266.0" prefHeight="25.0" prefWidth="114.0" />
-				<ChoiceBox fx:id="nameDropdown2" layoutX="224.0" layoutY="101.0" prefHeight="25.0" prefWidth="114.0" />
-				<ChoiceBox fx:id="informationDropdown3" layoutX="345.0" layoutY="68.0" prefHeight="25.0" prefWidth="114.0" />
-				<ChoiceBox fx:id="recipientDropdown3" layoutX="224.0" layoutY="68.0" prefHeight="25.0" prefWidth="114.0" />
-				<TextField fx:id="regexBox" layoutX="52.0" layoutY="332.0" />
-				<TreeView fx:id="rulePane" layoutX="223.0" layoutY="368.0" prefHeight="200.0" prefWidth="410.0" showRoot="false" />
-				<Button fx:id="showAllButton" layoutX="401.0" layoutY="219.0" mnemonicParsing="false" text="Show All" />
-				<TreeView fx:id="intersectionsPane" layoutX="475.0" layoutY="53.0" prefHeight="308.0" prefWidth="182.0" showRoot="false" />
-				<Button fx:id="intersectionsButton" layoutX="530.0" layoutY="25.0" mnemonicParsing="false" text="Display Intersections" />
-				<!--<TextField fx:id="operationBox2" disable="true" layoutX="139.0" layoutY="262.0" prefHeight="25.0" prefWidth="33.0" promptText="op" />-->
-			</children>
-		</Pane>
+		<TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+			<tabs>
+				<Tab text="Create rules">
+					<content>
+						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+							<children>
+								<Text layoutX="70.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="Create a new rule:"/>
+								<Text layoutX="88.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="Share"/>
+								<Text layoutX="255.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="with"/>
+								<Text fill="#a4a4a4" layoutX="90.0" layoutY="78.0" strokeType="OUTSIDE"
+									  strokeWidth="0.0" text="-------------------------------"/>
+								<ChoiceBox fx:id="informationDropdown1" layoutX="126.0" layoutY="85.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
+								<ChoiceBox fx:id="recipientDropdown1" layoutX="292.0" layoutY="85.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
+								<Text layoutX="88.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="when"/>
+								<Button fx:id="addButton" layoutX="451.0" layoutY="166.0" mnemonicParsing="false"
+										text="Add"/>
+								<Text fill="#a4a4a4" layoutX="88.0" layoutY="144.0" strokeType="OUTSIDE"
+									  strokeWidth="0.0" text="Conditions -----------------"/>
+								<Text layoutX="500.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="Conditions saved:" wrappingWidth="103.41796875"/>
+								<Text fx:id="conditionCount" layoutX="603.0" layoutY="183.0" strokeType="OUTSIDE"
+									  strokeWidth="0.0" text="0"/>
+								<ChoiceBox fx:id="operandDropdown1" layoutX="127.0" layoutY="166.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
+								<ChoiceBox fx:id="operandDropdown2" layoutX="317.0" layoutY="166.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
+								<ChoiceBox fx:id="operationDropdown" layoutX="257.0" layoutY="166.0" prefHeight="25.0"
+										   prefWidth="41.0"/>
+								<Button id="saveButton" fx:id="saveButton" layoutX="85.0" layoutY="306.0"
+										mnemonicParsing="false" text="Save rule"/>
+								<Text fill="#a4a4a4" layoutX="87.0" layoutY="224.0" strokeType="OUTSIDE"
+									  strokeWidth="0.0" text="Regex -----------------------"/>
+								<TextField fx:id="regexBox" layoutX="85.0" layoutY="245.0"/>
+								<Text layoutX="164.0" layoutY="323.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="Rules saved:" wrappingWidth="64.41796875"/>
+								<Text fx:id="ruleCount" layoutX="241.0" layoutY="323.0" strokeType="OUTSIDE"
+									  strokeWidth="0.0" text="0" wrappingWidth="15.46875"/>
+							</children>
+						</AnchorPane>
+					</content>
+				</Tab>
+				<Tab text="Check valid rules">
+					<content>
+						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+							<children>
+								<Text fx:id="foundCount2" layoutX="497.0" layoutY="135.0" strokeType="OUTSIDE"
+									  strokeWidth="0.0" text="0"/>
+								<Text layoutX="415.0" layoutY="135.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="Rules found:"/>
+								<Button fx:id="checkButton" layoutX="348.0" layoutY="122.0" mnemonicParsing="false"
+										text="Check"/>
+								<Text layoutX="75.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="Check rule validity:"/>
+								<Text fill="#a4a4a4" layoutX="75.0" layoutY="79.0" strokeType="OUTSIDE"
+									  strokeWidth="0.0" text="-------------------------------------------------"/>
+								<Text layoutX="416.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="Rules valid:"/>
+								<Text fx:id="validCount" layoutX="497.0" layoutY="155.0" strokeType="OUTSIDE"
+									  strokeWidth="0.0" text="0"/>
+								<ChoiceBox fx:id="nameDropdown2" layoutX="75.0" layoutY="122.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
+								<ChoiceBox fx:id="informationDropdown3" layoutX="209.0" layoutY="122.0"
+										   prefHeight="25.0" prefWidth="114.0"/>
+								<ChoiceBox fx:id="recipientDropdown3" layoutX="75.0" layoutY="89.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
+								<TreeView fx:id="validPane" layoutX="28.0" layoutY="193.0" prefHeight="346.0"
+										  prefWidth="625.0" showRoot="false"/>
+							</children>
+						</AnchorPane>
+					</content>
+				</Tab>
+				<Tab text="Find rules">
+					<content>
+						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+							<children>
+								<Text fill="#a4a4a4" layoutX="50.0" layoutY="67.0" strokeType="OUTSIDE"
+									  strokeWidth="0.0" text="-------------------------------------------------"/>
+								<Text layoutX="50.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="Find rule(s):"/>
+								<Button fx:id="findButton" layoutX="310.0" layoutY="114.0" mnemonicParsing="false"
+										text="Find"/>
+								<Text layoutX="360.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="Rules found:"/>
+								<Text fx:id="foundCount1" layoutX="442.0" layoutY="131.0" strokeType="OUTSIDE"
+									  strokeWidth="0.0" text="0"/>
+								<ChoiceBox fx:id="recipientDropdown2" layoutX="54.0" layoutY="81.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
+								<ChoiceBox fx:id="nameDropdown1" layoutX="54.0" layoutY="114.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
+								<ChoiceBox fx:id="informationDropdown2" layoutX="179.0" layoutY="114.0"
+										   prefHeight="25.0" prefWidth="114.0"/>
+								<Button fx:id="showAllButton" layoutX="592.0" layoutY="153.0" mnemonicParsing="false"
+										text="Show All"/>
+								<TreeView fx:id="rulePane" layoutX="29.0" layoutY="187.0" prefHeight="346.0"
+										  prefWidth="625.0" showRoot="false"/>
+							</children>
+						</AnchorPane>
+					</content>
+				</Tab>
+				<Tab text="Intersections">
+					<content>
+						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+							<children>
+								<Button fx:id="intersectionsButton" layoutX="38.0" layoutY="34.0"
+										mnemonicParsing="false" text="Display Intersections"/>
+								<TreeView fx:id="intersectionsPane" layoutX="38.0" layoutY="89.0" prefHeight="448.0"
+										  prefWidth="600.0" showRoot="false"/>
+							</children>
+						</AnchorPane>
+					</content>
+				</Tab>
+			</tabs>
+		</TabPane>
 	</center>
 </BorderPane>
