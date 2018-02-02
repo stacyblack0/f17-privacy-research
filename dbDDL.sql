@@ -23,8 +23,9 @@ CREATE TABLE Rules (
 	RuleID INT auto_increment NOT NULL PRIMARY KEY,
 	RecipientSetID INT NOT NULL,
 	Info VARCHAR(50) NOT NULL,
-	Conditions VARCHAR(128) NOT NULL,
-	Regex VARCHAR(128) NOT NULL,
+	Conditions VARCHAR(256) NOT NULL,
+	Regex VARCHAR(256) NOT NULL,
+	RegexFrequency INT,
 	FOREIGN KEY (RecipientSetID)
 		REFERENCES RecipientSets (RecipientSetID)
 );

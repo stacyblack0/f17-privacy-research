@@ -1,10 +1,13 @@
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import tree.Intersection;
 import tree.Rule;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 
 public class DataAccess {
@@ -243,24 +246,31 @@ public class DataAccess {
 		return null;
 	}
 
-	public ObservableMap<String, String> selectIntersections() {
+	public ObservableMap<String, ArrayList<String>> selectIntersections() {
 		try {
 			createConnection();
-			preparedStatement = connect.prepareStatement("SELECT a.IndividualName,b.RecipientSetID,c.RecipientSetName" +
-					"FROM (SELECT IndividualName, RecipientSetID, COUNT(IndividualName)" +
-							"FROM individuals GROUP BY IndividualName HAVING COUNT(IndividualName)>1) AS a" +
-					"JOIN individuals AS b ON a.IndividualName=b.IndividualName" +
-					"JOIN recipientsets AS c ON b.RecipientSetID=c.RecipientSetID" +
+			preparedStatement = connect.prepareStatement("SELECT a.IndividualName,b.RecipientSetID,c.RecipientSetName " +
+					"FROM (SELECT IndividualName, RecipientSetID, COUNT(IndividualName) " +
+							"FROM individuals GROUP BY IndividualName HAVING COUNT(IndividualName)>1) AS a " +
+					"JOIN individuals AS b ON a.IndividualName=b.IndividualName " +
+					"JOIN recipientsets AS c ON b.RecipientSetID=c.RecipientSetID " +
 					"ORDER BY b.IndividualName;");
 			resultSet = preparedStatement.executeQuery();
-//			ObservableMap<String, String> data = FXCollections.observableMap();
-//			while (resultSet.next()) {
-//				String name = resultSet.getString("IndividualName");
-//				String recipientSet = resultSet.getString("RecipientSetName");
-//				data.add(name, recipientSet);
-//			}
-//			connect.close();
-//			return data;
+			ObservableMap<String, ArrayList<String>> data = FXCollections.observableMap(new HashMap<String, ArrayList<String>>());
+			while (resultSet.next()) {
+				System.out.println("hello!");
+				String name = resultSet.getString("IndividualName");
+				String recipientSet = resultSet.getString("RecipientSetName");
+				if (data.get(name) != null) {
+					data.get(name).add(recipientSet);
+				} else {
+					ArrayList<String> array = new ArrayList<>();
+					array.add(recipientSet);
+					data.put(name, array);
+				}
+			}
+			connect.close();
+			return data;
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}

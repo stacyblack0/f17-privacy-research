@@ -1,13 +1,27 @@
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
+import org.sat4j.core.VecInt;
+import org.sat4j.minisat.SolverFactory;
+import org.sat4j.reader.DimacsReader;
+import org.sat4j.reader.ParseFormatException;
+import org.sat4j.reader.Reader;
+import org.sat4j.specs.ContradictionException;
+import org.sat4j.specs.IProblem;
+import org.sat4j.specs.ISolver;
+import org.sat4j.specs.TimeoutException;
 import tree.Condition;
 import tree.ConditionSet;
 import tree.Rule;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 
 public class Controller {
@@ -16,10 +30,10 @@ public class Controller {
 	private ChoiceBox<String> operandDropdown1;
 
 	@FXML
-	private ChoiceBox<String> operationDropdown;
+	private ChoiceBox<String> recipientDropdown1;
 
 	@FXML
-	private ChoiceBox<String> recipientDropdown1;
+	private ChoiceBox<String> regexFreqDropdown;
 
 	@FXML
 	private Button checkButton;
@@ -40,16 +54,22 @@ public class Controller {
 	private ChoiceBox<String> recipientDropdown3;
 
 	@FXML
+	private ChoiceBox<String> regexTempDropdown;
+
+	@FXML
 	private TreeView<String> validPane;
+
+	@FXML
+	private ChoiceBox<String> regexInfoDropdown2;
 
 	@FXML
 	private Button saveButton;
 
 	@FXML
-	private Text conditionCount;
+	private ChoiceBox<String> regexInfoDropdown1;
 
 	@FXML
-	private TextField regexBox;
+	private Text conditionCount;
 
 	@FXML
 	private ChoiceBox<String> informationDropdown3;
@@ -67,9 +87,6 @@ public class Controller {
 	private ChoiceBox<String> nameDropdown2;
 
 	@FXML
-	private Button addButton;
-
-	@FXML
 	private Button showAllButton;
 
 	@FXML
@@ -85,10 +102,28 @@ public class Controller {
 	private Text foundCount2;
 
 	@FXML
+	private ChoiceBox<String> operationDropdown1;
+
+	@FXML
+	private ChoiceBox<String> operationDropdown2;
+
+	@FXML
 	private TreeView<String> rulePane;
 
 	@FXML
 	private TreeView<String> intersectionsPane;
+
+	@FXML
+	private Button addButton1;
+
+	@FXML
+	private ChoiceBox<String> regexRecDropdown;
+
+	@FXML
+	private TextField regexFreqText;
+
+	@FXML
+	private Button addButton2;
 
 	@FXML
 	void a4a4a4(ActionEvent event) {
@@ -99,36 +134,44 @@ public class Controller {
 	void initialize() throws IOException {
 
 		assert operandDropdown1 != null : "fx:id=\"operandDropdown1\" was not injected: check your FXML file 'view.fxml'.";
-		assert operationDropdown != null : "fx:id=\"operationDropdown\" was not injected: check your FXML file 'view.fxml'.";
 		assert recipientDropdown1 != null : "fx:id=\"recipientDropdown1\" was not injected: check your FXML file 'view.fxml'.";
+		assert regexFreqDropdown != null : "fx:id=\"regexFreqDropdown\" was not injected: check your FXML file 'view.fxml'.";
 		assert checkButton != null : "fx:id=\"checkButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert findButton != null : "fx:id=\"findButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert validCount != null : "fx:id=\"validCount\" was not injected: check your FXML file 'view.fxml'.";
 		assert recipientDropdown2 != null : "fx:id=\"recipientDropdown2\" was not injected: check your FXML file 'view.fxml'.";
 		assert operandDropdown2 != null : "fx:id=\"operandDropdown2\" was not injected: check your FXML file 'view.fxml'.";
 		assert recipientDropdown3 != null : "fx:id=\"recipientDropdown3\" was not injected: check your FXML file 'view.fxml'.";
+		assert regexTempDropdown != null : "fx:id=\"regexTempDropdown\" was not injected: check your FXML file 'view.fxml'.";
 		assert validPane != null : "fx:id=\"validPane\" was not injected: check your FXML file 'view.fxml'.";
+		assert regexInfoDropdown2 != null : "fx:id=\"regexInfoDropdown2\" was not injected: check your FXML file 'view.fxml'.";
 		assert saveButton != null : "fx:id=\"saveButton\" was not injected: check your FXML file 'view.fxml'.";
+		assert regexInfoDropdown1 != null : "fx:id=\"regexInfoDropdown1\" was not injected: check your FXML file 'view.fxml'.";
 		assert conditionCount != null : "fx:id=\"conditionCount\" was not injected: check your FXML file 'view.fxml'.";
-		assert regexBox != null : "fx:id=\"regexBox\" was not injected: check your FXML file 'view.fxml'.";
 		assert informationDropdown3 != null : "fx:id=\"informationDropdown3\" was not injected: check your FXML file 'view.fxml'.";
 		assert informationDropdown2 != null : "fx:id=\"informationDropdown2\" was not injected: check your FXML file 'view.fxml'.";
 		assert informationDropdown1 != null : "fx:id=\"informationDropdown1\" was not injected: check your FXML file 'view.fxml'.";
 		assert nameDropdown1 != null : "fx:id=\"nameDropdown1\" was not injected: check your FXML file 'view.fxml'.";
 		assert nameDropdown2 != null : "fx:id=\"nameDropdown2\" was not injected: check your FXML file 'view.fxml'.";
-		assert addButton != null : "fx:id=\"addButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert showAllButton != null : "fx:id=\"showAllButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert intersectionsButton != null : "fx:id=\"intersectionsButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert ruleCount != null : "fx:id=\"ruleCount\" was not injected: check your FXML file 'view.fxml'.";
 		assert foundCount1 != null : "fx:id=\"foundCount1\" was not injected: check your FXML file 'view.fxml'.";
 		assert foundCount2 != null : "fx:id=\"foundCount2\" was not injected: check your FXML file 'view.fxml'.";
+		assert operationDropdown1 != null : "fx:id=\"operationDropdown1\" was not injected: check your FXML file 'view.fxml'.";
+		assert operationDropdown2 != null : "fx:id=\"operationDropdown2\" was not injected: check your FXML file 'view.fxml'.";
 		assert rulePane != null : "fx:id=\"rulePane\" was not injected: check your FXML file 'view.fxml'.";
 		assert intersectionsPane != null : "fx:id=\"intersectionsPane\" was not injected: check your FXML file 'view.fxml'.";
+		assert addButton1 != null : "fx:id=\"addButton1\" was not injected: check your FXML file 'view.fxml'.";
+		assert regexRecDropdown != null : "fx:id=\"regexRecDropdown\" was not injected: check your FXML file 'view.fxml'.";
+		assert regexFreqText != null : "fx:id=\"regexFreqText\" was not injected: check your FXML file 'view.fxml'.";
+		assert addButton2 != null : "fx:id=\"addButton2\" was not injected: check your FXML file 'view.fxml'.";
+
 
 		// populate dropdown menus
 
-		operandDropdown1.getItems().addAll("time", "day");
-		operandDropdown1.getSelectionModel().select("time");
+//		operandDropdown1.getItems().addAll("time", "day");
+//		operandDropdown1.getSelectionModel().select("time");
 
 		DataAccess dataAccess = new DataAccess();
 		ObservableList<String> informationSet = dataAccess.selectInformation();
@@ -137,6 +180,8 @@ public class Controller {
 			informationDropdown1.getItems().add(s);
 			informationDropdown2.getItems().add(s);
 			informationDropdown3.getItems().add(s);
+			regexInfoDropdown1.getItems().add(s);
+			regexInfoDropdown2.getItems().add(s);
 		}
 
 		ObservableList<String> recipientsSet = dataAccess.selectRecipients();
@@ -145,14 +190,15 @@ public class Controller {
 			recipientDropdown1.getItems().add(s);
 			recipientDropdown2.getItems().add(s);
 			recipientDropdown3.getItems().add(s);
+			regexRecDropdown.getItems().add(s);
 		}
 
 		ObservableList<Metadata> metadataSet = dataAccess.selectMetadata();
 
 		for (Metadata m : metadataSet) {
+			operandDropdown1.getItems().add(m.getName());
 			operandDropdown2.getItems().add(m.getName());
 		}
-
 
 		recipientDropdown2.valueProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -174,16 +220,27 @@ public class Controller {
 			}
 		});
 
-		operandDropdown2.getSelectionModel().select("business hours");
+		operandDropdown1.getSelectionModel().select("business hours");
+		operandDropdown2.getSelectionModel().select("weekend");
 
 		// metadata operators
-		operationDropdown.getItems().add("==");
-		operationDropdown.getItems().add("!=");
+		operationDropdown1.getItems().add("==");
+		operationDropdown1.getItems().add("!=");
+		operationDropdown2.getItems().add("==");
+		operationDropdown2.getItems().add("!=");
 		// custom operators - only useful if user is entering their own values
-		operationDropdown.getItems().add("<");
-		operationDropdown.getItems().add("<=");
-		operationDropdown.getItems().add(">");
-		operationDropdown.getItems().add(">=");
+//		operationDropdown.getItems().add("<");
+//		operationDropdown.getItems().add("<=");
+//		operationDropdown.getItems().add(">");
+//		operationDropdown.getItems().add(">=");
+
+		regexTempDropdown.getItems().add("before");
+		regexTempDropdown.getItems().add("after");
+
+		regexFreqDropdown.getItems().add("year");
+		regexFreqDropdown.getItems().add("month");
+		regexFreqDropdown.getItems().add("day");
+		regexFreqDropdown.getItems().add("hour");
 
 		RuleHandler handler = new RuleHandler();
 		ConditionSet conditions = new ConditionSet();
@@ -201,7 +258,22 @@ public class Controller {
 		saveButton.setOnAction(event -> {
 
 			ConditionSet temp = resetCondition(conditions);
-			handler.createRule(informationDropdown1.getValue(), recipientDropdown1.getValue(), temp.toString(), regexBox.getText());
+			String regex = "";
+			if (regexInfoDropdown1.getValue() != null && regexRecDropdown.getValue() != null) {
+				if (regexTempDropdown.getValue() != null && regexInfoDropdown2.getValue() != null) {
+					regex = ".*";
+					if (regexTempDropdown.getValue().equals("before")) {
+						regex = ".*(" + regexRecDropdown.getValue() + " K " + regexInfoDropdown1.getValue() + ").*(" +
+								regexRecDropdown.getValue() + " K " + regexInfoDropdown2.getValue() + ").*";
+					} else {
+						regex = ".*(" + regexRecDropdown.getValue() + " K " + regexInfoDropdown2.getValue() + ").*(" +
+								regexRecDropdown.getValue() + " K " + regexInfoDropdown1.getValue() + ").*";
+					}
+				} else if (regexFreqText.getText() != null && regexFreqDropdown.getValue() != null) {
+					// TODO: handle this
+				}
+			}
+			handler.createRule(informationDropdown1.getValue(), recipientDropdown1.getValue(), temp.toString(), regex);
 
 			conditionCount.setText("0");
 			incrRuleCount();
@@ -210,9 +282,42 @@ public class Controller {
 //			handler.eval(); // for testing; see console output; recipient must be entered as family, friends, or colleagues
 		});
 
-		addButton.setOnAction(event -> {
+		addButton1.setOnAction(event -> {
 
-			String operation = operationDropdown.getValue();
+			String operation = operationDropdown1.getValue();
+			String str = "";
+
+			if (operation.equals("!=")) {
+				str += "!";
+			}
+
+			switch (operandDropdown1.getValue()) {
+				case "business hours":
+					str += "(time >= 8 and time <= 16)";
+					break;
+				case "weekend":
+					str += "(day >= 7 or day <= 1)";
+					break;
+				case "day":
+					str += "(time >= 8 and time <= 19)";
+					break;
+				case "night":
+					str += "(time >= 20 or time <= 7)";
+					break;
+			}
+
+			Condition condition = new Condition(str);
+			conditions.addToSet(condition);
+
+			incrConditionCount();
+//			clearPropositionBoxes();
+//			operationBox2.setDisable(false);
+//			operandDropdown1.requestFocus(); // select first condition text field
+		});
+
+		addButton2.setOnAction(event -> {
+
+			String operation = operationDropdown2.getValue();
 			String str = "";
 
 			if (operation.equals("!=")) {
@@ -234,13 +339,11 @@ public class Controller {
 					break;
 			}
 
-//			Proposition proposition = new Proposition(operandDropdown1.getValue(), operationDropdown.getValue(), operandDropdown2.getValue());
-//			Condition condition = new Condition(proposition, null, null);
 			Condition condition = new Condition(str);
 			conditions.addToSet(condition);
 
 			incrConditionCount();
-			clearPropositionBoxes();
+//			clearPropositionBoxes();
 //			operationBox2.setDisable(false);
 //			operandDropdown1.requestFocus(); // select first condition text field
 		});
@@ -273,10 +376,12 @@ public class Controller {
 
 			TreeItem<String> rootNode = new TreeItem<>("Rules");
 			rootNode.setExpanded(true);
-			rulePane.setRoot(rootNode);
+			validPane.setRoot(rootNode);
 
 			TreeItem<String> allRulesNode = new TreeItem<>("All matching rules");
 			TreeItem<String> validRulesNode = new TreeItem<>("Only valid rules");
+			rootNode.getChildren().add(allRulesNode);
+			rootNode.getChildren().add(validRulesNode);
 
 			for (Rule r : temp1) {
 				TreeItem<String> leaf = new TreeItem<>(r.toString());
@@ -293,6 +398,62 @@ public class Controller {
 
 			clearCheckBoxes();
 //			nameBox2.requestFocus();
+
+			ISolver solver = SolverFactory.newDefault();
+			solver.setTimeout(3600); // 1 hour timeout
+			Reader reader = new DimacsReader(solver);
+			// CNF filename is given on the command line
+			try {
+
+//				IProblem problem = reader.parseInstance(temp1.get(0).getRegex());
+				IProblem problem = reader.parseInstance("regex");
+				if (problem.isSatisfiable()) {
+					System.out.println("Satisfiable !");
+					System.out.println(reader.decode(problem.model()));
+				} else {
+					System.out.println("Unsatisfiable !");
+				}
+
+//				final int MAXVAR = 1000000;
+//				final int NBCLAUSES = 500000;
+//
+//				// prepare the solver to accept MAXVAR variables. MANDATORY for MAXSAT solving
+//				solver.newVar(MAXVAR);
+//				solver.setExpectedNumberOfClauses(NBCLAUSES);
+//				// Feed the solver using Dimacs format, using arrays of int
+//				// (best option to avoid dependencies on SAT4J IVecInt)
+//				for (int i=0; i < NBCLAUSES; i++) {
+//					int [] clause = // get the clause from somewhere
+//							// the clause should not contain a 0, only integer (positive or negative)
+//							// with absolute values less or equal to MAXVAR
+//							// e.g. int [] clause = {1, -3, 7}; is fine
+//							// while int [] clause = {1, -3, 7, 0}; is not fine
+//							solver.addClause(new VecInt(clause)); // adapt Array to IVecInt
+//				}
+//
+//				// we are done. Working now on the IProblem interface
+//				IProblem problem = solver;
+//				if (problem.isSatisfiable()) {
+////					...
+//				} else {
+//// 					...
+//				}
+
+
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				System.out.println(e.toString());
+			} catch (ParseFormatException e) {
+				// TODO Auto-generated catch block
+				System.out.println(e.toString());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println(e.toString());
+			} catch (ContradictionException e) {
+				System.out.println("Unsatisfiable (trivial)!");
+			} catch (TimeoutException e) {
+				System.out.println("Timeout, sorry!");
+			}
 		});
 
 		showAllButton.setOnAction(event -> {
@@ -321,23 +482,29 @@ public class Controller {
 
 			TreeItem<String> rootNode = new TreeItem<>("All intersections");
 			rootNode.setExpanded(true);
-			rulePane.setRoot(rootNode);
+			intersectionsPane.setRoot(rootNode);
 
-//			ObservableMap<String, String> intersections = dataAccess.selectIntersections();
+			ObservableMap<String, ArrayList<String>> intersections = dataAccess.selectIntersections();
 
-//			for (Entry e : intersections) {
+			for (HashMap.Entry<String, ArrayList<String>> e : intersections.entrySet()) {
 
-//				TreeItem<String> leaf = new TreeItem<>(e);
-//				rootNode.getChildren().add(leaf);
-//				leaf.setExpanded(true);
+				String name = e.getKey();
+				ArrayList<String> array = e.getValue();
 
-//				ObservableList<Rule> rules = dataAccess.selectRulesbyRec(s);
-//
-//				for (Rule r : rules) {
-//					leaf.getChildren().add(new TreeItem<>(r.getInfo() + " -> " + r.toString()));
-//				}
-//			}
+				String item = name + " [ ";
+
+				for (String s : array) {
+					item += s + " , ";
+				}
+
+				item += " ]";
+
+				TreeItem<String> leaf = new TreeItem<>(item);
+				rootNode.getChildren().add(leaf);
+				leaf.setExpanded(true);
+			}
 		});
+
 		// disable save button when all text fields are not filled in and when no conditions are saved
 		// https://stackoverflow.com/questions/23040531/
 //		saveButton.disableProperty().bind(
