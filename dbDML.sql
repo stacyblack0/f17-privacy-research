@@ -85,6 +85,8 @@ INSERT INTO Individuals (IndividualName,RecipientSetID) VALUES ('Catherine Zimme
 -- people: close friends
 INSERT INTO Individuals (IndividualName,RecipientSetID) VALUES ('John Doe',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
+INSERT INTO Individuals (IndividualName,RecipientSetID) VALUES ('Adela Jones',
+    (SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
 -- people: best friends
 INSERT INTO Individuals (IndividualName,RecipientSetID) VALUES ('Joe Brown',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
@@ -237,7 +239,7 @@ INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('location','(ti
 INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('email address','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='acquaintances' AND Type='people'));
 
-INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','(time > 7 and time < 17)','',
+INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('mutual friends','(time > 19 and time < 8)','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='friends' AND Type='people'));
 INSERT INTO Rules (Info,Conditions,Regex,RecipientSetID) VALUES ('phone number','true','',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='friends' AND Type='people'));

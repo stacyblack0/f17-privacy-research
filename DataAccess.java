@@ -1,7 +1,6 @@
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import tree.Intersection;
 import tree.Rule;
 
 import java.sql.*;
@@ -258,7 +257,6 @@ public class DataAccess {
 			resultSet = preparedStatement.executeQuery();
 			ObservableMap<String, ArrayList<String>> data = FXCollections.observableMap(new HashMap<String, ArrayList<String>>());
 			while (resultSet.next()) {
-				System.out.println("hello!");
 				String name = resultSet.getString("IndividualName");
 				String recipientSet = resultSet.getString("RecipientSetName");
 				if (data.get(name) != null) {
@@ -276,4 +274,66 @@ public class DataAccess {
 		}
 		return null;
 	}
+
+	public ObservableMap<String, ArrayList<Rule>> selectIntersectRules(String intersect1, String intersect2) {
+		try {
+			createConnection();
+			preparedStatement = connect.prepareStatement("SELECT * FROM rules " +
+					"WHERE RecipientSetID=(SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?) " +
+					"AND Info IN (SELECT Info FROM rules WHERE " +
+					"RecipientSetID=(SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?)" +
+					"OR RecipientSetID=(SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?) " +
+					"GROUP BY Info HAVING COUNT(Info) > 1);");
+
+			preparedStatement.setString(1, intersect1);
+			preparedStatement.setString(2, intersect1);
+			preparedStatement.setString(3, intersect2);
+			resultSet = preparedStatement.executeQuery();
+
+			ObservableMap<String, ArrayList<Rule>> data = FXCollections.observableMap(new HashMap<String, ArrayList<Rule>>());
+
+			data = intersectHelper(data, resultSet, intersect1);
+
+			preparedStatement.setString(1, intersect2);
+			preparedStatement.setString(2, intersect1);
+			preparedStatement.setString(3, intersect2);
+			resultSet = preparedStatement.executeQuery();
+
+			data = intersectHelper(data, resultSet, intersect2);
+
+			connect.close();
+			return data;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return null;
+	}
+
+	public ObservableMap<String, ArrayList<Rule>> intersectHelper(ObservableMap<String, ArrayList<Rule>> data, ResultSet resultSet, String recipientSetName) {
+		try {
+			while (resultSet.next()) {
+
+				ArrayList<Rule> rules;
+				String information = resultSet.getString("Info");
+				String conditions = resultSet.getString("Conditions");
+				String regex = resultSet.getString("Regex");
+
+				if (data.get(information) != null) {
+					rules = data.get(information);
+				} else {
+					rules = new ArrayList<>();
+					data.put(information, rules);
+				}
+
+				rules.add(new Rule(information, recipientSetName, conditions, regex));
+			}
+
+			return data;
+
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return null;
+	}
+
 }
