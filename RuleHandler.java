@@ -88,14 +88,12 @@ public class RuleHandler {
 	 * as a set.
 	 *
 	 * @param rules the given set of rules
-	 * @param metadataSet metadata used to compare system time to a rule's
-	 * specified time
+	 * @param env current state of the system
 	 * @return the set of valid rules
 	 */
-	public ObservableList<Rule> findValidRules(ObservableList<Rule> rules, ObservableList<Metadata> metadataSet) {
+	public ObservableList<Rule> findValidRules(ObservableList<Rule> rules, Environment env) {
 
 		ObservableList<Rule> result = FXCollections.observableArrayList();
-		Environment env = new Environment(); //current state of system
 
 		for (Rule r : rules) {
 

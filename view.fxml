@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
 	<top>
 		<MenuBar BorderPane.alignment="CENTER">
@@ -41,32 +39,60 @@
 								<ChoiceBox fx:id="informationDropdown1" layoutX="126.0" layoutY="85.0" prefHeight="25.0" prefWidth="114.0" />
 								<ChoiceBox fx:id="recipientDropdown1" layoutX="292.0" layoutY="85.0" prefHeight="25.0" prefWidth="114.0" />
 								<Text layoutX="88.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0" text="when" />
-								<Button fx:id="addButton1" layoutX="363.0" layoutY="168.0" mnemonicParsing="false" text="Add" />
+								<Button fx:id="addButton1" layoutX="436.0" layoutY="167.0" mnemonicParsing="false"
+										text="Add"/>
 								<Text fill="#a4a4a4" layoutX="88.0" layoutY="144.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Conditions -----------------" />
-								<Text layoutX="431.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Conditions saved:" wrappingWidth="103.41796875" />
-								<Text fx:id="conditionCount" layoutX="534.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-								<ChoiceBox fx:id="operandDropdown1" layoutX="229.0" layoutY="168.0" prefHeight="25.0" prefWidth="114.0" />
-								<ChoiceBox fx:id="operationDropdown1" layoutX="169.0" layoutY="168.0" prefHeight="25.0" prefWidth="41.0" />
+								<Text layoutX="490.0" layoutY="218.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="Conditions saved:" wrappingWidth="103.41796875"/>
+								<Text fx:id="conditionCount" layoutX="604.0" layoutY="218.0" strokeType="OUTSIDE"
+									  strokeWidth="0.0" text="0"/>
+								<ChoiceBox fx:id="operandDropdown1" layoutX="302.0" layoutY="167.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
+								<ChoiceBox fx:id="operatorDropdown1" layoutX="169.0" layoutY="168.0" prefHeight="25.0"
+										   prefWidth="41.0"/>
 								<Button id="saveButton" fx:id="saveButton" layoutX="89.0" layoutY="403.0" mnemonicParsing="false" text="Save rule" />
 								<Text fill="#a4a4a4" layoutX="89.0" layoutY="257.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Regex -----------------------" />
 								<Text layoutX="168.0" layoutY="420.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rules saved:" wrappingWidth="64.41796875" />
 								<Text fx:id="ruleCount" layoutX="245.0" layoutY="420.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="15.46875" />
-                        <ChoiceBox fx:id="regexRecDropdown" layoutX="297.0" layoutY="272.0" prefHeight="25.0" prefWidth="114.0" />
-                        <ChoiceBox fx:id="regexInfoDropdown1" layoutX="131.0" layoutY="272.0" prefHeight="25.0" prefWidth="114.0" />
-                        <Text layoutX="92.0" layoutY="289.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Share" />
-                        <Text layoutX="260.0" layoutY="289.0" strokeType="OUTSIDE" strokeWidth="0.0" text="with" />
-                        <ChoiceBox fx:id="regexTempDropdown" layoutX="182.0" layoutY="311.0" prefHeight="25.0" prefWidth="114.0" />
-                        <Text layoutX="303.0" layoutY="328.0" strokeType="OUTSIDE" strokeWidth="0.0" text="sharing" />
-                        <ChoiceBox fx:id="regexInfoDropdown2" layoutX="348.0" layoutY="311.0" prefHeight="25.0" prefWidth="114.0" />
-                        <TextField fx:id="regexFreqText" layoutX="224.0" layoutY="350.0" prefHeight="25.0" prefWidth="61.0" />
-                        <Text layoutX="294.0" layoutY="367.0" strokeType="OUTSIDE" strokeWidth="0.0" text="times per" />
-                        <ChoiceBox fx:id="regexFreqDropdown" layoutX="351.0" layoutY="350.0" prefHeight="25.0" prefWidth="114.0" />
-                        <ChoiceBox fx:id="operationDropdown2" layoutX="169.0" layoutY="202.0" prefHeight="25.0" prefWidth="41.0" />
-                        <ChoiceBox fx:id="operandDropdown2" layoutX="229.0" layoutY="202.0" prefHeight="25.0" prefWidth="114.0" />
-                        <Button fx:id="addButton2" layoutX="363.0" layoutY="202.0" mnemonicParsing="false" text="Add" />
+								<ChoiceBox fx:id="regexTempDropdown" layoutX="154.0" layoutY="296.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
+								<Text layoutX="94.0" layoutY="313.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="Share info"/>
+								<TextField fx:id="regexFreqText" layoutX="94.0" layoutY="356.0" prefHeight="25.0"
+										   prefWidth="61.0"/>
+								<Text layoutX="164.0" layoutY="373.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="times per"/>
+								<ChoiceBox fx:id="regexFreqDropdown" layoutX="221.0" layoutY="356.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
+								<ChoiceBox fx:id="operatorDropdown2" layoutX="169.0" layoutY="202.0" prefHeight="25.0"
+										   prefWidth="41.0"/>
+								<ChoiceBox fx:id="operandDropdown2" layoutX="302.0" layoutY="201.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
+								<Button fx:id="addButton2" layoutX="436.0" layoutY="201.0" mnemonicParsing="false"
+										text="Add"/>
                         <Text layoutX="88.0" layoutY="217.0" strokeType="OUTSIDE" strokeWidth="0.0" text="when" />
                         <Text layoutX="126.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0" text="time" />
                         <Text layoutX="125.0" layoutY="217.0" strokeType="OUTSIDE" strokeWidth="0.0" text="day" />
+								<Text layoutX="87.0" layoutY="284.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="• Prior knowledge"/>
+								<Text layoutX="87.0" layoutY="346.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="• Counting"/>
+								<Button fx:id="regexAddButton1" layoutX="570.0" layoutY="296.0" mnemonicParsing="false"
+										text="Add"/>
+								<Button fx:id="regexAddButton2" layoutX="467.0" layoutY="356.0" mnemonicParsing="false"
+										text="Add"/>
+								<ChoiceBox fx:id="regexScopeDropdown1" layoutX="447.0" layoutY="296.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
+								<ChoiceBox fx:id="regexScopeDropdown2" layoutX="344.0" layoutY="356.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
+								<TextField fx:id="conditionText1" layoutX="227.0" layoutY="168.0" prefHeight="25.0"
+										   prefWidth="59.0"/>
+								<TextField fx:id="conditionText2" layoutX="227.0" layoutY="202.0" prefHeight="25.0"
+										   prefWidth="59.0"/>
+								<Text layoutX="278.0" layoutY="313.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="sharing"/>
+								<ChoiceBox fx:id="regexInfoDropdown" layoutX="323.0" layoutY="296.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
 							</children>
 						</AnchorPane>
 					</content>
@@ -75,17 +101,41 @@
 					<content>
 						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
 							<children>
-								<Text fx:id="foundCount2" layoutX="497.0" layoutY="135.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-								<Text layoutX="415.0" layoutY="135.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rules found:" />
-								<Button fx:id="checkButton" layoutX="348.0" layoutY="122.0" mnemonicParsing="false" text="Check" />
+								<Text fx:id="foundCount2" layoutX="585.0" layoutY="194.0" strokeType="OUTSIDE"
+									  strokeWidth="0.0" text="0"/>
+								<Text layoutX="503.0" layoutY="194.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="Rules found:"/>
+								<Button fx:id="checkButton" layoutX="323.0" layoutY="181.0" mnemonicParsing="false"
+										text="Check"/>
 								<Text layoutX="75.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Check rule validity:" />
-								<Text fill="#a4a4a4" layoutX="75.0" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-------------------------------------------------" />
-								<Text layoutX="416.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rules valid:" />
-								<Text fx:id="validCount" layoutX="497.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-								<ChoiceBox fx:id="nameDropdown2" layoutX="75.0" layoutY="122.0" prefHeight="25.0" prefWidth="114.0" />
-								<ChoiceBox fx:id="informationDropdown3" layoutX="209.0" layoutY="122.0" prefHeight="25.0" prefWidth="114.0" />
-								<ChoiceBox fx:id="recipientDropdown3" layoutX="75.0" layoutY="89.0" prefHeight="25.0" prefWidth="114.0" />
-								<TreeView fx:id="validPane" layoutX="28.0" layoutY="193.0" prefHeight="346.0" prefWidth="625.0" showRoot="false" />
+								<Text fill="#a4a4a4" layoutX="75.0" layoutY="138.0" strokeType="OUTSIDE"
+									  strokeWidth="0.0" text="-------------------------------------------------"/>
+								<Text layoutX="504.0" layoutY="214.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="Rules valid:"/>
+								<Text fx:id="validCount" layoutX="585.0" layoutY="214.0" strokeType="OUTSIDE"
+									  strokeWidth="0.0" text="0"/>
+								<ChoiceBox fx:id="nameDropdown2" layoutX="75.0" layoutY="181.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
+								<ChoiceBox fx:id="informationDropdown3" layoutX="197.0" layoutY="181.0"
+										   prefHeight="25.0" prefWidth="114.0"/>
+								<ChoiceBox fx:id="recipientDropdown3" layoutX="75.0" layoutY="148.0" prefHeight="25.0"
+										   prefWidth="114.0"/>
+								<TreeView fx:id="validPane" layoutX="28.0" layoutY="226.0" prefHeight="313.0"
+										  prefWidth="625.0" showRoot="false"/>
+								<Text fill="#a4a4a4" layoutX="75.0" layoutY="83.0" strokeType="OUTSIDE"
+									  strokeWidth="0.0" text="Custom Time ----------------------------------"/>
+								<Button fx:id="checkCustomButton" layoutX="383.0" layoutY="181.0"
+										mnemonicParsing="false" text="Check Custom"/>
+								<TextField fx:id="yearTextField" layoutX="75.0" layoutY="95.0" prefHeight="25.0"
+										   prefWidth="71.0" promptText="Year"/>
+								<TextField fx:id="monthTextField" layoutX="158.0" layoutY="95.0" prefHeight="25.0"
+										   prefWidth="71.0" promptText="Month"/>
+								<TextField fx:id="dayTextField" layoutX="240.0" layoutY="95.0" prefHeight="25.0"
+										   prefWidth="71.0" promptText="Day"/>
+								<TextField fx:id="hourTextField" layoutX="323.0" layoutY="95.0" prefHeight="25.0"
+										   prefWidth="71.0" promptText="Hour"/>
+								<TextField fx:id="minuteTextField" layoutX="405.0" layoutY="95.0" prefHeight="25.0"
+										   prefWidth="71.0" promptText="Minute"/>
 							</children>
 						</AnchorPane>
 					</content>
