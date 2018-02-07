@@ -26,6 +26,7 @@ CREATE TABLE Rules (
 	Conditions VARCHAR(256) NOT NULL,
 	Regex VARCHAR(256) NOT NULL,
 	RegexFrequency INT,
+	Scope VARCHAR(1) NOT NULL,
 	FOREIGN KEY (RecipientSetID)
 		REFERENCES RecipientSets (RecipientSetID)
 );

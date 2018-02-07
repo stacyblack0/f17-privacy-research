@@ -25,15 +25,40 @@ public class DataAccess {
 				+ "user=root&password=password");
 	}
 
+	public boolean hasRule(String recipientSet, String information) {
+		try {
+			createConnection();
+			preparedStatement = connect.prepareStatement("SELECT * FROM Rules WHERE " +
+					"RecipientSetID=(SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?)" +
+					" AND Info=?;");
+			preparedStatement.setString(1, recipientSet);
+			preparedStatement.setString(2, information);
+			resultSet = preparedStatement.executeQuery();
+//			String count = resultSet.getString("COUNT(*)");
+			int count = 0;
+			while (resultSet.next()) {
+				count++;
+			}
+			connect.commit();
+			connect.close();
+			return count > 0;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+
+		return false;
+	}
+
 	public void insertRule(Rule rule) {
 		try {
 			createConnection();
-			preparedStatement = connect.prepareStatement("INSERT INTO Rules (RecipientSetID,Info,Conditions,Regex) " +
-					"VALUES ((SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?),?,?,?);");
+			preparedStatement = connect.prepareStatement("INSERT INTO Rules (RecipientSetID,Info,Conditions,Regex,Scope) " +
+					"VALUES ((SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?),?,?,?,?);");
 			preparedStatement.setString(1, rule.getRecipientSet());
 			preparedStatement.setString(2, rule.getInfo());
 			preparedStatement.setString(3, rule.getConditions());
 			preparedStatement.setString(4, rule.getRegex());
+			preparedStatement.setString(5, rule.getScope());
 			preparedStatement.executeUpdate();
 			connect.commit();
 			connect.close();
@@ -85,7 +110,8 @@ public class DataAccess {
 				String setName = resultSet.getString("RecipientSetName");
 				String conditions = resultSet.getString("Conditions");
 				String regex = resultSet.getString("Regex");
-				data.add(new Rule(information, setName, conditions, regex));
+				String scope = resultSet.getString("Scope");
+				data.add(new Rule(information, setName, conditions, regex, scope));
 			}
 			connect.close();
 			return data;
@@ -107,7 +133,8 @@ public class DataAccess {
 			while (resultSet.next()) { // should loop 1 or fewer times
 				String conditions = resultSet.getString("Conditions");
 				String regex = resultSet.getString("Regex");
-				rule = new Rule(information, recipientSet, conditions, regex);
+				String scope = resultSet.getString("Scope");
+				rule = new Rule(information, recipientSet, conditions, regex, scope);
 			}
 			connect.close();
 			return rule;
@@ -131,7 +158,8 @@ public class DataAccess {
 				String setName = resultSet.getString("RecipientSetName");
 				String conditions = resultSet.getString("Conditions");
 				String regex = resultSet.getString("Regex");
-				data.add(new Rule(information, setName, conditions, regex));
+				String scope = resultSet.getString("Scope");
+				data.add(new Rule(information, setName, conditions, regex, scope));
 			}
 			connect.close();
 			return data;
@@ -317,6 +345,7 @@ public class DataAccess {
 				String information = resultSet.getString("Info");
 				String conditions = resultSet.getString("Conditions");
 				String regex = resultSet.getString("Regex");
+				String scope = resultSet.getString("Scope");
 
 				if (data.get(information) != null) {
 					rules = data.get(information);
@@ -325,7 +354,7 @@ public class DataAccess {
 					data.put(information, rules);
 				}
 
-				rules.add(new Rule(information, recipientSetName, conditions, regex));
+				rules.add(new Rule(information, recipientSetName, conditions, regex, scope));
 			}
 
 			return data;

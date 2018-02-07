@@ -316,9 +316,9 @@ public class Controller {
 		ConditionSet conditions = new ConditionSet();
 		// later have these things kept track of by RuleHandler ?
 		ArrayList<String> regexArray = new ArrayList<>(); // have to use ArrayList instead of string to get around final restriction
-		ArrayList<String> scope = new ArrayList<>(); // have to use ArrayList instead of string to get around final restriction
+		ArrayList<String> scopeArray = new ArrayList<>(); // have to use ArrayList instead of string to get around final restriction
 		regexArray.add(0, "");
-		scope.add(0, "");
+		scopeArray.add(0, "");
 
 		// makes it so the information text field is not selected on launch
 		// https://stackoverflow.com/questions/29051225/
@@ -334,21 +334,24 @@ public class Controller {
 
 			ConditionSet temp = resetCondition(conditions);
 			String regexString = regexArray.get(0);
-			String scopeString;
+			String scope;
 
-			if (scope.get(0) != null) {
-				scopeString = scope.get(0);
-				scope.set(0, null);
+			if (!scopeArray.get(0).equals("")) {
+				scope = scopeArray.get(0);
+				scopeArray.set(0, "");
 			} else {
-				scopeString = "g";
+				scope = "g";
 			}
 
 			regexArray.set(0, "");
 
-			handler.createRule(informationDropdown1.getValue(), recipientDropdown1.getValue(), temp.toString(), regexString);
+			Rule rule = handler.createRule(informationDropdown1.getValue(), recipientDropdown1.getValue(), temp.toString(), regexString, scope);
+
+			if (rule != null) {
+				incrRuleCount();
+			}
 
 			conditionCount.setText("0");
-			incrRuleCount();
 			clearTextBoxes();
 //			informationBox.requestFocus(); // select information text field
 //			handler.eval(); // for testing; see console output; recipient must be entered as family, friends, or colleagues
@@ -449,7 +452,7 @@ public class Controller {
 				}
 
 				disableRegexBoxes();
-				scope.set(0, regexScopeDropdown1.getValue());
+				scopeArray.set(0, regexScopeDropdown1.getValue());
 			}
 
 		});
@@ -463,7 +466,7 @@ public class Controller {
 				regexArray.set(0, "frequency=" + frequency);
 
 				disableRegexBoxes();
-				scope.set(0, regexScopeDropdown1.getValue());
+				scopeArray.set(0, regexScopeDropdown1.getValue());
 			}
 		});
 

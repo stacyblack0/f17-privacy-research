@@ -13,6 +13,7 @@ public class Rule {
 	private String recipientSet;
 	private String conditions;
 	private String regex;
+	private String scope;
 
 	/**
 	 * The constructor. Makes a new rule.
@@ -21,12 +22,14 @@ public class Rule {
 	 * @param recipientSet the recipient set
 	 * @param conditions the conditions to share the information
 	 * @param regex a string depicting a regular expression
+	 * @param scope whether to apply history to an individual or the group
 	 */
-	public Rule(String information, String recipientSet, String conditions, String regex) {
+	public Rule(String information, String recipientSet, String conditions, String regex, String scope) {
 		this.information = information;
 		this.recipientSet = recipientSet;
 		this.conditions = conditions;
 		this.regex = regex;
+		this.regex = scope;
 	}
 
 	public String getInfo() {
@@ -45,7 +48,12 @@ public class Rule {
 		return regex;
 	}
 
+	public String getScope() {
+		return scope;
+	}
+
 	public String toString() {
-		return recipientSet + " E " + information + " U ( " + conditions + " ) {regex: " + regex + " }\n";
+		return recipientSet + " E " + information + " and ( " + conditions + " ) " +
+				"and {regex: " + regex + " } and [scope: " + scope + " ]\n";
 	}
 }

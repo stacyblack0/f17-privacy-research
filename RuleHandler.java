@@ -29,15 +29,21 @@ public class RuleHandler {
 	}
 
 	/**
-	 * Creates a new rule with given information, recipient, and
-	 * conditions, and inserts it into the database.
+	 * Creates a new rule with given information, recipient, conditions,
+	 * and scope, and inserts it into the database.
 	 *
 	 * @param information the given information
 	 * @param recipient the given recipient
 	 * @param conditions the given conditions
+	 * @param scope the given scope
 	 */
-	public Rule createRule(String information, String recipient, String conditions, String regex) {
-		Rule rule = new Rule(information, recipient, conditions, regex);
+	public Rule createRule(String information, String recipient, String conditions, String regex, String scope) {
+
+		if (dataAccess.hasRule(recipient, information)) {
+			return null;
+		}
+
+		Rule rule = new Rule(information, recipient, conditions, regex, scope);
 		dataAccess.insertRule(rule);
 		return rule;
 	}
