@@ -29,7 +29,7 @@ public class Rule {
 		this.recipientSet = recipientSet;
 		this.conditions = conditions;
 		this.regex = regex;
-		this.regex = scope;
+		this.scope = scope;
 	}
 
 	public String getInfo() {
@@ -54,6 +54,6 @@ public class Rule {
 
 	public String toString() {
 		return recipientSet + " E " + information + " and ( " + conditions + " ) " +
-				"and {regex: " + regex + " } and [scope: " + scope + " ]\n";
+				"and { regex: " + regex + " } and [ scope: " + scope + " ]\n";
 	}
 }

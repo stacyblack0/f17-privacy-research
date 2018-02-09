@@ -49,7 +49,8 @@ public class DataAccess {
 		return false;
 	}
 
-	public void insertRule(Rule rule) {
+	public Rule insertRule(Rule rule) {
+
 		try {
 			createConnection();
 			preparedStatement = connect.prepareStatement("INSERT INTO Rules (RecipientSetID,Info,Conditions,Regex,Scope) " +
@@ -62,9 +63,15 @@ public class DataAccess {
 			preparedStatement.executeUpdate();
 			connect.commit();
 			connect.close();
+			return rule;
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(rule.toString());
+			return null;
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
+
+		return null;
 	}
 
 	public void insertHistory(HistoryNode node) {

@@ -23,29 +23,31 @@ public class RuleHandler {
 	 */
 	public RuleHandler() {
 //		HistoryTester();
-		// initialize sets?
 		dataAccess = new DataAccess();
 		parser = new SpelExpressionParser();
 	}
 
 	/**
-	 * Creates a new rule with given information, recipient, conditions,
-	 * and scope, and inserts it into the database.
+	 * Creates a new rule with given information, recipient, conditions, regex,
+	 * and scope, and inserts it into the database. If insertion was successful,
+	 * returns the rule. If unsuccessful, returns null.
 	 *
 	 * @param information the given information
 	 * @param recipient the given recipient
 	 * @param conditions the given conditions
+	 * @param regex the given regex
 	 * @param scope the given scope
+	 * @return the given rule if added successfully; null if not
 	 */
-	public Rule createRule(String information, String recipient, String conditions, String regex, String scope) {
+	public Rule addRule(String information, String recipient, String conditions, String regex, String scope) {
 
 		if (dataAccess.hasRule(recipient, information)) {
 			return null;
 		}
 
 		Rule rule = new Rule(information, recipient, conditions, regex, scope);
-		dataAccess.insertRule(rule);
-		return rule;
+
+		return dataAccess.insertRule(rule);
 	}
 
 	/**

@@ -3,14 +3,6 @@ import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
-import org.sat4j.core.VecInt;
-import org.sat4j.minisat.SolverFactory;
-import org.sat4j.reader.DimacsReader;
-import org.sat4j.reader.Reader;
-import org.sat4j.specs.ContradictionException;
-import org.sat4j.specs.IProblem;
-import org.sat4j.specs.ISolver;
-import org.sat4j.specs.TimeoutException;
 import tree.Condition;
 import tree.ConditionSet;
 import tree.Rule;
@@ -198,75 +190,28 @@ public class Controller {
 		assert regexFreqText != null : "fx:id=\"regexFreqText\" was not injected: check your FXML file 'view.fxml'.";
 		assert addButton2 != null : "fx:id=\"addButton2\" was not injected: check your FXML file 'view.fxml'.";
 
-		// populate dropdown menus
-
+		RuleHandler handler = new RuleHandler();
+		ConditionSet conditions = new ConditionSet();
 		DataAccess dataAccess = new DataAccess();
+		// later have these things kept track of by RuleHandler ?
+		ArrayList<String> regexArray = new ArrayList<>(); // have to use ArrayList instead of string to get around final restriction
+		ArrayList<String> scopeArray = new ArrayList<>(); // have to use ArrayList instead of string to get around final restriction
+		regexArray.add(0, "");
+		scopeArray.add(0, "g"); // by default, set scope to group
 
-		// populate dropdowns with information types
-		ObservableList<String> informationSet = dataAccess.selectInformation();
+		// populate dropdown menus
+		populateFromDatabase(dataAccess);
+		populateManualValues();
 
-		for (String s : informationSet) {
-			informationDropdown1.getItems().add(s);
-			informationDropdown2.getItems().add(s);
-			informationDropdown3.getItems().add(s);
-			regexInfoDropdown.getItems().add(s);
-		}
-
-		// populate dropdowns with recipient sets
-		ObservableList<String> recipientsSet = dataAccess.selectRecipients();
-
-		for (String s : recipientsSet) {
-			recipientDropdown1.getItems().add(s);
-			recipientDropdown2.getItems().add(s);
-			recipientDropdown3.getItems().add(s);
-		}
-
-		// populate dropdowns with metadata
-		ObservableList<Metadata> metadataSet = dataAccess.selectMetadata();
-
-//		for (Metadata m : metadataSet) {
-//			operandDropdown1.getItems().add(m.getName());
-//			operandDropdown2.getItems().add(m.getName());
-//		}
-
-		operandDropdown1.getItems().add("business hours");
-		operandDropdown1.getItems().add("day");
-		operandDropdown1.getItems().add("night");
-		operandDropdown2.getItems().add("weekend");
-
-//		operandDropdown1.getSelectionModel().select("business hours");
-//		operandDropdown2.getSelectionModel().select("weekend");
-
-		// metadata operators
-		operatorDropdown1.getItems().add("==");
-		operatorDropdown2.getItems().add("==");
-		operatorDropdown1.getItems().add("!=");
-		operatorDropdown2.getItems().add("!=");
-		// custom operators - only useful if user is entering their own values
-		operatorDropdown1.getItems().add("<");
-		operatorDropdown2.getItems().add("<");
-		operatorDropdown1.getItems().add("<=");
-		operatorDropdown2.getItems().add("<=");
-		operatorDropdown1.getItems().add(">");
-		operatorDropdown2.getItems().add(">");
-		operatorDropdown1.getItems().add(">=");
-		operatorDropdown2.getItems().add(">=");
-
-		// regex templates
-		regexTempDropdown.getItems().add("before");
-		regexTempDropdown.getItems().add("after");
-
-		// regex frequencies
-		regexFreqDropdown.getItems().add("year");
-		regexFreqDropdown.getItems().add("month");
-		regexFreqDropdown.getItems().add("day");
-		regexFreqDropdown.getItems().add("hour");
-
-		// regex scope
-		regexScopeDropdown1.getItems().add("g");
-		regexScopeDropdown2.getItems().add("g");
-		regexScopeDropdown1.getItems().add("i");
-		regexScopeDropdown2.getItems().add("i");
+		// makes it so the information text field is not selected on launch
+		// https://stackoverflow.com/questions/29051225/
+//		final BooleanProperty firstTime = new SimpleBooleanProperty(true);
+//		informationBox.focusedProperty().addListener((observable, oldValue, newValue) -> {
+//			if (newValue && firstTime.get()) {
+//				ruleCount.requestFocus(); // move focus to ruleCount text
+//				firstTime.setValue(false);
+//			}
+//		});
 
 		// when a recipient set is selected, populate another dropdown with its individuals
 		recipientDropdown2.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -292,13 +237,18 @@ public class Controller {
 
 		// disable condition options depending on the operator
 		operatorDropdown1.valueProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue.equals("!=") || newValue.equals("==")) {
-				conditionText1.setDisable(true);
-				operandDropdown1.setDisable(false);
-			} else {
-				conditionText1.setDisable(false);
-				operandDropdown1.setDisable(true);
+			try {
+				if (newValue.equals("!=") || newValue.equals("==")) {
+					conditionText1.setDisable(true);
+					operandDropdown1.setDisable(false);
+				} else {
+					conditionText1.setDisable(false);
+					operandDropdown1.setDisable(true);
+				}
+			} catch (NullPointerException e) {
+				// figure this out
 			}
+
 		});
 
 		// disable condition options depending on the operator
@@ -312,51 +262,29 @@ public class Controller {
 			}
 		});
 
-		RuleHandler handler = new RuleHandler();
-		ConditionSet conditions = new ConditionSet();
-		// later have these things kept track of by RuleHandler ?
-		ArrayList<String> regexArray = new ArrayList<>(); // have to use ArrayList instead of string to get around final restriction
-		ArrayList<String> scopeArray = new ArrayList<>(); // have to use ArrayList instead of string to get around final restriction
-		regexArray.add(0, "");
-		scopeArray.add(0, "");
-
-		// makes it so the information text field is not selected on launch
-		// https://stackoverflow.com/questions/29051225/
-//		final BooleanProperty firstTime = new SimpleBooleanProperty(true);
-//		informationBox.focusedProperty().addListener((observable, oldValue, newValue) -> {
-//			if (newValue && firstTime.get()) {
-//				ruleCount.requestFocus(); // move focus to ruleCount text
-//				firstTime.setValue(false);
-//			}
-//		});
-
+		// saves all data gathered so far into a new rule
 		saveButton.setOnAction(event -> {
 
 			ConditionSet temp = resetCondition(conditions);
 			String regexString = regexArray.get(0);
-			String scope;
-
-			if (!scopeArray.get(0).equals("")) {
-				scope = scopeArray.get(0);
-				scopeArray.set(0, "");
-			} else {
-				scope = "g";
-			}
+			String scope = scopeArray.get(0);
 
 			regexArray.set(0, "");
+			scopeArray.set(0, "g");
 
-			Rule rule = handler.createRule(informationDropdown1.getValue(), recipientDropdown1.getValue(), temp.toString(), regexString, scope);
+			Rule rule = handler.addRule(informationDropdown1.getValue(), recipientDropdown1.getValue(), temp.toString(), regexString, scope);
 
 			if (rule != null) {
 				incrRuleCount();
 			}
 
+			enableConditionBoxes();
+			enableRegexBoxes();
+			clearSaveTabBoxes();
 			conditionCount.setText("0");
-			clearTextBoxes();
-//			informationBox.requestFocus(); // select information text field
-//			handler.eval(); // for testing; see console output; recipient must be entered as family, friends, or colleagues
 		});
 
+		// adds a time condition that will eventually be added to a rule
 		addButton1.setOnAction(event -> {
 
 			if (operatorDropdown1.getValue() != null
@@ -395,11 +323,9 @@ public class Controller {
 				operandDropdown1.setDisable(true);
 				addButton1.setDisable(true);
 			}
-//			clearPropositionBoxes();
-//			operationBox2.setDisable(false);
-//			operandDropdown1.requestFocus(); // select first condition text field
 		});
 
+		// adds a day condition that will eventually be added to a rule
 		addButton2.setOnAction(event -> {
 
 			if (operatorDropdown2.getValue() != null
@@ -432,18 +358,16 @@ public class Controller {
 				operandDropdown2.setDisable(true);
 				addButton2.setDisable(true);
 			}
-//			clearPropositionBoxes();
-//			operationBox2.setDisable(false);
-//			operandDropdown1.requestFocus(); // select first condition text field
 		});
 
+		// adds a prior knowledge regex that will eventually be added to a rule
 		regexAddButton1.setOnAction(event -> {
 
 			if (regexTempDropdown.getValue() != null && regexInfoDropdown.getValue() != null
 					&& regexScopeDropdown1.getValue() != null) {
 
-				String otherEvent = "(" + recipientDropdown1.getValue() + " K " + regexInfoDropdown.getValue() + ")";
 				String thisEvent = "(" + recipientDropdown1.getValue() + " K " + informationDropdown1.getValue() + ")";
+				String otherEvent = "(" + recipientDropdown1.getValue() + " K " + regexInfoDropdown.getValue() + ")";
 
 				if (regexTempDropdown.getValue().equals("before")) {
 					regexArray.set(0, ".*" + thisEvent + ".*" + otherEvent + ".*");
@@ -454,9 +378,9 @@ public class Controller {
 				disableRegexBoxes();
 				scopeArray.set(0, regexScopeDropdown1.getValue());
 			}
-
 		});
 
+		// adds a repetition regex that will eventually be added to a rule
 		regexAddButton2.setOnAction(event -> {
 			if (regexFreqText.getText() != null && regexFreqDropdown.getValue() != null
 					&& regexScopeDropdown2.getValue() != null) {
@@ -466,10 +390,11 @@ public class Controller {
 				regexArray.set(0, "frequency=" + frequency);
 
 				disableRegexBoxes();
-				scopeArray.set(0, regexScopeDropdown1.getValue());
+				scopeArray.set(0, regexScopeDropdown2.getValue());
 			}
 		});
 
+		// finds rules matching a given individual and info and displays them
 		findButton.setOnAction(event -> {
 
 			String name = nameDropdown1.getValue();
@@ -487,18 +412,20 @@ public class Controller {
 				rootNode.getChildren().add(leaf);
 			}
 
-			clearFindBoxes();
-//			nameBox1.requestFocus(); // select first condition text field
+			clearFindTabBoxes();
 		});
 
+		// checks if rules matching a given individual and info are valid, and displays them
 		checkButton.setOnAction(event -> {
 
 			ObservableList<Rule> rules1 = handler.findAllRules(nameDropdown2.getValue(), informationDropdown3.getValue());
 			ObservableList<Rule> rules2 = handler.findValidRules(rules1, new Environment());
 
 			populateValidPane(rules1, rules2);
+			clearCheckTabBoxes();
 		});
 
+		// checks if rules matching a given individual and info are valid given a custom time, and displays them
 		checkCustomButton.setOnAction(event -> {
 
 			Environment env;
@@ -523,8 +450,10 @@ public class Controller {
 			ObservableList<Rule> rules2 = handler.findValidRules(rules1, env);
 
 			populateValidPane(rules1, rules2);
+			clearCheckTabBoxes();
 		});
 
+		// show all rules stored in the database
 		showAllButton.setOnAction(event -> {
 
 			TreeItem<String> rootNode = new TreeItem<>("All rules");
@@ -547,6 +476,7 @@ public class Controller {
 			}
 		});
 
+		// show all individuals that are in multiple recipient sets
 		intersectionsButton.setOnAction(event -> {
 
 			TreeItem<String> rootNode = new TreeItem<>("All intersections");
@@ -554,8 +484,6 @@ public class Controller {
 			intersectionsPane.setRoot(rootNode);
 
 			ObservableMap<String, ArrayList<String>> intersections = dataAccess.selectIntersections();
-
-			int conflictNum = 0;
 
 			for (HashMap.Entry<String, ArrayList<String>> e : intersections.entrySet()) {
 
@@ -573,94 +501,7 @@ public class Controller {
 				TreeItem<String> leaf = new TreeItem<>(item);
 				rootNode.getChildren().add(leaf);
 				leaf.setExpanded(true);
-
-				/////////////
-				// SAT solver
-				ObservableMap<String, ArrayList<Rule>> infoRulePairs = dataAccess.selectIntersectRules(array.get(0), array.get(1));
-
-				ISolver solver = SolverFactory.newDefault();
-				solver.setTimeout(3600); // 1 hour timeout
-				Reader reader = new DimacsReader(solver);
-				// CNF filename is given on the command line
-
-				final int MAXVAR = 200000;
-				final int NBCLAUSES = 100000;
-
-				// prepare the solver to accept MAXVAR variables. MANDATORY for MAXSAT solving
-				solver.newVar(MAXVAR);
-				solver.setExpectedNumberOfClauses(NBCLAUSES);
-
-				try {
-
-					int i = 1;
-					for (HashMap.Entry<String, ArrayList<Rule>> info : infoRulePairs.entrySet()) {
-
-						ArrayList<Rule> ruleList = info.getValue();
-						System.out.println(info.getKey());
-						for (Rule r : ruleList) {
-							System.out.print(r.toString());
-						}
-
-						String conditions1 = ruleList.get(0).getConditions();
-						String conditions2 = ruleList.get(1).getConditions();
-
-						if ((!conditions1.equals("") && !conditions2.equals("")) &&
-								conditions1.equals(conditions2)) {
-							solver.addClause(new VecInt(new int[]{i}));
-							solver.addClause(new VecInt(new int[]{i}));
-//							System.out.println("equivalent" + i);
-						} else if ((!conditions1.equals("") && !conditions2.equals("")) &&
-								!conditions1.equals(conditions2)) {
-							solver.addClause(new VecInt(new int[]{i}));
-							solver.addClause(new VecInt(new int[]{-i}));
-//							System.out.println("not equivalent" + i);
-						} else if (!conditions1.equals("") || !conditions2.equals("")) {
-							solver.addClause(new VecInt(new int[]{i}));
-//							System.out.println("only one" + i);
-						}
-
-						i++;
-
-						String regex1 = ruleList.get(0).getRegex();
-						String regex2 = ruleList.get(1).getRegex();
-
-						if ((!regex1.equals("") && !regex2.equals("")) &&
-								regex1.equals(regex2)) {
-							solver.addClause(new VecInt(new int[]{i}));
-							solver.addClause(new VecInt(new int[]{i}));
-//							System.out.println("equivalent" + i);
-						} else if ((!regex1.equals("") && !regex2.equals("")) &&
-								!regex1.equals(regex2)) {
-							solver.addClause(new VecInt(new int[]{i}));
-							solver.addClause(new VecInt(new int[]{-i}));
-//							System.out.println("not equivalent" + i);
-						} else if (!regex1.equals("") || !regex2.equals("")) {
-							solver.addClause(new VecInt(new int[]{i}));
-//							System.out.println("only one" + i);
-						}
-
-						// we are done. Working now on the IProblem interface
-						IProblem problem = solver;
-						if (problem.isSatisfiable()) {
-							System.out.println("Satisfiable !");
-							System.out.println(reader.decode(problem.model()));
-							System.out.println();
-						} else {
-							System.out.println("Unsatisfiable !");
-							System.out.println();
-						}
-
-						i = 1; // reset variable integer
-					}
-				} catch (ContradictionException ce) {
-					System.out.println("Unsatisfiable (trivial)!");
-					System.out.println();
-					conflictNum++;
-				} catch (TimeoutException ce) {
-					System.out.println("Timeout, sorry!");
-				}
 			}
-			System.out.println("Number of conflicts: " + conflictNum);
 		});
 
 		// disable save button when all text fields are not filled in and when no conditions are saved
@@ -709,52 +550,97 @@ public class Controller {
 	}
 
 	/**
-	 * Clears GUI text boxes of text.
-	 */
-	private void clearTextBoxes() {
-//		informationBox.clear();
-//		recipientBox.clear();
-		clearPropositionBoxes();
-	}
-
-	/**
-	 * Clears GUI proposition text boxes of text.
-	 */
-	private void clearPropositionBoxes() {
-//		operationBox1.clear();
-//		operandBox2.clear();
-	}
-
-	/**
-	 * Clears GUI find text boxes of text.
-	 */
-	private void clearFindBoxes() {
-//		nameBox1.clear();
-//		informationBox1.clear();
-	}
-
-	/**
-	 * Clears GUI check text boxes of text.
-	 */
-	private void clearCheckBoxes() {
-//		nameBox2.clear();
-//		informationBox2.clear();
-	}
-
-	/**
 	 * Disables all regex boxes.
 	 */
 	private void disableRegexBoxes() {
+
 		regexTempDropdown.setDisable(true);
 		regexInfoDropdown.setDisable(true);
 		regexScopeDropdown1.setDisable(true);
 		regexAddButton1.setDisable(true);
+
 		regexFreqText.setDisable(true);
 		regexFreqDropdown.setDisable(true);
 		regexScopeDropdown2.setDisable(true);
 		regexAddButton2.setDisable(true);
 	}
 
+	/**
+	 * Enables all regex boxes.
+	 */
+	private void enableRegexBoxes() {
+
+		regexTempDropdown.setDisable(false);
+		regexInfoDropdown.setDisable(false);
+		regexScopeDropdown1.setDisable(false);
+		regexAddButton1.setDisable(false);
+
+		regexFreqText.setDisable(false);
+		regexFreqDropdown.setDisable(false);
+		regexScopeDropdown2.setDisable(false);
+		regexAddButton2.setDisable(false);
+	}
+
+	private void enableConditionBoxes() {
+
+		operatorDropdown1.setDisable(false);
+		conditionText1.setDisable(false);
+		operandDropdown1.setDisable(false);
+		addButton1.setDisable(false);
+
+		operatorDropdown2.setDisable(false);
+		conditionText2.setDisable(false);
+		operandDropdown2.setDisable(false);
+		addButton2.setDisable(false);
+	}
+
+	private void clearSaveTabBoxes() {
+
+		informationDropdown1.getSelectionModel().clearSelection();
+		recipientDropdown1.getSelectionModel().clearSelection();
+
+		operatorDropdown1.getSelectionModel().clearSelection();
+		conditionText1.clear();
+		operandDropdown1.getSelectionModel().clearSelection();
+
+		operatorDropdown2.getSelectionModel().clearSelection();
+		conditionText2.clear();
+		operandDropdown2.getSelectionModel().clearSelection();
+
+		regexTempDropdown.getSelectionModel().clearSelection();
+		regexInfoDropdown.getSelectionModel().clearSelection();
+		regexScopeDropdown1.getSelectionModel().clearSelection();
+
+		regexFreqText.clear();
+		regexFreqDropdown.getSelectionModel().clearSelection();
+		regexScopeDropdown2.getSelectionModel().clearSelection();
+	}
+
+	private void clearCheckTabBoxes() {
+
+		yearTextField.clear();
+		monthTextField.clear();
+		dayTextField.clear();
+		hourTextField.clear();
+		minuteTextField.clear();
+
+		recipientDropdown3.getSelectionModel().clearSelection();
+		nameDropdown2.getSelectionModel().clearSelection();
+		informationDropdown3.getSelectionModel().clearSelection();
+	}
+
+	private void clearFindTabBoxes() {
+		recipientDropdown2.getSelectionModel().clearSelection();
+		nameDropdown1.getSelectionModel().clearSelection();
+		informationDropdown2.getSelectionModel().clearSelection();
+	}
+
+	/**
+	 * Given a list of rules and valid rules, displays them all in the GUI.
+	 *
+	 * @param rules1 the list of rules
+	 * @param rules2 the list of valid rules
+	 */
 	private void populateValidPane(ObservableList<Rule> rules1, ObservableList<Rule> rules2) {
 
 		TreeItem<String> rootNode = new TreeItem<>("Rules");
@@ -793,5 +679,80 @@ public class Controller {
 		ConditionSet temp2 = new ConditionSet(temp1);
 		conditionSet.setSet(new LinkedHashSet<>());
 		return temp2;
+	}
+
+	/**
+	 * Populates dropdown menus with information from the database.
+	 */
+	private void populateFromDatabase(DataAccess dataAccess) {
+
+		// populate dropdowns with information types
+		ObservableList<String> informationSet = dataAccess.selectInformation();
+
+		for (String s : informationSet) {
+			informationDropdown1.getItems().add(s);
+			informationDropdown2.getItems().add(s);
+			informationDropdown3.getItems().add(s);
+			regexInfoDropdown.getItems().add(s);
+		}
+
+		// populate dropdowns with recipient sets
+		ObservableList<String> recipientsSet = dataAccess.selectRecipients();
+
+		for (String s : recipientsSet) {
+			recipientDropdown1.getItems().add(s);
+			recipientDropdown2.getItems().add(s);
+			recipientDropdown3.getItems().add(s);
+		}
+
+		// populate dropdowns with metadata
+//		ObservableList<Metadata> metadataSet = dataAccess.selectMetadata();
+//
+//		for (Metadata m : metadataSet) {
+//			operandDropdown1.getItems().add(m.getName());
+//			operandDropdown2.getItems().add(m.getName());
+//		}
+	}
+
+	private void populateManualValues() {
+
+		operandDropdown1.getItems().add("business hours");
+		operandDropdown1.getItems().add("day");
+		operandDropdown1.getItems().add("night");
+		operandDropdown2.getItems().add("weekend");
+
+//		operandDropdown1.getSelectionModel().select("business hours");
+//		operandDropdown2.getSelectionModel().select("weekend");
+
+		// metadata operators
+		operatorDropdown1.getItems().add("==");
+		operatorDropdown2.getItems().add("==");
+		operatorDropdown1.getItems().add("!=");
+		operatorDropdown2.getItems().add("!=");
+		// custom operators - only useful if user is entering their own values
+		operatorDropdown1.getItems().add("<");
+		operatorDropdown2.getItems().add("<");
+		operatorDropdown1.getItems().add("<=");
+		operatorDropdown2.getItems().add("<=");
+		operatorDropdown1.getItems().add(">");
+		operatorDropdown2.getItems().add(">");
+		operatorDropdown1.getItems().add(">=");
+		operatorDropdown2.getItems().add(">=");
+
+		// regex templates
+		regexTempDropdown.getItems().add("before");
+		regexTempDropdown.getItems().add("after");
+
+		// regex frequencies
+		regexFreqDropdown.getItems().add("year");
+		regexFreqDropdown.getItems().add("month");
+		regexFreqDropdown.getItems().add("day");
+		regexFreqDropdown.getItems().add("hour");
+
+		// regex scope
+		regexScopeDropdown1.getItems().add("g");
+		regexScopeDropdown2.getItems().add("g");
+		regexScopeDropdown1.getItems().add("i");
+		regexScopeDropdown2.getItems().add("i");
 	}
 }
