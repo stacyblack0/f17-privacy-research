@@ -3,6 +3,14 @@ import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
+import org.sosy_lab.common.ShutdownNotifier;
+import org.sosy_lab.common.configuration.Configuration;
+import org.sosy_lab.common.configuration.InvalidConfigurationException;
+import org.sosy_lab.common.log.BasicLogManager;
+import org.sosy_lab.common.log.LogManager;
+import org.sosy_lab.java_smt.SolverContextFactory;
+import org.sosy_lab.java_smt.api.ProverEnvironment;
+import org.sosy_lab.java_smt.api.SolverContext;
 import tree.Condition;
 import tree.ConditionSet;
 import tree.Regex;
@@ -269,16 +277,59 @@ public class Controller {
 		// saves all data gathered so far into a new rule
 		saveButton.setOnAction(event -> {
 
+
+			// determine conflicts
+			Configuration config = Configuration.defaultConfiguration();
+			LogManager logger = null;
+			try {
+				logger = BasicLogManager.create(config);
+			} catch (InvalidConfigurationException e) {
+				e.printStackTrace();
+			}
+			ShutdownNotifier notifier = ShutdownNotifier.createDummy();
+
+			SolverContextFactory.Solvers[] var4 = SolverContextFactory.Solvers.values();
+			int var5 = var4.length;
+			for (SolverContextFactory.Solvers solvers : var4) {
+				System.out.println(solvers);
+			}
+			SolverContextFactory.Solvers solver = var4[2];
+			System.out.println("\nUsing solver " + solver);
+			SolverContext context = null;
+			try {
+				context = SolverContextFactory.createSolverContext(config, logger, notifier, solver);
+			} catch (InvalidConfigurationException e) {
+				e.printStackTrace();
+			}
+			Throwable var9 = null;
+
+			ProverEnvironment prover = context.newProverEnvironment(new SolverContext.ProverOptions[]{SolverContext.ProverOptions.GENERATE_MODELS});
+
+			try {
+				ConflictDetection cDetect = new ConflictDetection(context, prover);
+			} catch (InvalidConfigurationException e) {
+				e.printStackTrace();
+			}
+
+
+
 //			ConditionSet temp = resetCondition(conditions);
-			Condition condtion = conditionArray.get(0);
+			Condition condition = conditionArray.get(0);
 			Regex regex = regexArray.get(0);
 			String scope = scopeArray.get(0);
+
+			if (condition == null) {
+				condition = new Condition("", -1, -1, false);
+			}
+			if (regex == null) {
+				regex = new Regex("");
+			}
 
 			regexArray.set(0, null);
 			scopeArray.set(0, "g");
 			conditionArray.set(0, null);
 
-			Rule rule = ruleHandler.addRule(informationDropdown1.getValue(), recipientDropdown1.getValue(), condtion, regex, scope);
+			Rule rule = ruleHandler.addRule(informationDropdown1.getValue(), recipientDropdown1.getValue(), condition, regex, scope);
 
 			if (rule != null) {
 				incrRuleCount();
@@ -330,6 +381,7 @@ public class Controller {
 				}
 
 				Condition condition = new Condition("time", conditionStart, conditionEnd, negation);
+				conditionArray.set(0, condition);
 				conditions.addToSet(condition);
 
 				incrConditionCount();
@@ -372,6 +424,7 @@ public class Controller {
 				}
 
 				Condition condition = new Condition("day", conditionStart, conditionEnd, negation);
+				conditionArray.set(0, condition);
 				conditions.addToSet(condition);
 
 				incrConditionCount();

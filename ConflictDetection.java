@@ -56,7 +56,7 @@ public class ConflictDetection {
 
             try {
                 prover.push();
-                System.out.println(createSATModle(ruleList));
+                System.out.println(createSATModel(ruleList));
                 prover.pop();
             } catch (Throwable var23) {
                 var11 = var23;
@@ -79,7 +79,7 @@ public class ConflictDetection {
         return true;
     }
 
-    private List<List<org.sosy_lab.java_smt.api.Model.ValueAssignment>> createSATModle(ArrayList<Rule> ruleList) throws InterruptedException, SolverException {
+    private List<List<org.sosy_lab.java_smt.api.Model.ValueAssignment>> createSATModel(ArrayList<Rule> ruleList) throws InterruptedException, SolverException {
 
 
         NumeralFormula.IntegerFormula a = (NumeralFormula.IntegerFormula)this.ifmgr.makeVariable("a");
