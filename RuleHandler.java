@@ -3,6 +3,8 @@ import javafx.collections.ObservableList;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import tree.Condition;
+import tree.Regex;
 import tree.Rule;
 
 
@@ -27,24 +29,24 @@ public class RuleHandler {
 	}
 
 	/**
-	 * Creates a new rule with given information, recipient, conditions, regex,
+	 * Creates a new rule with given information, recipient, condition, regex,
 	 * and scope, and inserts it into the database. If insertion was successful,
 	 * returns the rule. If unsuccessful, returns null.
 	 *
 	 * @param information the given information
 	 * @param recipient the given recipient
-	 * @param conditions the given conditions
+	 * @param condition the given condition
 	 * @param regex the given regex
 	 * @param scope the given scope
 	 * @return the given rule if added successfully; null if not
 	 */
-	public Rule addRule(String information, String recipient, String conditions, String regex, String scope) {
+	public Rule addRule(String information, String recipient, Condition condition, Regex regex, String scope) {
 
 		if (dataAccess.hasRule(recipient, information)) {
 			return null;
 		}
 
-		Rule rule = new Rule(information, recipient, conditions, regex, scope);
+		Rule rule = new Rule(information, recipient, condition, regex, scope);
 
 		return dataAccess.insertRule(rule);
 	}
@@ -104,12 +106,12 @@ public class RuleHandler {
 
 		for (Rule r : rules) {
 
-			String conditions = r.getConditions();
+			String conditions = r.getCondition().toString();
 
 			Expression exp = parser.parseExpression(conditions);
 			// defaults to true if conditions are empty; otherwise, checks if conditions are valid
-			boolean isValidCond = r.getConditions().equals("") || exp.getValue(env, Boolean.class);
-			String regex = r.getRegex();
+			boolean isValidCond = r.getCondition().toString().equals("") || exp.getValue(env, Boolean.class);
+			String regex = r.getRegex().getRegexString();
 			// defaults to true if regex is empty; otherwise, checks if regex is valid
 			boolean isValidRegex = r.getRegex().equals("") || historyHandler.regexMatch24Hours(regex);
 

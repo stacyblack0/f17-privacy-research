@@ -8,45 +8,59 @@ package tree;
  */
 public class Condition {
 
-	private Proposition proposition1; // First proposition, i.e. "Time == night"
-	private String operator; // Operator, i.e. "and", "^"
-	private Proposition proposition2; // Second proposition, i.e. "Day != weekend"
-	private Temporal temporal;
-	private Environmental environmental;
-	private String condition;
+	private String conditionType;
+	private int conditionStart;
+	private int conditionEnd;
+	private boolean negation;
 
 	/**
-	 * The constructor. Creates a new condition with two given propositions
-	 * and an operator.
-	 *
-	 * @param proposition1 the first proposition
-	 * @param operator the operator
-	 * @param proposition2 the second proposition
+	 * The constructor. Creates a new condition with a given condition type,
+	 * start time, and end time. If one of the times is unused, pass it in
+	 * with a value of -1.
+	 * @param conditionType the condition type
+	 * @param conditionStart the start time
+	 * @param conditionEnd the end time
+	 * @param negation whether the condition should be true or not
 	 */
-	public Condition(Proposition proposition1, String operator, Proposition proposition2) {
-		this.proposition1 = proposition1;
-		this.operator = operator;
-		this.proposition2 = proposition2;
+	public Condition(String conditionType, int conditionStart, int conditionEnd, boolean negation) {
+		this.conditionType = conditionType;
+		this.conditionStart = conditionStart;
+		this.conditionEnd = conditionEnd;
+		this.negation = negation;
 	}
 
-	public Condition(String condition) {
-		this.condition = condition;
+	public String getConditionType() {
+		return conditionType;
 	}
 
-	public Proposition getProposition1() {
-		return proposition1;
+	public int getConditionStart() {
+		return conditionStart;
 	}
 
-	public Proposition getProposition2() {
-		return proposition2;
+	public int getConditionEnd() {
+		return conditionEnd;
+	}
+
+	public boolean getNegation() {
+		return negation;
 	}
 
 	public String toString() {
-//		if (operator != null && proposition2 != null) {
-//			return "[" + proposition1 + " " + operator + " " + proposition2 + "]";
-//		} else {
-//			return "[" + proposition1 + "]";
-//		}
-		return condition;
+
+		String str = "";
+
+		if (negation) {
+			str = "!";
+		}
+
+		if (conditionStart == -1 && conditionEnd == -1) {
+			return "(true)";
+		} else if (conditionStart == -1) {
+			return str += "(" + conditionType + " <= " + conditionEnd + ")";
+		} else if (conditionEnd == -1) {
+			return str += "(" + conditionStart + " <= " + conditionType + ")";
+		} else {
+			return str += "(" + conditionStart + " <= " + conditionType + " <= " + conditionEnd + ")";
+		}
 	}
 }

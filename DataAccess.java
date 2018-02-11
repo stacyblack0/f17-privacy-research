@@ -1,6 +1,8 @@
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import tree.Condition;
+import tree.Regex;
 import tree.Rule;
 
 import java.sql.*;
@@ -53,13 +55,19 @@ public class DataAccess {
 
 		try {
 			createConnection();
-			preparedStatement = connect.prepareStatement("INSERT INTO Rules (RecipientSetID,Info,Conditions,Regex,Scope) " +
-					"VALUES ((SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?),?,?,?,?);");
+			preparedStatement = connect.prepareStatement("INSERT INTO Rules " +
+					"(RecipientSetID,Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope) " +
+					"VALUES ((SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?),?,?,?,?,?,?,?,?,?);");
 			preparedStatement.setString(1, rule.getRecipientSet());
 			preparedStatement.setString(2, rule.getInfo());
-			preparedStatement.setString(3, rule.getConditions());
-			preparedStatement.setString(4, rule.getRegex());
-			preparedStatement.setString(5, rule.getScope());
+			preparedStatement.setString(3, rule.getCondition().getConditionType());
+			preparedStatement.setInt(4, rule.getCondition().getConditionStart());
+			preparedStatement.setInt(5, rule.getCondition().getConditionEnd());
+			preparedStatement.setBoolean(6, rule.getCondition().getNegation());
+			preparedStatement.setString(7, rule.getRegex().getRegexString());
+			preparedStatement.setString(8, rule.getRegex().getInterval());
+			preparedStatement.setInt(9, rule.getRegex().getFrequency());
+			preparedStatement.setString(10, rule.getScope());
 			preparedStatement.executeUpdate();
 			connect.commit();
 			connect.close();
@@ -113,12 +121,24 @@ public class DataAccess {
 			resultSet = preparedStatement.executeQuery();
 			ObservableList<Rule> data = FXCollections.observableArrayList();
 			while (resultSet.next()) {
+
 				String information = resultSet.getString("Info");
 				String setName = resultSet.getString("RecipientSetName");
-				String conditions = resultSet.getString("Conditions");
-				String regex = resultSet.getString("Regex");
+
+				String conditionType = resultSet.getString("ConditionType");
+				int conditionStart = resultSet.getInt("ConditionStart");
+				int conditionEnd = resultSet.getInt("ConditionEnd");
+				boolean negation = resultSet.getBoolean("Negation");
+				Condition condition = new Condition(conditionType, conditionStart, conditionEnd, negation);
+
+				String regexString = resultSet.getString("Regex");
+				String interval = resultSet.getString("RegexInterval");
+				int frequency = resultSet.getInt("RegexFrequency");
+				Regex regex = new Regex(regexString, interval, frequency);
+
 				String scope = resultSet.getString("Scope");
-				data.add(new Rule(information, setName, conditions, regex, scope));
+
+				data.add(new Rule(information, setName, condition, regex, scope));
 			}
 			connect.close();
 			return data;
@@ -138,10 +158,21 @@ public class DataAccess {
 			resultSet = preparedStatement.executeQuery();
 			Rule rule = null;
 			while (resultSet.next()) { // should loop 1 or fewer times
-				String conditions = resultSet.getString("Conditions");
-				String regex = resultSet.getString("Regex");
+
+				String conditionType = resultSet.getString("ConditionType");
+				int conditionStart = resultSet.getInt("ConditionStart");
+				int conditionEnd = resultSet.getInt("ConditionEnd");
+				boolean negation = resultSet.getBoolean("Negation");
+				Condition condition = new Condition(conditionType, conditionStart, conditionEnd, negation);
+
+				String regexString = resultSet.getString("Regex");
+				String interval = resultSet.getString("RegexInterval");
+				int frequency = resultSet.getInt("RegexFrequency");
+				Regex regex = new Regex(regexString, interval, frequency);
+
 				String scope = resultSet.getString("Scope");
-				rule = new Rule(information, recipientSet, conditions, regex, scope);
+
+				rule = new Rule(information, recipientSet, condition, regex, scope);
 			}
 			connect.close();
 			return rule;
@@ -162,11 +193,23 @@ public class DataAccess {
 			resultSet = preparedStatement.executeQuery();
 			ObservableList<Rule> data = FXCollections.observableArrayList();
 			while (resultSet.next()) {
+
 				String setName = resultSet.getString("RecipientSetName");
-				String conditions = resultSet.getString("Conditions");
-				String regex = resultSet.getString("Regex");
+
+				String conditionType = resultSet.getString("ConditionType");
+				int conditionStart = resultSet.getInt("ConditionStart");
+				int conditionEnd = resultSet.getInt("ConditionEnd");
+				boolean negation = resultSet.getBoolean("Negation");
+				Condition condition = new Condition(conditionType, conditionStart, conditionEnd, negation);
+
+				String regexString = resultSet.getString("Regex");
+				String interval = resultSet.getString("RegexInterval");
+				int frequency = resultSet.getInt("RegexFrequency");
+				Regex regex = new Regex(regexString, interval, frequency);
+
 				String scope = resultSet.getString("Scope");
-				data.add(new Rule(information, setName, conditions, regex, scope));
+
+				data.add(new Rule(information, setName, condition, regex, scope));
 			}
 			connect.close();
 			return data;
@@ -349,9 +392,20 @@ public class DataAccess {
 			while (resultSet.next()) {
 
 				ArrayList<Rule> rules;
+
 				String information = resultSet.getString("Info");
-				String conditions = resultSet.getString("Conditions");
-				String regex = resultSet.getString("Regex");
+
+				String conditionType = resultSet.getString("ConditionType");
+				int conditionStart = resultSet.getInt("ConditionStart");
+				int conditionEnd = resultSet.getInt("ConditionEnd");
+				boolean negation = resultSet.getBoolean("Negation");
+				Condition condition = new Condition(conditionType, conditionStart, conditionEnd, negation);
+
+				String regexString = resultSet.getString("Regex");
+				String interval = resultSet.getString("RegexInterval");
+				int frequency = resultSet.getInt("RegexFrequency");
+				Regex regex = new Regex(regexString, interval, frequency);
+
 				String scope = resultSet.getString("Scope");
 
 				if (data.get(information) != null) {
@@ -361,7 +415,7 @@ public class DataAccess {
 					data.put(information, rules);
 				}
 
-				rules.add(new Rule(information, recipientSetName, conditions, regex, scope));
+				rules.add(new Rule(information, recipientSetName, condition, regex, scope));
 			}
 
 			return data;

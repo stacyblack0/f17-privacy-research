@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import tree.Condition;
 import tree.ConditionSet;
+import tree.Regex;
 import tree.Rule;
 
 import java.util.ArrayList;
@@ -195,10 +196,12 @@ public class Controller {
 		ConditionSet conditions = new ConditionSet();
 		DataAccess dataAccess = new DataAccess();
 		// later have these things kept track of by RuleHandler ?
-		ArrayList<String> regexArray = new ArrayList<>(); // have to use ArrayList instead of string to get around final restriction
-		ArrayList<String> scopeArray = new ArrayList<>(); // have to use ArrayList instead of string to get around final restriction
-		regexArray.add(0, "");
+		ArrayList<Regex> regexArray = new ArrayList<>(); // have to use ArrayList instead of Regex to get around final restriction
+		ArrayList<String> scopeArray = new ArrayList<>(); // have to use ArrayList instead of String to get around final restriction
+		ArrayList<Condition> conditionArray = new ArrayList<>(); // have to use ArrayList instead of Condition to get around final restriction
+		regexArray.add(0, null);
 		scopeArray.add(0, "g"); // by default, set scope to group
+		conditionArray.add(0, null);
 
 		// populate dropdown menus
 		populateFromDatabase(dataAccess);
@@ -266,14 +269,16 @@ public class Controller {
 		// saves all data gathered so far into a new rule
 		saveButton.setOnAction(event -> {
 
-			ConditionSet temp = resetCondition(conditions);
-			String regexString = regexArray.get(0);
+//			ConditionSet temp = resetCondition(conditions);
+			Condition condtion = conditionArray.get(0);
+			Regex regex = regexArray.get(0);
 			String scope = scopeArray.get(0);
 
-			regexArray.set(0, "");
+			regexArray.set(0, null);
 			scopeArray.set(0, "g");
+			conditionArray.set(0, null);
 
-			Rule rule = ruleHandler.addRule(informationDropdown1.getValue(), recipientDropdown1.getValue(), temp.toString(), regexString, scope);
+			Rule rule = ruleHandler.addRule(informationDropdown1.getValue(), recipientDropdown1.getValue(), condtion, regex, scope);
 
 			if (rule != null) {
 				incrRuleCount();
@@ -292,30 +297,39 @@ public class Controller {
 					&& (conditionText1.getText() != null || operandDropdown1.getValue() != null)) {
 
 				String operator = operatorDropdown1.getValue();
-				String str = "";
+				int conditionStart = -1;
+				int conditionEnd = -1;
+				boolean negation = false;
 
 				if (operator.equals("==") || operator.equals("!=")) {
 
 					if (operator.equals("!=")) {
-						str += "!";
+						negation = true;
 					}
 
 					switch (operandDropdown1.getValue()) {
 						case "business hours":
-							str += "(time >= 8 and time <= 16)";
+							conditionStart = 8;
+							conditionEnd = 16;
 							break;
 						case "day":
-							str += "(time >= 8 and time <= 19)";
+							conditionStart = 8;
+							conditionEnd = 19;
 							break;
 						case "night":
-							str += "(time >= 20 or time <= 7)";
+							conditionStart = 20;
+							conditionEnd = 7;
 							break;
 					}
+				} else if (operator.equals(">") || operator.equals(">=")) {
+					conditionStart = Integer.parseInt(conditionText1.getText());
+					conditionEnd = -1;
 				} else {
-					str = "(time " + operator + " " + conditionText1 + ")";
+					conditionStart = -1;
+					conditionEnd = Integer.parseInt(conditionText1.getText());
 				}
 
-				Condition condition = new Condition(str);
+				Condition condition = new Condition("time", conditionStart, conditionEnd, negation);
 				conditions.addToSet(condition);
 
 				incrConditionCount();
@@ -333,24 +347,31 @@ public class Controller {
 					&& (conditionText2.getText() != null || operandDropdown2.getValue() != null)) {
 
 				String operator = operatorDropdown2.getValue();
-				String str = "";
+				int conditionStart = -1;
+				int conditionEnd = -1;
+				boolean negation = false;
 
 				if (operator.equals("==") || operator.equals("!=")) {
 
 					if (operator.equals("!=")) {
-						str += "!";
+						negation = true;
 					}
 
 					switch (operandDropdown2.getValue()) {
 						case "weekend":
-							str += "(day >= 7 or day <= 1)";
+							conditionStart = 7;
+							conditionEnd = 1;
 							break;
 					}
+				} else if (operator.equals(">") || operator.equals(">=")) {
+					conditionStart = Integer.parseInt(conditionText2.getText());
+					conditionEnd = -1;
 				} else {
-					str = "(day " + operator + " " + conditionText2 + ")";
+					conditionStart = -1;
+					conditionEnd = Integer.parseInt(conditionText2.getText());
 				}
 
-				Condition condition = new Condition(str);
+				Condition condition = new Condition("day", conditionStart, conditionEnd, negation);
 				conditions.addToSet(condition);
 
 				incrConditionCount();
@@ -369,11 +390,14 @@ public class Controller {
 
 				String thisEvent = "(" + recipientDropdown1.getValue() + " K " + informationDropdown1.getValue() + ")";
 				String otherEvent = "(" + recipientDropdown1.getValue() + " K " + regexInfoDropdown.getValue() + ")";
+				String regexString;
 
 				if (regexTempDropdown.getValue().equals("before")) {
-					regexArray.set(0, ".*" + thisEvent + ".*" + otherEvent + ".*");
+					regexString = ".*" + thisEvent + ".*" + otherEvent + ".*";
+					regexArray.set(0, new Regex(regexString));
 				} else {
-					regexArray.set(0, ".*" + otherEvent + ".*" + thisEvent + ".*");
+					regexString = ".*" + otherEvent + ".*" + thisEvent + ".*";
+					regexArray.set(0, new Regex(regexString));
 				}
 
 				disableRegexBoxes();
@@ -386,9 +410,10 @@ public class Controller {
 			if (regexFreqText.getText() != null && regexFreqDropdown.getValue() != null
 					&& regexScopeDropdown2.getValue() != null) {
 
-				String frequency = regexFreqText.getText();
-//				String time = regexFreqDropdown.getValue();
-				regexArray.set(0, "frequency=" + frequency);
+				String interval = regexFreqDropdown.getValue();
+				int frequency = Integer.parseInt(regexFreqText.getText());
+
+				regexArray.set(0, new Regex(interval, frequency));
 
 				disableRegexBoxes();
 				scopeArray.set(0, regexScopeDropdown2.getValue());

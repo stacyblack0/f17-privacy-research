@@ -11,8 +11,8 @@ public class Rule {
 
 	private String information;
 	private String recipientSet;
-	private String conditions;
-	private String regex;
+	private Condition condition;
+	private Regex regex;
 	private String scope;
 
 	/**
@@ -20,14 +20,14 @@ public class Rule {
 	 *
 	 * @param information the information
 	 * @param recipientSet the recipient set
-	 * @param conditions the conditions to share the information
-	 * @param regex a string depicting a regular expression
+	 * @param condition the condition to share the information
+	 * @param regex the regex depicting a regular expression or frequency
 	 * @param scope whether to apply history to an individual or the group
 	 */
-	public Rule(String information, String recipientSet, String conditions, String regex, String scope) {
+	public Rule(String information, String recipientSet, Condition condition, Regex regex, String scope) {
 		this.information = information;
 		this.recipientSet = recipientSet;
-		this.conditions = conditions;
+		this.condition = condition;
 		this.regex = regex;
 		this.scope = scope;
 	}
@@ -40,11 +40,11 @@ public class Rule {
 		return recipientSet;
 	}
 
-	public String getConditions() {
-		return conditions;
+	public Condition getCondition() {
+		return condition;
 	}
 
-	public String getRegex() {
+	public Regex getRegex() {
 		return regex;
 	}
 
@@ -53,7 +53,7 @@ public class Rule {
 	}
 
 	public String toString() {
-		return recipientSet + " E " + information + " and ( " + conditions + " ) " +
+		return recipientSet + " E " + information + " and ( " + condition.toString() + " ) " +
 				"and { regex: " + regex + " } and [ scope: " + scope + " ]\n";
 	}
 }

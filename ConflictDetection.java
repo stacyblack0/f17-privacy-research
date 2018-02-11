@@ -144,8 +144,8 @@ public class ConflictDetection {
         // prepare the solver to accept MAXVAR variables. MANDATORY for MAXSAT solving
         solver.newVar(MAXVAR);
         solver.setExpectedNumberOfClauses(NBCLAUSES);
-        String conditions1 = ruleList.get(0).getConditions();
-        String conditions2 = ruleList.get(1).getConditions();
+        String conditions1 = ruleList.get(0).getCondition().toString();
+        String conditions2 = ruleList.get(1).getCondition().toString();
 
         if ((!conditions1.equals("") && !conditions2.equals("")) &&
                 conditions1.equals(conditions2)) {
@@ -164,8 +164,8 @@ public class ConflictDetection {
 
         i++;
 
-        String regex1 = ruleList.get(0).getRegex();
-        String regex2 = ruleList.get(1).getRegex();
+        String regex1 = ruleList.get(0).getRegex().getRegexString();
+        String regex2 = ruleList.get(1).getRegex().getRegexString();
 
         if ((!regex1.equals("") && !regex2.equals("")) &&
                 regex1.equals(regex2)) {
