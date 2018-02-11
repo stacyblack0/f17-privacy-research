@@ -7,8 +7,8 @@ import tree.Condition;
 import tree.ConditionSet;
 import tree.Rule;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 
@@ -144,7 +144,7 @@ public class Controller {
 	private Button addButton2;
 
 	@FXML
-	void initialize() throws IOException {
+	void initialize() {
 
 		assert operandDropdown1 != null : "fx:id=\"operandDropdown1\" was not injected: check your FXML file 'view.fxml'.";
 		assert recipientDropdown1 != null : "fx:id=\"recipientDropdown1\" was not injected: check your FXML file 'view.fxml'.";
@@ -190,7 +190,8 @@ public class Controller {
 		assert regexFreqText != null : "fx:id=\"regexFreqText\" was not injected: check your FXML file 'view.fxml'.";
 		assert addButton2 != null : "fx:id=\"addButton2\" was not injected: check your FXML file 'view.fxml'.";
 
-		RuleHandler handler = new RuleHandler();
+		RuleHandler ruleHandler = new RuleHandler();
+		HistoryHandler historyHandler = new HistoryHandler();
 		ConditionSet conditions = new ConditionSet();
 		DataAccess dataAccess = new DataAccess();
 		// later have these things kept track of by RuleHandler ?
@@ -272,7 +273,7 @@ public class Controller {
 			regexArray.set(0, "");
 			scopeArray.set(0, "g");
 
-			Rule rule = handler.addRule(informationDropdown1.getValue(), recipientDropdown1.getValue(), temp.toString(), regexString, scope);
+			Rule rule = ruleHandler.addRule(informationDropdown1.getValue(), recipientDropdown1.getValue(), temp.toString(), regexString, scope);
 
 			if (rule != null) {
 				incrRuleCount();
@@ -399,7 +400,7 @@ public class Controller {
 
 			String name = nameDropdown1.getValue();
 			String info = informationDropdown2.getValue();
-			ObservableList<Rule> temp = handler.findAllRules(name, info);
+			ObservableList<Rule> temp = ruleHandler.findAllRules(name, info);
 
 			foundCount1.setText("" + temp.size());
 
@@ -418,8 +419,17 @@ public class Controller {
 		// checks if rules matching a given individual and info are valid, and displays them
 		checkButton.setOnAction(event -> {
 
-			ObservableList<Rule> rules1 = handler.findAllRules(nameDropdown2.getValue(), informationDropdown3.getValue());
-			ObservableList<Rule> rules2 = handler.findValidRules(rules1, new Environment());
+			String individual = nameDropdown2.getValue();
+			String info = informationDropdown3.getValue();
+
+			ObservableList<Rule> rules1 = ruleHandler.findAllRules(individual, info);
+			ObservableList<Rule> rules2 = ruleHandler.findValidRules(rules1, new Environment());
+			Calendar cal = Calendar.getInstance();
+
+			// if there are valid rules that allow info-sharing, add info-sharing to history
+			if (rules2.size() > 0) {
+				historyHandler.addHistory(individual, info, cal.getTimeInMillis());
+			}
 
 			populateValidPane(rules1, rules2);
 			clearCheckTabBoxes();
@@ -446,8 +456,8 @@ public class Controller {
 				env = new Environment();
 			}
 
-			ObservableList<Rule> rules1 = handler.findAllRules(nameDropdown2.getValue(), informationDropdown3.getValue());
-			ObservableList<Rule> rules2 = handler.findValidRules(rules1, env);
+			ObservableList<Rule> rules1 = ruleHandler.findAllRules(nameDropdown2.getValue(), informationDropdown3.getValue());
+			ObservableList<Rule> rules2 = ruleHandler.findValidRules(rules1, env);
 
 			populateValidPane(rules1, rules2);
 			clearCheckTabBoxes();
@@ -581,6 +591,10 @@ public class Controller {
 		regexAddButton2.setDisable(false);
 	}
 
+
+	/**
+	 * Enable all condition boxes.
+	 */
 	private void enableConditionBoxes() {
 
 		operatorDropdown1.setDisable(false);
@@ -594,6 +608,9 @@ public class Controller {
 		addButton2.setDisable(false);
 	}
 
+	/**
+	 * Clear all dropdowns and text fields in the create rule tab.
+	 */
 	private void clearSaveTabBoxes() {
 
 		informationDropdown1.getSelectionModel().clearSelection();
@@ -616,6 +633,9 @@ public class Controller {
 		regexScopeDropdown2.getSelectionModel().clearSelection();
 	}
 
+	/**
+	 * Clear all dropdowns and text fields in the check rules tab.
+	 */
 	private void clearCheckTabBoxes() {
 
 		yearTextField.clear();
@@ -629,6 +649,9 @@ public class Controller {
 		informationDropdown3.getSelectionModel().clearSelection();
 	}
 
+	/**
+	 * Clear all dropdowns and text fields in the find rules tab.
+	 */
 	private void clearFindTabBoxes() {
 		recipientDropdown2.getSelectionModel().clearSelection();
 		nameDropdown1.getSelectionModel().clearSelection();

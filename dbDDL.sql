@@ -52,3 +52,10 @@ CREATE TABLE Information (
 	InformationID INT auto_increment NOT NULL PRIMARY KEY,
 	InformationName VARCHAR(50) NOT NULL UNIQUE
 );
+
+CREATE TABLE Priorities (
+	PriorityID INT auto_increment NOT NULL PRIMARY KEY,
+	PriorityValue INT NOT NULL,
+	FOREIGN KEY (RuleID)
+		REFERENCES Rules (RuleID)
+);

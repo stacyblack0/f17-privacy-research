@@ -5,8 +5,6 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import tree.Rule;
 
-import java.util.Calendar;
-
 
 /**
  * This class handles the creation and checking of rules.
@@ -17,14 +15,15 @@ public class RuleHandler {
 
 	private DataAccess dataAccess;
 	private ExpressionParser parser;
+	private HistoryHandler historyHandler;
 
 	/**
 	 * The constructor. Initializes the data access object.
 	 */
 	public RuleHandler() {
-//		HistoryTester();
 		dataAccess = new DataAccess();
 		parser = new SpelExpressionParser();
+		historyHandler = new HistoryHandler();
 	}
 
 	/**
@@ -108,9 +107,13 @@ public class RuleHandler {
 			String conditions = r.getConditions();
 
 			Expression exp = parser.parseExpression(conditions);
-			boolean isValid = exp.getValue(env, Boolean.class);
+			// defaults to true if conditions are empty; otherwise, checks if conditions are valid
+			boolean isValidCond = r.getConditions().equals("") || exp.getValue(env, Boolean.class);
+			String regex = r.getRegex();
+			// defaults to true if regex is empty; otherwise, checks if regex is valid
+			boolean isValidRegex = r.getRegex().equals("") || historyHandler.regexMatch24Hours(regex);
 
-			if (isValid) {
+			if (isValidCond && isValidRegex) {
 				result.add(r);
 			}
 
@@ -118,71 +121,5 @@ public class RuleHandler {
 		}
 
 		return result;
-	}
-
-	//	just a tester function
-	public void HistoryTester() {
-
-		Calendar cal1 = Calendar.getInstance();
-		Calendar cal2 = Calendar.getInstance();
-		Calendar cal3 = Calendar.getInstance();
-		Calendar cal4 = Calendar.getInstance();
-		Calendar cal5 = Calendar.getInstance();
-		Calendar cal6 = Calendar.getInstance();
-		Calendar cal7 = Calendar.getInstance();
-
-		// less than 24 hours ago
-		cal1.add(Calendar.HOUR, -2);
-		cal2.add(Calendar.HOUR, -5);
-		cal3.add(Calendar.HOUR, -10);
-		cal4.add(Calendar.HOUR, -12);
-		cal5.add(Calendar.HOUR, -22);
-		// 24 hours and greater ago
-		cal6.add(Calendar.HOUR, -24);
-		cal7.add(Calendar.HOUR, -30);
-
-		addHistory("A K location", cal1.getTimeInMillis());
-		addHistory("B K location", cal2.getTimeInMillis());
-		addHistory("C K location", cal3.getTimeInMillis());
-		addHistory("D K location", cal4.getTimeInMillis());
-		addHistory("E K location", cal5.getTimeInMillis());
-		addHistory("F K location", cal6.getTimeInMillis());
-		addHistory("G K location", cal7.getTimeInMillis());
-
-		regexMatch24Hours(".*(A K location).*(D K location).*");
-		regexMatch24Hours(".*(D K location).*(D K location).*");
-	}
-
-	public void addHistory(String infoShareEvent, long timeInMillis) {
-		HistoryNode node = new HistoryNode(infoShareEvent, timeInMillis);
-		dataAccess.insertHistory(node);
-	}
-
-	/**
-	 * Checks to see if a given regex is valid for the past 24 hours.
-	 *
-	 * @param regex the given regex
-	 * @return true if the regex is valid; false otherwise
-	 */
-	public boolean regexMatch24Hours(String regex) {
-
-		StringBuilder builder = new StringBuilder();
-		Calendar current = Calendar.getInstance(); // the current time
-		current.add(Calendar.HOUR, -24);           // roll calendar back 24 hours
-		ObservableList<HistoryNode> history = dataAccess.selectHistoryAfter(current);
-
-		// build string from list of history nodes
-		for (HistoryNode h : history) {
-			builder.append(h.getInfoShareEvent()).append(" -> "); // += "(" + h.getInfoShareEvent() + ") -> "
-		}
-
-		// get string from StringBuilder
-		String string = builder.toString();
-
-		System.out.println("regex: " + regex);
-		System.out.println("history substring: " + string);
-		System.out.println(string.matches(regex));
-
-		return string.matches(regex);
 	}
 }

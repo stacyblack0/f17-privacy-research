@@ -102,9 +102,9 @@ INSERT INTO Individuals (IndividualName,RecipientSetID) VALUES ('Google Docs',
 
 
 -- insert rules!!
-INSERT INTO Rules (Info,Conditions,Regex,Scope,RecipientSetID) VALUES ('location','','.*(Uber K location).*','g',
+INSERT INTO Rules (Info,Conditions,Regex,Scope,RecipientSetID) VALUES ('location','(day > 6 or day < 2)','','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='transportation' AND Type='applications'));
-INSERT INTO Rules (Info,Conditions,Regex,Scope,RecipientSetID) VALUES ('social security number','','.*(Uber K social security number).*','g',
+INSERT INTO Rules (Info,Conditions,Regex,Scope,RecipientSetID) VALUES ('social security number','','.*(Uber K location).*(Uber K social security number).*','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='transportation' AND Type='applications'));
 INSERT INTO Rules (Info,Conditions,Regex,Scope,RecipientSetID) VALUES ('credit card number','','.*(Lyft K credit card number).*','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='transportation' AND Type='applications'));
