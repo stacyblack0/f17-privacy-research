@@ -48,24 +48,22 @@
 									  strokeWidth="0.0" text="0"/>
 								<ChoiceBox fx:id="operandDropdown1" layoutX="302.0" layoutY="167.0" prefHeight="25.0"
 										   prefWidth="114.0"/>
-								<ChoiceBox fx:id="operatorDropdown1" layoutX="169.0" layoutY="168.0" prefHeight="25.0"
-										   prefWidth="41.0"/>
+								<ChoiceBox fx:id="operatorDropdown1" layoutX="157.0" layoutY="168.0" prefHeight="25.0"
+										   prefWidth="59.0"/>
 								<Button id="saveButton" fx:id="saveButton" layoutX="89.0" layoutY="403.0" mnemonicParsing="false" text="Save rule" />
 								<Text fill="#a4a4a4" layoutX="89.0" layoutY="257.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Regex -----------------------" />
 								<Text layoutX="168.0" layoutY="420.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rules saved:" wrappingWidth="64.41796875" />
 								<Text fx:id="ruleCount" layoutX="245.0" layoutY="420.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="15.46875" />
-								<ChoiceBox fx:id="regexTempDropdown" layoutX="154.0" layoutY="296.0" prefHeight="25.0"
-										   prefWidth="114.0"/>
 								<Text layoutX="94.0" layoutY="313.0" strokeType="OUTSIDE" strokeWidth="0.0"
-									  text="Share info"/>
+									  text="Share info after sharing"/>
 								<TextField fx:id="regexFreqText" layoutX="94.0" layoutY="356.0" prefHeight="25.0"
 										   prefWidth="61.0"/>
 								<Text layoutX="164.0" layoutY="373.0" strokeType="OUTSIDE" strokeWidth="0.0"
 									  text="times per"/>
-								<ChoiceBox fx:id="regexFreqDropdown" layoutX="221.0" layoutY="356.0" prefHeight="25.0"
+								<ChoiceBox fx:id="regexFreqDropdown" layoutX="223.0" layoutY="356.0" prefHeight="25.0"
 										   prefWidth="114.0"/>
-								<ChoiceBox fx:id="operatorDropdown2" layoutX="169.0" layoutY="202.0" prefHeight="25.0"
-										   prefWidth="41.0"/>
+								<ChoiceBox fx:id="operatorDropdown2" layoutX="157.0" layoutY="202.0" prefHeight="25.0"
+										   prefWidth="59.0"/>
 								<ChoiceBox fx:id="operandDropdown2" layoutX="302.0" layoutY="201.0" prefHeight="25.0"
 										   prefWidth="114.0"/>
 								<Button fx:id="addButton2" layoutX="436.0" layoutY="201.0" mnemonicParsing="false"
@@ -77,22 +75,24 @@
 									  text="• Prior knowledge"/>
 								<Text layoutX="87.0" layoutY="346.0" strokeType="OUTSIDE" strokeWidth="0.0"
 									  text="• Counting"/>
-								<Button fx:id="regexAddButton1" layoutX="570.0" layoutY="296.0" mnemonicParsing="false"
+								<Button fx:id="regexAddButton1" layoutX="470.0" layoutY="296.0" mnemonicParsing="false"
 										text="Add"/>
-								<Button fx:id="regexAddButton2" layoutX="467.0" layoutY="356.0" mnemonicParsing="false"
+								<Button fx:id="regexAddButton2" layoutX="470.0" layoutY="356.0" mnemonicParsing="false"
 										text="Add"/>
-								<ChoiceBox fx:id="regexScopeDropdown1" layoutX="447.0" layoutY="296.0" prefHeight="25.0"
-										   prefWidth="114.0"/>
-								<ChoiceBox fx:id="regexScopeDropdown2" layoutX="344.0" layoutY="356.0" prefHeight="25.0"
-										   prefWidth="114.0"/>
+								<ChoiceBox fx:id="regexScopeDropdown1" layoutX="414.0" layoutY="296.0" prefHeight="25.0"
+										   prefWidth="46.0"/>
+								<ChoiceBox fx:id="regexScopeDropdown2" layoutX="414.0" layoutY="356.0" prefHeight="25.0"
+										   prefWidth="46.0"/>
 								<TextField fx:id="conditionText1" layoutX="227.0" layoutY="168.0" prefHeight="25.0"
 										   prefWidth="59.0"/>
 								<TextField fx:id="conditionText2" layoutX="227.0" layoutY="202.0" prefHeight="25.0"
 										   prefWidth="59.0"/>
-								<Text layoutX="278.0" layoutY="313.0" strokeType="OUTSIDE" strokeWidth="0.0"
-									  text="sharing"/>
-								<ChoiceBox fx:id="regexInfoDropdown" layoutX="323.0" layoutY="296.0" prefHeight="25.0"
+								<ChoiceBox fx:id="regexInfoDropdown" layoutX="225.0" layoutY="296.0" prefHeight="25.0"
 										   prefWidth="114.0"/>
+								<Text layoutX="348.0" layoutY="313.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="with scope"/>
+								<Text layoutX="347.0" layoutY="373.0" strokeType="OUTSIDE" strokeWidth="0.0"
+									  text="with scope"/>
 							</children>
 						</AnchorPane>
 					</content>

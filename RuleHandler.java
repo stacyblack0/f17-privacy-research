@@ -68,13 +68,14 @@ public class RuleHandler {
 	 * Given the name of an individual recipient and information, returns
 	 * all the rules that apply to that recipient and information.
 	 *
-	 * @param name the given individual recipient
-	 * @param information the given information
+	 * @param action a sharing action containing the name of the recipient and the information
 	 * @return the set of rules applying to the given individual recipient
 	 * and information
 	 */
-	public ObservableList<Rule> findAllRules(String name, String information) {
-		return dataAccess.selectRulesbyIndiInfo(name, information);
+	public ObservableList<Rule> findAllRules(Action action) {
+		String individual = action.getIndividual();
+		String information = action.getInformation();
+		return dataAccess.selectRulesbyIndiInfo(individual, information);
 	}
 
 	/**
@@ -86,10 +87,10 @@ public class RuleHandler {
 	 * @param information the given information
 	 * @return true if there a rule exists, false otherwise
 	 */
-	public boolean hasRule(String individual, String information) {
-		ObservableList<Rule> temp = findAllRules(individual, information);
-		return temp.size() > 0;
-	}
+//	public boolean hasRule(String individual, String information) {
+//		ObservableList<Rule> temp = findAllRules(individual, information);
+//		return temp.size() > 0;
+//	}
 
 	/**
 	 * Given a set of rules, checks each rule to see if it is currently
@@ -100,7 +101,7 @@ public class RuleHandler {
 	 * @param env current state of the system
 	 * @return the set of valid rules
 	 */
-	public ObservableList<Rule> findValidRules(ObservableList<Rule> rules, Environment env) {
+	public ObservableList<Rule> findValidRules(ObservableList<Rule> rules, Environment env, String individual) {
 
 		ObservableList<Rule> result = FXCollections.observableArrayList();
 
@@ -112,8 +113,18 @@ public class RuleHandler {
 			// defaults to true if conditions are empty; otherwise, checks if conditions are valid
 			boolean isValidCond = r.getCondition().toString().equals("") || exp.getValue(env, Boolean.class);
 			String regex = r.getRegex().getRegexString();
-			// defaults to true if regex is empty; otherwise, checks if regex is valid
-			boolean isValidRegex = r.getRegex().equals("") || historyHandler.regexMatch24Hours(regex);
+			String scope = r.getScope();
+			boolean isValidRegex;
+
+			if (scope.equals("g")) { // group scope
+				// defaults to true if regex is empty; otherwise, checks if regex is valid
+				isValidRegex = r.getRegex().getRegexString().equals("") || historyHandler.regexMatch24Hours(regex, r.getRecipientSet(), r.getInfo());
+			} else {                 // individual scope
+				// replaces instances of the recipient set name with the name of the individual
+				regex = regex.replaceAll(r.getRecipientSet(), individual);
+				// defaults to true if regex is empty; otherwise, checks if regex is valid
+				isValidRegex = r.getRegex().getRegexString().equals("") || historyHandler.regexMatch24Hours(regex, individual, r.getInfo());
+			}
 
 			if (isValidCond && isValidRegex) {
 				result.add(r);

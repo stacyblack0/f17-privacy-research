@@ -2,6 +2,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import org.sosy_lab.common.ShutdownNotifier;
 import org.sosy_lab.common.configuration.Configuration;
@@ -55,9 +56,6 @@ public class Controller {
 
 	@FXML
 	private TextField monthTextField;
-
-	@FXML
-	private ChoiceBox<String> regexTempDropdown;
 
 	@FXML
 	private TreeView<String> validPane;
@@ -166,7 +164,6 @@ public class Controller {
 		assert operandDropdown2 != null : "fx:id=\"operandDropdown2\" was not injected: check your FXML file 'view.fxml'.";
 		assert recipientDropdown3 != null : "fx:id=\"recipientDropdown3\" was not injected: check your FXML file 'view.fxml'.";
 		assert monthTextField != null : "fx:id=\"monthTextField\" was not injected: check your FXML file 'view.fxml'.";
-		assert regexTempDropdown != null : "fx:id=\"regexTempDropdown\" was not injected: check your FXML file 'view.fxml'.";
 		assert validPane != null : "fx:id=\"validPane\" was not injected: check your FXML file 'view.fxml'.";
 		assert regexScopeDropdown1 != null : "fx:id=\"regexScopeDropdown1\" was not injected: check your FXML file 'view.fxml'.";
 		assert regexInfoDropdown != null : "fx:id=\"regexInfoDropdown\" was not injected: check your FXML file 'view.fxml'.";
@@ -250,7 +247,7 @@ public class Controller {
 		// disable condition options depending on the operator
 		operatorDropdown1.valueProperty().addListener((observable, oldValue, newValue) -> {
 			try {
-				if (newValue.equals("!=") || newValue.equals("==")) {
+				if (newValue.equals("not equal") || newValue.equals("equal")) {
 					conditionText1.setDisable(true);
 					operandDropdown1.setDisable(false);
 				} else {
@@ -265,7 +262,7 @@ public class Controller {
 
 		// disable condition options depending on the operator
 		operatorDropdown2.valueProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue.equals("!=") || newValue.equals("==")) {
+			if (newValue.equals("not equal") || newValue.equals("equal")) {
 				conditionText2.setDisable(true);
 				operandDropdown2.setDisable(false);
 			} else {
@@ -352,9 +349,9 @@ public class Controller {
 				int conditionEnd = -1;
 				boolean negation = false;
 
-				if (operator.equals("==") || operator.equals("!=")) {
+				if (operator.equals("equal") || operator.equals("not equal")) {
 
-					if (operator.equals("!=")) {
+					if (operator.equals("not equal")) {
 						negation = true;
 					}
 
@@ -372,7 +369,7 @@ public class Controller {
 							conditionEnd = 7;
 							break;
 					}
-				} else if (operator.equals(">") || operator.equals(">=")) {
+				} else if (operator.equals("greater than")) {
 					conditionStart = Integer.parseInt(conditionText1.getText());
 					conditionEnd = -1;
 				} else {
@@ -403,9 +400,9 @@ public class Controller {
 				int conditionEnd = -1;
 				boolean negation = false;
 
-				if (operator.equals("==") || operator.equals("!=")) {
+				if (operator.equals("equal") || operator.equals("not equal")) {
 
-					if (operator.equals("!=")) {
+					if (operator.equals("not equal")) {
 						negation = true;
 					}
 
@@ -415,7 +412,7 @@ public class Controller {
 							conditionEnd = 1;
 							break;
 					}
-				} else if (operator.equals(">") || operator.equals(">=")) {
+				} else if (operator.equals("greater than")) {
 					conditionStart = Integer.parseInt(conditionText2.getText());
 					conditionEnd = -1;
 				} else {
@@ -438,20 +435,12 @@ public class Controller {
 		// adds a prior knowledge regex that will eventually be added to a rule
 		regexAddButton1.setOnAction(event -> {
 
-			if (regexTempDropdown.getValue() != null && regexInfoDropdown.getValue() != null
-					&& regexScopeDropdown1.getValue() != null) {
+			if (regexInfoDropdown.getValue() != null && regexScopeDropdown1.getValue() != null) {
 
 				String thisEvent = "(" + recipientDropdown1.getValue() + " K " + informationDropdown1.getValue() + ")";
 				String otherEvent = "(" + recipientDropdown1.getValue() + " K " + regexInfoDropdown.getValue() + ")";
-				String regexString;
-
-				if (regexTempDropdown.getValue().equals("before")) {
-					regexString = ".*" + thisEvent + ".*" + otherEvent + ".*";
-					regexArray.set(0, new Regex(regexString));
-				} else {
-					regexString = ".*" + otherEvent + ".*" + thisEvent + ".*";
-					regexArray.set(0, new Regex(regexString));
-				}
+				String regexString = ".*" + otherEvent + ".*" + thisEvent + ".*";
+				regexArray.set(0, new Regex(regexString));
 
 				disableRegexBoxes();
 				scopeArray.set(0, regexScopeDropdown1.getValue());
@@ -476,9 +465,12 @@ public class Controller {
 		// finds rules matching a given individual and info and displays them
 		findButton.setOnAction(event -> {
 
-			String name = nameDropdown1.getValue();
+			String recipientSet = recipientDropdown2.getValue();
+			String individual = nameDropdown1.getValue();
 			String info = informationDropdown2.getValue();
-			ObservableList<Rule> temp = ruleHandler.findAllRules(name, info);
+			Action action = new Action(recipientSet, individual, info);
+
+			ObservableList<Rule> temp = ruleHandler.findAllRules(action);
 
 			foundCount1.setText("" + temp.size());
 
@@ -497,11 +489,13 @@ public class Controller {
 		// checks if rules matching a given individual and info are valid, and displays them
 		checkButton.setOnAction(event -> {
 
+			String recipientSet = recipientDropdown3.getValue();
 			String individual = nameDropdown2.getValue();
 			String info = informationDropdown3.getValue();
+			Action action = new Action(recipientSet, individual, info);
 
-			ObservableList<Rule> rules1 = ruleHandler.findAllRules(individual, info);
-			ObservableList<Rule> rules2 = ruleHandler.findValidRules(rules1, new Environment());
+			ObservableList<Rule> rules1 = ruleHandler.findAllRules(action);
+			ObservableList<Rule> rules2 = ruleHandler.findValidRules(rules1, new Environment(), individual);
 			Calendar cal = Calendar.getInstance();
 
 			// if there are valid rules that allow info-sharing, add info-sharing to history
@@ -516,6 +510,10 @@ public class Controller {
 		// checks if rules matching a given individual and info are valid given a custom time, and displays them
 		checkCustomButton.setOnAction(event -> {
 
+			String recipientSet = recipientDropdown3.getValue();
+			String individual = nameDropdown2.getValue();
+			String info = informationDropdown3.getValue();
+			Action action = new Action(recipientSet, individual, info);
 			Environment env;
 
 			// check if any custom fields have been set
@@ -534,8 +532,8 @@ public class Controller {
 				env = new Environment();
 			}
 
-			ObservableList<Rule> rules1 = ruleHandler.findAllRules(nameDropdown2.getValue(), informationDropdown3.getValue());
-			ObservableList<Rule> rules2 = ruleHandler.findValidRules(rules1, env);
+			ObservableList<Rule> rules1 = ruleHandler.findAllRules(action);
+			ObservableList<Rule> rules2 = ruleHandler.findValidRules(rules1, env, individual);
 
 			populateValidPane(rules1, rules2);
 			clearCheckTabBoxes();
@@ -571,6 +569,7 @@ public class Controller {
 			rootNode.setExpanded(true);
 			intersectionsPane.setRoot(rootNode);
 
+			// for each information type, there is an array of recipient set names
 			ObservableMap<String, ArrayList<String>> intersections = dataAccess.selectIntersections();
 
 			for (HashMap.Entry<String, ArrayList<String>> e : intersections.entrySet()) {
@@ -642,7 +641,6 @@ public class Controller {
 	 */
 	private void disableRegexBoxes() {
 
-		regexTempDropdown.setDisable(true);
 		regexInfoDropdown.setDisable(true);
 		regexScopeDropdown1.setDisable(true);
 		regexAddButton1.setDisable(true);
@@ -658,7 +656,6 @@ public class Controller {
 	 */
 	private void enableRegexBoxes() {
 
-		regexTempDropdown.setDisable(false);
 		regexInfoDropdown.setDisable(false);
 		regexScopeDropdown1.setDisable(false);
 		regexAddButton1.setDisable(false);
@@ -702,7 +699,6 @@ public class Controller {
 		conditionText2.clear();
 		operandDropdown2.getSelectionModel().clearSelection();
 
-		regexTempDropdown.getSelectionModel().clearSelection();
 		regexInfoDropdown.getSelectionModel().clearSelection();
 		regexScopeDropdown1.getSelectionModel().clearSelection();
 
@@ -826,23 +822,15 @@ public class Controller {
 //		operandDropdown2.getSelectionModel().select("weekend");
 
 		// metadata operators
-		operatorDropdown1.getItems().add("==");
-		operatorDropdown2.getItems().add("==");
-		operatorDropdown1.getItems().add("!=");
-		operatorDropdown2.getItems().add("!=");
+		operatorDropdown1.getItems().add("equal");
+		operatorDropdown2.getItems().add("equal");
+		operatorDropdown1.getItems().add("not equal");
+		operatorDropdown2.getItems().add("not equal");
 		// custom operators - only useful if user is entering their own values
-		operatorDropdown1.getItems().add("<");
-		operatorDropdown2.getItems().add("<");
-		operatorDropdown1.getItems().add("<=");
-		operatorDropdown2.getItems().add("<=");
-		operatorDropdown1.getItems().add(">");
-		operatorDropdown2.getItems().add(">");
-		operatorDropdown1.getItems().add(">=");
-		operatorDropdown2.getItems().add(">=");
-
-		// regex templates
-		regexTempDropdown.getItems().add("before");
-		regexTempDropdown.getItems().add("after");
+		operatorDropdown1.getItems().add("less than");
+		operatorDropdown2.getItems().add("less than");
+		operatorDropdown1.getItems().add("greater than");
+		operatorDropdown2.getItems().add("greater than");
 
 		// regex frequencies
 		regexFreqDropdown.getItems().add("year");
@@ -856,4 +844,32 @@ public class Controller {
 		regexScopeDropdown1.getItems().add("i");
 		regexScopeDropdown2.getItems().add("i");
 	}
+
+	private void inConsistencyWarning(ArrayList<Rule> rules) {
+
+		Alert alert = new Alert(Alert.AlertType.WARNING);
+		alert.setTitle("Inconsistency Detected");
+		alert.setHeaderText("The Rule you Defined in inconsistent with your policy ");
+		alert.setContentText("There is a inconsistency between the following Rule Which one has a priority?");
+
+		ArrayList<Label> label = new ArrayList<>();
+		ArrayList<RadioButton> radioButtons = new ArrayList<>();
+		GridPane expContent = new GridPane();
+		expContent.setMaxWidth(Double.MAX_VALUE);
+
+		for (Rule rule : rules) {
+			label.add(new Label(rule.toString()));
+			radioButtons.add(new RadioButton());
+		}
+
+		for (int i = 0; i < label.size(); i++) {
+			expContent.add(radioButtons.get(i), 0, i);
+			expContent.add(label.get(i), 1, i);
+		}
+
+		// Set expandable Exception into the dialog pane.
+		alert.getDialogPane().setExpandableContent(expContent);
+		alert.showAndWait();
+	}
 }
+

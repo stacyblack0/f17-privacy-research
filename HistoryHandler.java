@@ -42,8 +42,8 @@ public class HistoryHandler {
 		addHistory("F", "location", cal6.getTimeInMillis());
 		addHistory("G", "location", cal7.getTimeInMillis());
 
-		regexMatch24Hours(".*(A K location).*(D K location).*");
-		regexMatch24Hours(".*(D K location).*(D K location).*");
+		regexMatch24Hours(".*(A K location).*", "D", "location");
+		regexMatch24Hours(".*(D K location).*", "D", "location");
 	}
 
 	public void addHistory(String individual, String information, long timeInMillis) {
@@ -55,9 +55,11 @@ public class HistoryHandler {
 	 * Checks to see if a given regex is valid for the past 24 hours.
 	 *
 	 * @param regex the given regex
+	 * @param name the name of the recipient set or individual that may be shared with
+	 * @param info the information that may be shared
 	 * @return true if the regex is valid; false otherwise
 	 */
-	public boolean regexMatch24Hours(String regex) {
+	public boolean regexMatch24Hours(String regex, String name, String info) {
 
 		StringBuilder builder = new StringBuilder();
 		Calendar current = Calendar.getInstance(); // the current time
@@ -68,6 +70,8 @@ public class HistoryHandler {
 		for (HistoryNode h : history) {
 			builder.append(h.getInfoShareEvent()).append(" -> "); // += "(" + h.getInfoShareEvent() + ") -> "
 		}
+
+		builder.append("(").append(name).append(" K ").append(info).append(")"); // add the current info-sharing event
 
 		// get string from StringBuilder
 		String string = builder.toString();

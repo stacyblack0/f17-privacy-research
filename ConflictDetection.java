@@ -81,15 +81,44 @@ public class ConflictDetection {
 
     private List<List<org.sosy_lab.java_smt.api.Model.ValueAssignment>> createSATModel(ArrayList<Rule> ruleList) throws InterruptedException, SolverException {
 
+		// to be used for variable names
+		int i = 1;
 
-        NumeralFormula.IntegerFormula a = (NumeralFormula.IntegerFormula)this.ifmgr.makeVariable("a");
-        this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(100), a));
-        this.prover.addConstraint(this.ifmgr.lessOrEquals(a, this.num(1300)));
-        this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(1100), a));
-        this.prover.addConstraint(this.ifmgr.lessOrEquals(a, this.num(1200)));
-        this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(1130), a));
-        this.prover.addConstraint(this.ifmgr.lessOrEquals(a, this.num(1200)));
-        this.prover.addConstraint(this.ifmgr.lessOrEquals(a, this.num(1200)));
+		for (Rule r : ruleList) {
+
+			int start = r.getCondition().getConditionStart();
+			int end = r.getCondition().getConditionEnd();
+
+			// in the database, null values for start/end times have been stored as -1
+			if (start == -1) {
+				if (r.getCondition().getConditionType().equals("day")) {
+					start = 1;
+				} else {
+					start = 0;
+				}
+			}
+			if (end == -1) {
+				if (r.getCondition().getConditionType().equals("day")) {
+					end = 7;
+				} else {
+					end = 23;
+				}
+			}
+
+			NumeralFormula.IntegerFormula temp = (NumeralFormula.IntegerFormula)this.ifmgr.makeVariable("" + i);
+			this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(start), temp));
+			this.prover.addConstraint(this.ifmgr.lessOrEquals(temp, this.num(end)));
+			i++;
+		}
+
+//        NumeralFormula.IntegerFormula a = (NumeralFormula.IntegerFormula)this.ifmgr.makeVariable("a");
+//        this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(100), a));
+//        this.prover.addConstraint(this.ifmgr.lessOrEquals(a, this.num(1300)));
+//        this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(1100), a));
+//        this.prover.addConstraint(this.ifmgr.lessOrEquals(a, this.num(1200)));
+//        this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(1130), a));
+//        this.prover.addConstraint(this.ifmgr.lessOrEquals(a, this.num(1200)));
+//        this.prover.addConstraint(this.ifmgr.lessOrEquals(a, this.num(1200)));
         ArrayList models = new ArrayList();
 
         while (!this.prover.isUnsat()) {

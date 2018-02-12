@@ -109,128 +109,131 @@ INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex
 	VALUES ('social security number','','-1','-1','0','.*(Uber K location).*(Uber K social security number).*','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='transportation' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('credit card number','','-1','-1','0','.*(Lyft K credit card number).*','','0','g',
+	VALUES ('credit card number','','-1','-1','0','.*(Uber K location).*(Uber K credit card number).*','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='transportation' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('personal planner','','-1','-1','0','.*(Lyft K personal planner).*','','0','g',
+	VALUES ('personal info','','-1','-1','0','.*(Lyft K location).*(Lyft K personal info).*','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='transportation' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('home address','','-1','-1','0','.*(BSU Shuttle K home address).*','','0','g',
+	VALUES ('home address','time','8','19','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='transportation' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('phone number','','-1','-1','0','.*(BSU Shuttle K phone number).*','','0','g',
+	VALUES ('phone number','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='transportation' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('email address','','-1','-1','0','.*(BSU Shuttle K email address).*','','0','g',
+	VALUES ('email address','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='transportation' AND Type='applications'));
 
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('location','','-1','-1','0','.*(Fitbit K location).*','','0','g',
+	VALUES ('location','time','8','19','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='health' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('health information','','-1','-1','0','.*(Fitbit K health information).*','','0','g',
+	VALUES ('health information','','-1','-1','0','.*(Fitbit K location).*(Fitbit K health information).*','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='health' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('credit card number','','-1','-1','0','.*(Fitbit K credit card number).*','','0','g',
+	VALUES ('credit card number','','-1','-1','0','.*(Fitbit K location).*(Fitbit K credit card number).*','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='health' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('mutual friends','','-1','-1','0','.*(Fitbit K mutual friends).*','','0','g',
+	VALUES ('personal info','','-1','-1','0','.*(Fitbit K location).*(Fitbit K personal info).*','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='health' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('personal planner','','-1','-1','0','.*(Fitbit K personal planner).*','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='health' AND Type='applications'));
-INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('email address','','-1','-1','0','.*(Fitbit K email address).*','','0','g',
+	VALUES ('email address','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='health' AND Type='applications'));
 
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('social security number','','-1','-1','0','.*(MoneyTracker K social security number).*','','0','g',
+	VALUES ('social security number','','-1','-1','0','','year','3','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='banking' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('credit card number','','-1','-1','0','.*(MoneyTracker K credit card number).*','','0','g',
+	VALUES ('credit card number','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='banking' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('banking history','','-1','-1','0','.*(MoneyTracker K banking history).*','','0','g',
+	VALUES ('financial','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='banking' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('shopping history','','-1','-1','0','.*(MoneyTracker K shopping history).*','','0','g',
+	VALUES ('shopping history','','-1','-1','0','.*(MoneyTracker K credit card number).*(MoneyTracker K shopping history).*','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='banking' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('home address','','-1','-1','0','.*(MoneyTracker K home address).*','','0','g',
+	VALUES ('home address','','-1','-1','0','.*(MoneyTracker K credit card number).*(MoneyTracker K home address).*','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='banking' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('phone number','','-1','-1','0','.*(MoneyTracker K phone number).*','','0','g',
+	VALUES ('phone number','day','7','1','1','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='banking' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('email address','','-1','-1','0','.*(MoneyTracker K email address).*','','0','g',
+	VALUES ('email address','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='banking' AND Type='applications'));
 
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('credit card number','','-1','-1','0','.*(Candy Crush K credit card number).*','','0','g',
+	VALUES ('location','time','8','19','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='gaming' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('mutual friends','','-1','-1','0','.*(Candy Crush K mutual friends).*','','0','g',
+	VALUES ('credit card number','','-1','-1','0','.*(Candy Crush K location).*(Candy Crush K credit card number).*','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='gaming' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('email address','','-1','-1','0','.*(Candy Crush K email address).*','','0','g',
+	VALUES ('photos','day','7','1','1','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='gaming' AND Type='applications'));
+INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
+	VALUES ('email address','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='gaming' AND Type='applications'));
 
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
 	VALUES ('credit card number','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='shopping' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('shopping history','true','-1','-1','0','','','0','g',
+	VALUES ('shopping history','','-1','-1','0','.*(Amazon K credit card number).*(Amazon K shopping history).*','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='shopping' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('home address','true','-1','-1','0','','','0','g',
+	VALUES ('home address','','-1','-1','0','.*(Amazon K credit card number).*(Amazon K home address).*','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='shopping' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('phone number','true','-1','-1','0','','','0','g',
+	VALUES ('photos','true','-1','-1','0','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='shopping' AND Type='applications'));
+INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
+	VALUES ('phone number','day','7','1','1','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='shopping' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
 	VALUES ('email address','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='shopping' AND Type='applications'));
 
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('location','','-1','-1','0','.*(Facebook K location).*','','0','g',
+	VALUES ('location','day','7','1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='social media' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('credit card number','','-1','-1','0','.*(Facebook K credit card number).*','','0','g',
+	VALUES ('credit card number','','-1','-1','0','.*(Facebook K location).*(Facebook K credit card number).*','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='social media' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('mutual friends','','-1','-1','0','.*(Facebook K mutual friends).*','','0','g',
+	VALUES ('photos','time','8','16','1','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='social media' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('personal planner','','-1','-1','0','.*(Facebook K personal planner).*','','0','g',
+	VALUES ('personal info','time','8','19','0','','','0','g',
   (SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='social media' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('home address','','-1','-1','0','.*(Facebook K home address).*','','0','g',
+	VALUES ('home address','','-1','-1','0','.*(Facebook K location).*(Facebook K home address).*','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='social media' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('phone number','','-1','-1','0','.*(Facebook K phone number).*','','0','g',
+	VALUES ('phone number','day','7','1','1','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='social media' AND Type='applications'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('email address','','-1','-1','0','.*(Facebook K email address).*','','0','g',
+	VALUES ('email address','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='social media' AND Type='applications'));
 
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
 	VALUES ('location','time','7','17','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='colleagues' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('work schedule','true','-1','-1','0','','','0','g',
+	VALUES ('calendar','time','7','17','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='colleagues' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('phone number','true','-1','-1','0','','','0','g',
+	VALUES ('phone number','day','7','1','1','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='colleagues' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
 	VALUES ('email address','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='colleagues' AND Type='people'));
 
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('location','true','-1','-1','0','','','0','g',
+	VALUES ('location','day','7','1','1','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='family' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('mutual friends','true','-1','-1','0','','','0','g',
+	VALUES ('photos','day','7','1','1','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='family' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
 	VALUES ('home address','true','-1','-1','0','','','0','g',
@@ -255,13 +258,13 @@ INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex
 	VALUES ('credit card number','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('banking history','true','-1','-1','0','','','0','g',
+	VALUES ('financial','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('mutual friends','true','-1','-1','0','','','0','g',
+	VALUES ('photos','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('personal planner','true','-1','-1','0','','','0','g',
+	VALUES ('personal info','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
 	VALUES ('shopping history','true','-1','-1','0','','','0','g',
@@ -280,82 +283,60 @@ INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='immediate family' AND Type='people'));
 
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('location','day','6','2','0','','','0','g',
+	VALUES ('location','day','7','1','1','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='extended family' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('mutual friends','day','6','2','0','','','0','g',
+	VALUES ('photos','day','7','1','1','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='extended family' AND Type='people'));
-INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('home address','time','19','8','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='extended family' AND Type='people'));
-INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('phone number','true','-1','-1','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='extended family' AND Type='people'));
-INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('email address','true','-1','-1','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='extended family' AND Type='people'));
-
-INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('location','time','7','17','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='acquaintances' AND Type='people'));
-INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('email address','true','-1','-1','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='acquaintances' AND Type='people'));
-
-INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('mutual friends','time','19','8','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='friends' AND Type='people'));
-INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('phone number','true','-1','-1','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='friends' AND Type='people'));
-INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('email address','true','-1','-1','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='friends' AND Type='people'));
-
-INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('location','time','7','17','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='instagram friends' AND Type='people'));
-INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('mutual friends','true','-1','-1','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='instagram friends' AND Type='people'));
-INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('email address','true','-1','-1','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='instagram friends' AND Type='people'));
-
-INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('location','','-1','-1','0','.*(Adela Jones K location).*','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
-INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('mutual friends','true','-1','-1','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
-INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('personal planner','true','-1','-1','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
 	VALUES ('home address','true','-1','-1','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='extended family' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
 	VALUES ('phone number','true','-1','-1','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='extended family' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
 	VALUES ('email address','true','-1','-1','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='extended family' AND Type='people'));
 
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('location','day','6','2','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
+	VALUES ('location','time','8','19','0','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='acquaintances' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('health information','day','6','2','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
+	VALUES ('email address','true','-1','-1','0','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='acquaintances' AND Type='people'));
+
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('mutual friends','day','6','2','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
+	VALUES ('photos','time','8','19','0','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='friends' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('personal planner','day','6','2','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
+	VALUES ('phone number','true','-1','-1','0','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='friends' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('home address','day','6','2','0','','','0','g',
-	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
+	VALUES ('email address','true','-1','-1','0','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='friends' AND Type='people'));
+
+INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
+	VALUES ('location','time','8','19','0','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='instagram friends' AND Type='people'));
+INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
+	VALUES ('photos','true','-1','-1','0','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='instagram friends' AND Type='people'));
+INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
+	VALUES ('email address','true','-1','-1','0','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='instagram friends' AND Type='people'));
+
+INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
+	VALUES ('location','day','7','1','1','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
+INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
+	VALUES ('photos','day','7','1','1','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
+INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
+	VALUES ('personal info','day','7','1','1','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
+INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
+	VALUES ('home address','day','7','1','1','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
 	VALUES ('phone number','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
@@ -365,21 +346,43 @@ INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex
 
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
 	VALUES ('location','true','-1','-1','0','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
+INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
+	VALUES ('health information','day','7','1','1','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
+INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
+	VALUES ('photos','true','-1','-1','0','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
+INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
+	VALUES ('personal info','true','-1','-1','0','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
+INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
+	VALUES ('home address','true','-1','-1','0','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='best friends' AND Type='people'));
+INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
+	VALUES ('phone number','true','-1','-1','0','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
+INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
+	VALUES ('email address','true','-1','-1','0','','','0','g',
+	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='close friends' AND Type='people'));
+
+INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
+	VALUES ('location','time','8','16','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='google services' AND Type='services'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
 	VALUES ('credit card number','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='google services' AND Type='services'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('banking history','true','-1','-1','0','','','0','g',
+	VALUES ('financial','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='google services' AND Type='services'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('mutual friends','true','-1','-1','0','','','0','g',
+	VALUES ('photos','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='google services' AND Type='services'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('personal planner','true','-1','-1','0','','','0','g',
+	VALUES ('personal info','true','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='google services' AND Type='services'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('shopping history','true','-1','-1','0','','','0','g',
+	VALUES ('shopping history','','-1','-1','0','.*(google services K credit card number).*(google services K shopping histor).*','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='google services' AND Type='services'));
 INSERT INTO Rules (Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
 	VALUES ('home address','true','-1','-1','0','','','0','g',
@@ -408,12 +411,12 @@ INSERT INTO Information (InformationName) VALUES ('location');
 INSERT INTO Information (InformationName) VALUES ('health information');
 INSERT INTO Information (InformationName) VALUES ('social security number');
 INSERT INTO Information (InformationName) VALUES ('credit card number');
-INSERT INTO Information (InformationName) VALUES ('banking history');
-INSERT INTO Information (InformationName) VALUES ('mutual friends');
-INSERT INTO Information (InformationName) VALUES ('personal planner');
+INSERT INTO Information (InformationName) VALUES ('financial');
+INSERT INTO Information (InformationName) VALUES ('photos');
+INSERT INTO Information (InformationName) VALUES ('personal info');
 INSERT INTO Information (InformationName) VALUES ('shopping history');
 INSERT INTO Information (InformationName) VALUES ('home address');
 INSERT INTO Information (InformationName) VALUES ('license plate number');
-INSERT INTO Information (InformationName) VALUES ('work schedule');
+INSERT INTO Information (InformationName) VALUES ('calendar');
 INSERT INTO Information (InformationName) VALUES ('phone number');
 INSERT INTO Information (InformationName) VALUES ('email address');
