@@ -6,7 +6,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import org.sosy_lab.common.ShutdownNotifier;
 import org.sosy_lab.common.configuration.Configuration;
-import org.sosy_lab.common.configuration.InvalidConfigurationException;
 import org.sosy_lab.common.log.BasicLogManager;
 import org.sosy_lab.common.log.LogManager;
 import org.sosy_lab.java_smt.SolverContextFactory;
@@ -20,7 +19,6 @@ import tree.Rule;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 
 public class Controller {
 
@@ -271,46 +269,46 @@ public class Controller {
 			}
 		});
 
-		// saves all data gathered so far into a new rule
+		// save all data gathered so far into a new rule
 		saveButton.setOnAction(event -> {
 
-
-			// determine conflicts
-			Configuration config = Configuration.defaultConfiguration();
-			LogManager logger = null;
+			// determine conflicts; put in new class/method?
 			try {
-				logger = BasicLogManager.create(config);
-			} catch (InvalidConfigurationException e) {
-				e.printStackTrace();
-			}
-			ShutdownNotifier notifier = ShutdownNotifier.createDummy();
 
-			SolverContextFactory.Solvers[] var4 = SolverContextFactory.Solvers.values();
-			int var5 = var4.length;
-			for (SolverContextFactory.Solvers solvers : var4) {
-				System.out.println(solvers);
-			}
-			SolverContextFactory.Solvers solver = var4[2];
-			System.out.println("\nUsing solver " + solver);
-			SolverContext context = null;
-			try {
-				context = SolverContextFactory.createSolverContext(config, logger, notifier, solver);
-			} catch (InvalidConfigurationException e) {
-				e.printStackTrace();
-			}
-			Throwable var9 = null;
+				Configuration config = Configuration.defaultConfiguration();
+				LogManager logger = BasicLogManager.create(config);
+				ShutdownNotifier notifier = ShutdownNotifier.createDummy();
+				SolverContextFactory.Solvers[] values = SolverContextFactory.Solvers.values();
 
-			ProverEnvironment prover = context.newProverEnvironment(new SolverContext.ProverOptions[]{SolverContext.ProverOptions.GENERATE_MODELS});
+				for (SolverContextFactory.Solvers solvers : values) {
+					System.out.println(solvers);
+				}
 
-			try {
+				SolverContextFactory.Solvers solver = values[2];
+				System.out.println("\nUsing solver " + solver);
+				SolverContext context = SolverContextFactory.createSolverContext(config, logger, notifier, solver);
+				ProverEnvironment prover = context.newProverEnvironment(SolverContext.ProverOptions.GENERATE_MODELS);
+
+				// get intersecting rules
+				ObservableList<Rule> data = dataAccess.selectIntByRecsetInfo(
+						recipientDropdown1.getValue(), informationDropdown1.getValue());
+				ArrayList<Rule> rules = new ArrayList<>(data); // convert to array list to pass into function
+
 				ConflictDetection cDetect = new ConflictDetection(context, prover);
-			} catch (InvalidConfigurationException e) {
+				boolean conflict = cDetect.hasConflict(rules);
+
+				if (conflict) {
+					conflictWarning();
+					enableConditionBoxes();
+					enableRegexBoxes();
+					clearSaveTabBoxes();
+					conditionCount.setText("0");
+					return;
+				}
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
-
-
-//			ConditionSet temp = resetCondition(conditions);
 			Condition condition = conditionArray.get(0);
 			Regex regex = regexArray.get(0);
 			String scope = scopeArray.get(0);
@@ -500,7 +498,7 @@ public class Controller {
 
 			// if there are valid rules that allow info-sharing, add info-sharing to history
 			if (rules2.size() > 0) {
-				historyHandler.addHistory(individual, info, cal.getTimeInMillis());
+				historyHandler.addHistory(recipientSet, individual, info, cal.getTimeInMillis());
 			}
 
 			populateValidPane(rules1, rules2);
@@ -764,21 +762,6 @@ public class Controller {
 	}
 
 	/**
-	 * Grabs the set of conditions from the given ConditionNode and returns
-	 * them in a new ConditionNode, before resetting the given
-	 * ConditionNode's set.
-	 *
-	 * @param conditionSet the ConditionNode to be reset
-	 * @return a new ConditionNode containing the old ConditionNode's set
-	 */
-	private ConditionSet resetCondition(ConditionSet conditionSet) {
-		LinkedHashSet<Condition> temp1 = conditionSet.getSet();
-		ConditionSet temp2 = new ConditionSet(temp1);
-		conditionSet.setSet(new LinkedHashSet<>());
-		return temp2;
-	}
-
-	/**
 	 * Populates dropdown menus with information from the database.
 	 */
 	private void populateFromDatabase(DataAccess dataAccess) {
@@ -845,7 +828,15 @@ public class Controller {
 		regexScopeDropdown2.getItems().add("i");
 	}
 
-	private void inConsistencyWarning(ArrayList<Rule> rules) {
+	private void conflictWarning() {
+
+		Alert alert = new Alert(Alert.AlertType.WARNING);
+		alert.setTitle("Conflict Detected");
+		alert.setHeaderText("The rule you are trying to save conflicts with another rule. Try another.");
+		alert.showAndWait();
+	}
+
+	private void inconsistencyWarning(ArrayList<Rule> rules) {
 
 		Alert alert = new Alert(Alert.AlertType.WARNING);
 		alert.setTitle("Inconsistency Detected");

@@ -60,7 +60,11 @@ public class Condition {
 		} else if (conditionEnd == -1) {
 			return str += "(" + conditionStart + " <= " + conditionType + ")";
 		} else {
-			return str += "(" + conditionStart + " <= " + conditionType + " <= " + conditionEnd + ")";
+			if (conditionStart <= conditionEnd) {
+				return str += "((" + conditionStart + " <= " + conditionType + ") AND (" + conditionType + " <= " + conditionEnd + "))";
+			} else {
+				return str += "((" + conditionStart + " <= " + conditionType + ") OR (" + conditionType + " <= " + conditionEnd + "))";
+			}
 		}
 	}
 }

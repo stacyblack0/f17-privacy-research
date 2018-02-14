@@ -34,20 +34,20 @@ public class HistoryHandler {
 		cal6.add(Calendar.HOUR, -24);
 		cal7.add(Calendar.HOUR, -30);
 
-		addHistory("A", "location", cal1.getTimeInMillis());
-		addHistory("B", "location", cal2.getTimeInMillis());
-		addHistory("C", "location", cal3.getTimeInMillis());
-		addHistory("D", "location", cal4.getTimeInMillis());
-		addHistory("E", "location", cal5.getTimeInMillis());
-		addHistory("F", "location", cal6.getTimeInMillis());
-		addHistory("G", "location", cal7.getTimeInMillis());
+		addHistory("A", "ABC", "location", cal1.getTimeInMillis());
+		addHistory("B", "ABC", "location", cal2.getTimeInMillis());
+		addHistory("C", "ABC", "location", cal3.getTimeInMillis());
+		addHistory("D", "ABC", "location", cal4.getTimeInMillis());
+		addHistory("E", "ABC", "location", cal5.getTimeInMillis());
+		addHistory("F", "ABC", "location", cal6.getTimeInMillis());
+		addHistory("G", "ABC", "location", cal7.getTimeInMillis());
 
-		regexMatch24Hours(".*(A K location).*", "D", "location");
-		regexMatch24Hours(".*(D K location).*", "D", "location");
+		regexMatch24Hours(".*(A K location).*", "D", "location", "i");
+		regexMatch24Hours(".*(D K location).*", "D", "location", "i");
 	}
 
-	public void addHistory(String individual, String information, long timeInMillis) {
-		HistoryNode node = new HistoryNode(individual, information, timeInMillis);
+	public void addHistory(String recipientSet, String individual, String information, long timeInMillis) {
+		HistoryNode node = new HistoryNode(recipientSet, individual, information, timeInMillis);
 		dataAccess.insertHistory(node);
 	}
 
@@ -59,7 +59,7 @@ public class HistoryHandler {
 	 * @param info the information that may be shared
 	 * @return true if the regex is valid; false otherwise
 	 */
-	public boolean regexMatch24Hours(String regex, String name, String info) {
+	public boolean regexMatch24Hours(String regex, String name, String info, String scope) {
 
 		StringBuilder builder = new StringBuilder();
 		Calendar current = Calendar.getInstance(); // the current time
@@ -68,7 +68,12 @@ public class HistoryHandler {
 
 		// build string from list of history nodes
 		for (HistoryNode h : history) {
-			builder.append(h.getInfoShareEvent()).append(" -> "); // += "(" + h.getInfoShareEvent() + ") -> "
+			if (scope.equals("g")) {
+				builder.append(h.getGroupShare()).append(" -> "); // += "(" + h.getGroupShare() + ") -> "
+			} else {
+				builder.append(h.getIndividualShare()).append(" -> "); // += "(" + h.getIndividualShare() + ") -> "
+			}
+
 		}
 
 		builder.append("(").append(name).append(" K ").append(info).append(")"); // add the current info-sharing event

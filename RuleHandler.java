@@ -87,13 +87,14 @@ public class RuleHandler {
 	 * @param information the given information
 	 * @return true if there a rule exists, false otherwise
 	 */
+
 //	public boolean hasRule(String individual, String information) {
 //		ObservableList<Rule> temp = findAllRules(individual, information);
 //		return temp.size() > 0;
 //	}
 
 	/**
-	 * Given a set of rules, checks each rule to see if it is currently
+	 * Given a set of rules and an individual, checks each rule to see if it is currently
 	 * (based on the computer's system time) valid, and returns valid rules
 	 * as a set.
 	 *
@@ -108,6 +109,7 @@ public class RuleHandler {
 		for (Rule r : rules) {
 
 			String conditions = r.getCondition().toString();
+			System.out.println(conditions);
 
 			Expression exp = parser.parseExpression(conditions);
 			// defaults to true if conditions are empty; otherwise, checks if conditions are valid
@@ -118,12 +120,14 @@ public class RuleHandler {
 
 			if (scope.equals("g")) { // group scope
 				// defaults to true if regex is empty; otherwise, checks if regex is valid
-				isValidRegex = r.getRegex().getRegexString().equals("") || historyHandler.regexMatch24Hours(regex, r.getRecipientSet(), r.getInfo());
+				isValidRegex = r.getRegex().getRegexString().equals("")
+						|| historyHandler.regexMatch24Hours(regex, r.getRecipientSet(), r.getInfo(), scope);
 			} else {                 // individual scope
 				// replaces instances of the recipient set name with the name of the individual
 				regex = regex.replaceAll(r.getRecipientSet(), individual);
 				// defaults to true if regex is empty; otherwise, checks if regex is valid
-				isValidRegex = r.getRegex().getRegexString().equals("") || historyHandler.regexMatch24Hours(regex, individual, r.getInfo());
+				isValidRegex = r.getRegex().getRegexString().equals("")
+						|| historyHandler.regexMatch24Hours(regex, individual, r.getInfo(), scope);
 			}
 
 			if (isValidCond && isValidRegex) {

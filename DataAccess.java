@@ -85,9 +85,10 @@ public class DataAccess {
 	public void insertHistory(HistoryNode node) {
 		try {
 			createConnection();
-			preparedStatement = connect.prepareStatement("INSERT INTO History (InfoShareEvent,TimeInMillis) VALUES (?,?);");
-			preparedStatement.setString(1, node.toString());
-			preparedStatement.setLong(2, node.getTimeInMillis());
+			preparedStatement = connect.prepareStatement("INSERT INTO History (IndividualShare,GroupShare,TimeInMillis) VALUES (?,?,?);");
+			preparedStatement.setString(1, node.indiString());
+			preparedStatement.setString(2, node.groupString());
+			preparedStatement.setLong(3, node.getTimeInMillis());
 			preparedStatement.executeUpdate();
 			connect.commit();
 			connect.close();
@@ -234,9 +235,10 @@ public class DataAccess {
 			resultSet = preparedStatement.executeQuery();
 			ObservableList<HistoryNode> data = FXCollections.observableArrayList();
 			while (resultSet.next()) {
-				String infoShareEvent = resultSet.getString("InfoShareEvent");
+				String individualShare = resultSet.getString("IndividualShare");
+				String groupShare = resultSet.getString("GroupShare");
 				long timeInMillis = resultSet.getLong("TimeInMillis");
-				data.add(new HistoryNode(infoShareEvent, timeInMillis));
+				data.add(new HistoryNode(individualShare, groupShare, timeInMillis));
 			}
 			connect.close();
 			return data;
@@ -344,6 +346,57 @@ public class DataAccess {
 					array.add(recipientSet);
 					data.put(name, array);
 				}
+			}
+			connect.close();
+			return data;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return null;
+	}
+
+	/**
+	 * Finds individuals in a recipient set (the subquery), and then find all instances of each found individual
+	 * in all recipient set for a certain info type, in order to determine the recipient set that might have conflicting
+	 * rules with the given recipient set and info type.
+	 *
+	 * @param recipientSet the given recipient set
+	 * @param information the given information type
+	 * @return all rules that might conflict with a given recipient set and info type
+	 */
+	public ObservableList<Rule> selectIntByRecsetInfo(String recipientSet, String information) {
+		try {
+
+			createConnection();
+			preparedStatement = connect.prepareStatement("SELECT * FROM Individuals i " +
+					"JOIN Rules r ON i.RecipientSetID=r.RecipientSetID " +
+					"WHERE IndividualName=ANY(SELECT IndividualName FROM Individuals WHERE RecipientSetID=" +
+					"(SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?)) " +
+					"AND r.Info=? " +
+					"GROUP BY RuleID;");
+			preparedStatement.setString(1, recipientSet);
+			preparedStatement.setString(2, information);
+			resultSet = preparedStatement.executeQuery();
+
+			ObservableList<Rule> data = FXCollections.observableArrayList();
+
+			while (resultSet.next()) {
+
+				String conditionType = resultSet.getString("ConditionType");
+				int conditionStart = resultSet.getInt("ConditionStart");
+				int conditionEnd = resultSet.getInt("ConditionEnd");
+				boolean negation = resultSet.getBoolean("Negation");
+				Condition condition = new Condition(conditionType, conditionStart, conditionEnd, negation);
+
+				String regexString = resultSet.getString("Regex");
+				String regexInterval = resultSet.getString("RegexInterval");
+				int regexFrequency = resultSet.getInt("RegexFrequency");
+				Regex regex = new Regex(regexString, regexInterval, regexFrequency);
+
+				String scope = resultSet.getString("Scope");
+
+				Rule rule = new Rule(information, recipientSet, condition, regex, scope);
+				data.add(rule);
 			}
 			connect.close();
 			return data;

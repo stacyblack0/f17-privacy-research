@@ -38,7 +38,8 @@ CREATE TABLE Rules (
 
 CREATE TABLE History (
 	HistoryID INT auto_increment NOT NULL PRIMARY KEY,
-	InfoShareEvent VARCHAR(128) NOT NULL,
+	IndividualShare VARCHAR(128) NOT NULL,
+	GroupShare VARCHAR(128) NOT NULL,
 	TimeInMillis BIGINT(19) NOT NULL
 );
 
