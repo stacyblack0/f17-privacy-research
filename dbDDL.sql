@@ -23,10 +23,12 @@ CREATE TABLE Rules (
 	RuleID INT auto_increment NOT NULL PRIMARY KEY,
 	RecipientSetID INT NOT NULL,
 	Info VARCHAR(50) NOT NULL,
-	ConditionType VARCHAR(50),
-	ConditionStart INT(5),
-	ConditionEnd INT(5),
-	Negation BOOLEAN,
+	TimeStart INT(5),
+	TimeEnd INT(5),
+	TimeNegation BOOLEAN,
+	DayStart INT(5),
+	DayEnd INT(5),
+	DayNegation BOOLEAN,
 	Regex VARCHAR(256),
 	RegexInterval VARCHAR(50),
 	RegexFrequency INT,
@@ -60,6 +62,7 @@ CREATE TABLE Information (
 
 CREATE TABLE Priorities (
 	PriorityID INT auto_increment NOT NULL PRIMARY KEY,
+	RuleID INT NOT NULL,
 	PriorityValue INT NOT NULL,
 	FOREIGN KEY (RuleID)
 		REFERENCES Rules (RuleID)

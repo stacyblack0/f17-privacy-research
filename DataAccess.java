@@ -56,18 +56,20 @@ public class DataAccess {
 		try {
 			createConnection();
 			preparedStatement = connect.prepareStatement("INSERT INTO Rules " +
-					"(RecipientSetID,Info,ConditionType,ConditionStart,ConditionEnd,Negation,Regex,RegexInterval,RegexFrequency,Scope) " +
-					"VALUES ((SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?),?,?,?,?,?,?,?,?,?);");
+					"(RecipientSetID,Info,TimeStart,TimeEnd,TimeNegation,DayStart,DayEnd,DayNegation,Regex,RegexInterval,RegexFrequency,Scope) " +
+					"VALUES ((SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?),?,?,?,?,?,?,?,?,?,?,?);");
 			preparedStatement.setString(1, rule.getRecipientSet());
 			preparedStatement.setString(2, rule.getInfo());
-			preparedStatement.setString(3, rule.getCondition().getConditionType());
-			preparedStatement.setInt(4, rule.getCondition().getConditionStart());
-			preparedStatement.setInt(5, rule.getCondition().getConditionEnd());
-			preparedStatement.setBoolean(6, rule.getCondition().getNegation());
-			preparedStatement.setString(7, rule.getRegex().getRegexString());
-			preparedStatement.setString(8, rule.getRegex().getInterval());
-			preparedStatement.setInt(9, rule.getRegex().getFrequency());
-			preparedStatement.setString(10, rule.getScope());
+			preparedStatement.setInt(3, rule.getCondition().getTimeStart());
+			preparedStatement.setInt(4, rule.getCondition().getTimeEnd());
+			preparedStatement.setBoolean(5, rule.getCondition().isTimeNegation());
+			preparedStatement.setInt(6, rule.getCondition().getDayStart());
+			preparedStatement.setInt(7, rule.getCondition().getDayEnd());
+			preparedStatement.setBoolean(8, rule.getCondition().isDayNegation());
+			preparedStatement.setString(9, rule.getRegex().getRegexString());
+			preparedStatement.setString(10, rule.getRegex().getInterval());
+			preparedStatement.setInt(11, rule.getRegex().getFrequency());
+			preparedStatement.setString(12, rule.getScope());
 			preparedStatement.executeUpdate();
 			connect.commit();
 			connect.close();
@@ -126,11 +128,13 @@ public class DataAccess {
 				String information = resultSet.getString("Info");
 				String setName = resultSet.getString("RecipientSetName");
 
-				String conditionType = resultSet.getString("ConditionType");
-				int conditionStart = resultSet.getInt("ConditionStart");
-				int conditionEnd = resultSet.getInt("ConditionEnd");
-				boolean negation = resultSet.getBoolean("Negation");
-				Condition condition = new Condition(conditionType, conditionStart, conditionEnd, negation);
+				int timeStart = resultSet.getInt("TimeStart");
+				int timeEnd = resultSet.getInt("TimeEnd");
+				boolean timeNegation = resultSet.getBoolean("TimeNegation");
+				int dayStart = resultSet.getInt("DayStart");
+				int dayEnd = resultSet.getInt("DayEnd");
+				boolean dayNegation = resultSet.getBoolean("DayNegation");
+				Condition condition = new Condition(timeStart, timeEnd, timeNegation, dayStart, dayEnd, dayNegation);
 
 				String regexString = resultSet.getString("Regex");
 				String interval = resultSet.getString("RegexInterval");
@@ -160,11 +164,13 @@ public class DataAccess {
 			Rule rule = null;
 			while (resultSet.next()) { // should loop 1 or fewer times
 
-				String conditionType = resultSet.getString("ConditionType");
-				int conditionStart = resultSet.getInt("ConditionStart");
-				int conditionEnd = resultSet.getInt("ConditionEnd");
-				boolean negation = resultSet.getBoolean("Negation");
-				Condition condition = new Condition(conditionType, conditionStart, conditionEnd, negation);
+				int timeStart = resultSet.getInt("TimeStart");
+				int timeEnd = resultSet.getInt("TimeEnd");
+				boolean timeNegation = resultSet.getBoolean("TimeNegation");
+				int dayStart = resultSet.getInt("DayStart");
+				int dayEnd = resultSet.getInt("DayEnd");
+				boolean dayNegation = resultSet.getBoolean("DayNegation");
+				Condition condition = new Condition(timeStart, timeEnd, timeNegation, dayStart, dayEnd, dayNegation);
 
 				String regexString = resultSet.getString("Regex");
 				String interval = resultSet.getString("RegexInterval");
@@ -197,11 +203,13 @@ public class DataAccess {
 
 				String setName = resultSet.getString("RecipientSetName");
 
-				String conditionType = resultSet.getString("ConditionType");
-				int conditionStart = resultSet.getInt("ConditionStart");
-				int conditionEnd = resultSet.getInt("ConditionEnd");
-				boolean negation = resultSet.getBoolean("Negation");
-				Condition condition = new Condition(conditionType, conditionStart, conditionEnd, negation);
+				int timeStart = resultSet.getInt("TimeStart");
+				int timeEnd = resultSet.getInt("TimeEnd");
+				boolean timeNegation = resultSet.getBoolean("TimeNegation");
+				int dayStart = resultSet.getInt("DayStart");
+				int dayEnd = resultSet.getInt("DayEnd");
+				boolean dayNegation = resultSet.getBoolean("DayNegation");
+				Condition condition = new Condition(timeStart, timeEnd, timeNegation, dayStart, dayEnd, dayNegation);
 
 				String regexString = resultSet.getString("Regex");
 				String interval = resultSet.getString("RegexInterval");
@@ -382,11 +390,13 @@ public class DataAccess {
 
 			while (resultSet.next()) {
 
-				String conditionType = resultSet.getString("ConditionType");
-				int conditionStart = resultSet.getInt("ConditionStart");
-				int conditionEnd = resultSet.getInt("ConditionEnd");
-				boolean negation = resultSet.getBoolean("Negation");
-				Condition condition = new Condition(conditionType, conditionStart, conditionEnd, negation);
+				int timeStart = resultSet.getInt("TimeStart");
+				int timeEnd = resultSet.getInt("TimeEnd");
+				boolean timeNegation = resultSet.getBoolean("TimeNegation");
+				int dayStart = resultSet.getInt("DayStart");
+				int dayEnd = resultSet.getInt("DayEnd");
+				boolean dayNegation = resultSet.getBoolean("DayNegation");
+				Condition condition = new Condition(timeStart, timeEnd, timeNegation, dayStart, dayEnd, dayNegation);
 
 				String regexString = resultSet.getString("Regex");
 				String regexInterval = resultSet.getString("RegexInterval");
@@ -448,11 +458,13 @@ public class DataAccess {
 
 				String information = resultSet.getString("Info");
 
-				String conditionType = resultSet.getString("ConditionType");
-				int conditionStart = resultSet.getInt("ConditionStart");
-				int conditionEnd = resultSet.getInt("ConditionEnd");
-				boolean negation = resultSet.getBoolean("Negation");
-				Condition condition = new Condition(conditionType, conditionStart, conditionEnd, negation);
+				int timeStart = resultSet.getInt("TimeStart");
+				int timeEnd = resultSet.getInt("TimeEnd");
+				boolean timeNegation = resultSet.getBoolean("TimeNegation");
+				int dayStart = resultSet.getInt("DayStart");
+				int dayEnd = resultSet.getInt("DayEnd");
+				boolean dayNegation = resultSet.getBoolean("DayNegation");
+				Condition condition = new Condition(timeStart, timeEnd, timeNegation, dayStart, dayEnd, dayNegation);
 
 				String regexString = resultSet.getString("Regex");
 				String interval = resultSet.getString("RegexInterval");
@@ -478,5 +490,4 @@ public class DataAccess {
 		}
 		return null;
 	}
-
 }

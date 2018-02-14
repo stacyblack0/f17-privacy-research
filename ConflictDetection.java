@@ -48,7 +48,13 @@ public class ConflictDetection {
 	}
 
 
-	public boolean hasConflict(ArrayList<Rule> ruleList) throws Exception {
+	/**
+	 * Determines if a set of rules contains a conflict.
+	 *
+	 * @param ruleList the set of rules
+	 * @param type what type of conflict to check for - time, or day
+	 */
+	public boolean hasConflict(ArrayList<Rule> ruleList, String type) throws Exception {
 		Throwable var9 = null;
 		try {
 			ProverEnvironment prover = context.newProverEnvironment(new SolverContext.ProverOptions[]{SolverContext.ProverOptions.GENERATE_MODELS});
@@ -56,7 +62,7 @@ public class ConflictDetection {
 
 			try {
 				prover.push();
-				System.out.println(createSATModel(ruleList));
+				System.out.println(createSATModel(ruleList, type));
 				prover.pop();
 			} catch (Throwable var23) {
 				var11 = var23;
@@ -79,61 +85,86 @@ public class ConflictDetection {
 		return true;
 	}
 
-	private List<List<org.sosy_lab.java_smt.api.Model.ValueAssignment>> createSATModel(ArrayList<Rule> ruleList) throws InterruptedException, SolverException {
-
-		// to be used for variable names
-//		int i = 1;
+	/**
+	 * @param ruleList the set of rules to check for a conflict
+	 * @param type what type of conflict to check for - time, or day
+	 */
+	private List<List<org.sosy_lab.java_smt.api.Model.ValueAssignment>> createSATModel(ArrayList<Rule> ruleList, String type) throws InterruptedException, SolverException {
 
 		for (Rule r : ruleList) {
 
 			System.out.println(r.toString());
 
-			int start = r.getCondition().getConditionStart();
-			int end = r.getCondition().getConditionEnd();
+//			int timeStart = r.getCondition().getTimeStart();
+//			int timeEnd = r.getCondition().getTimeEnd();
+//			int dayStart = r.getCondition().getTimeStart();
+//			int dayEnd = r.getCondition().getTimeEnd();
+
+			int start;
+			int end;
+
+			if (type.equals("time")) {
+				start = r.getCondition().getTimeStart();
+				end = r.getCondition().getTimeEnd();
+			} else {
+				start = r.getCondition().getDayStart();
+				end = r.getCondition().getDayEnd();
+			}
 
 			// in the database, null values for start/end times have been stored as -1
-			if (start == -1) {
-				if (r.getCondition().getConditionType().equals("day")) {
-					start = 1;
-				} else {
-					start = 0;
-				}
-			}
-			if (end == -1) {
-				if (r.getCondition().getConditionType().equals("day")) {
-					end = 7;
-				} else {
-					end = 23;
-				}
-			}
-
-			if (r.getCondition().getConditionType().equals("time")) {
-				System.out.println(start + " " + end);
-				NumeralFormula.IntegerFormula temp = this.ifmgr.makeVariable("a");
-				this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(start), temp));
-				this.prover.addConstraint(this.ifmgr.lessOrEquals(temp, this.num(end)));
-			}
-//			if (r.getCondition().getConditionType().equals("day")) {
-//				System.out.println(start + " " + end);
-//				NumeralFormula.IntegerFormula temp = this.ifmgr.makeVariable("b");
-//				NumeralFormula.IntegerFormula temp2 = this.ifmgr.makeVariable("c");
-//				this.prover.addConstraint(this.ifmgr.lessOrEquals(temp, this.num(end)));
-//				this.prover.addConstraint(this.ifmgr.greaterOrEquals(temp2, this.num(start)));
-//				this.prover.addConstraint(this.ifmgr.lessOrEquals(temp2, this.num(7)));
-//                this.prover.addConstraint(this.ifmgr.greaterOrEquals(this.num(0), temp));
+//			if (timeStart == -1) {
+//				timeStart = 0;
 //			}
+//			if (timeEnd == -1) {
+//				timeEnd = 23;
+//			}
+//			if (dayStart == -1) {
+//				dayStart = 1;
+//			}
+//			if (dayEnd == -1) {
+//				dayEnd = 7;
+//			}
+			if (start == -1 && type.equals("time")) {
+				start = 0;
+			} else if (start == -1 && type.equals("day")) {
+				start = 1;
+			}
 
-//			i++;
+			if (end == -1 && type.equals("time")) {
+				end = 23;
+			} else if (end == -1 && type.equals("day")) {
+				end = 7;
+			}
+
+			System.out.println(start + " " + end);
+			NumeralFormula.IntegerFormula a = this.ifmgr.makeVariable("a");
+//			NumeralFormula.IntegerFormula b = this.ifmgr.makeVariable("b");
+			// if condition specifies the weekend
+//			if (dayStart == 7 && dayEnd == 1) {
+////				NumeralFormula.IntegerFormula temp = this.ifmgr.makeVariable("a");
+//				this.prover.addConstraint(this.ifmgr.equal(this.num(dayStart), a));
+//				this.prover.addConstraint(this.ifmgr.equal(this.num(dayEnd), a));
+////				NumeralFormula.IntegerFormula temp2 = this.ifmgr.makeVariable("b");
+//				this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(dayStart), b));
+//				this.prover.addConstraint(this.ifmgr.lessOrEquals(b, this.num(dayEnd)));
+//			} else {
+////				NumeralFormula.IntegerFormula temp = this.ifmgr.makeVariable("a");
+//				this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(timeStart), a));
+//				this.prover.addConstraint(this.ifmgr.lessOrEquals(a, this.num(timeEnd)));
+////				NumeralFormula.IntegerFormula temp2 = this.ifmgr.makeVariable("b");
+//				this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(dayStart), b));
+//				this.prover.addConstraint(this.ifmgr.lessOrEquals(b, this.num(dayEnd)));
+//			}
+			if (start == 7 && end == 1) {
+				NumeralFormula.IntegerFormula b = this.ifmgr.makeVariable("b");
+				this.prover.addConstraint(this.ifmgr.equal(a, this.num(start)));
+				this.prover.addConstraint(this.ifmgr.equal(b, this.num(end)));
+			} else {
+				this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(start), a));
+				this.prover.addConstraint(this.ifmgr.lessOrEquals(a, this.num(end)));
+			}
 		}
 
-//        NumeralFormula.IntegerFormula a = this.ifmgr.makeVariable("a");
-//		NumeralFormula.IntegerFormula b = this.ifmgr.makeVariable("b");
-//        this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(0), a));
-//        this.prover.addConstraint(this.ifmgr.lessOrEquals(a, this.num(4)));
-//        this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(2), a));
-//        this.prover.addConstraint(this.ifmgr.lessOrEquals(a, this.num(3)));
-//        this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(8), b));
-//        this.prover.addConstraint(this.ifmgr.lessOrEquals(a, this.num(12)));
 		ArrayList models = new ArrayList();
 
 		while (!this.prover.isUnsat()) {

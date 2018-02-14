@@ -12,7 +12,6 @@ import org.sosy_lab.java_smt.SolverContextFactory;
 import org.sosy_lab.java_smt.api.ProverEnvironment;
 import org.sosy_lab.java_smt.api.SolverContext;
 import tree.Condition;
-import tree.ConditionSet;
 import tree.Regex;
 import tree.Rule;
 
@@ -196,7 +195,6 @@ public class Controller {
 
 		RuleHandler ruleHandler = new RuleHandler();
 		HistoryHandler historyHandler = new HistoryHandler();
-		ConditionSet conditions = new ConditionSet();
 		DataAccess dataAccess = new DataAccess();
 		// later have these things kept track of by RuleHandler ?
 		ArrayList<Regex> regexArray = new ArrayList<>(); // have to use ArrayList instead of Regex to get around final restriction
@@ -204,7 +202,7 @@ public class Controller {
 		ArrayList<Condition> conditionArray = new ArrayList<>(); // have to use ArrayList instead of Condition to get around final restriction
 		regexArray.add(0, null);
 		scopeArray.add(0, "g"); // by default, set scope to group
-		conditionArray.add(0, null);
+		conditionArray.add(0, new Condition(-1, -1, false, -1, -1, false));
 
 		// populate dropdown menus
 		populateFromDatabase(dataAccess);
@@ -280,9 +278,9 @@ public class Controller {
 				ShutdownNotifier notifier = ShutdownNotifier.createDummy();
 				SolverContextFactory.Solvers[] values = SolverContextFactory.Solvers.values();
 
-				for (SolverContextFactory.Solvers solvers : values) {
-					System.out.println(solvers);
-				}
+//				for (SolverContextFactory.Solvers solvers : values) {
+//					System.out.println(solvers);
+//				}
 
 				SolverContextFactory.Solvers solver = values[2];
 				System.out.println("\nUsing solver " + solver);
@@ -295,9 +293,10 @@ public class Controller {
 				ArrayList<Rule> rules = new ArrayList<>(data); // convert to array list to pass into function
 
 				ConflictDetection cDetect = new ConflictDetection(context, prover);
-				boolean conflict = cDetect.hasConflict(rules);
+				boolean timeConflict = false; //cDetect.hasConflict(rules, "time");
+				boolean dayConflict = cDetect.hasConflict(rules, "day");
 
-				if (conflict) {
+				if (timeConflict || dayConflict) {
 					conflictWarning();
 					enableConditionBoxes();
 					enableRegexBoxes();
@@ -314,7 +313,7 @@ public class Controller {
 			String scope = scopeArray.get(0);
 
 			if (condition == null) {
-				condition = new Condition("", -1, -1, false);
+				condition = new Condition(-1, -1, false, -1, -1, false);
 			}
 			if (regex == null) {
 				regex = new Regex("");
@@ -343,41 +342,43 @@ public class Controller {
 					&& (conditionText1.getText() != null || operandDropdown1.getValue() != null)) {
 
 				String operator = operatorDropdown1.getValue();
-				int conditionStart = -1;
-				int conditionEnd = -1;
-				boolean negation = false;
+				int timeStart = -1;
+				int timeEnd = -1;
+				boolean timeNegation = false;
 
 				if (operator.equals("equal") || operator.equals("not equal")) {
 
 					if (operator.equals("not equal")) {
-						negation = true;
+						timeNegation = true;
 					}
 
 					switch (operandDropdown1.getValue()) {
 						case "business hours":
-							conditionStart = 8;
-							conditionEnd = 16;
+							timeStart = 8;
+							timeEnd = 16;
 							break;
 						case "day":
-							conditionStart = 8;
-							conditionEnd = 19;
+							timeStart = 8;
+							timeEnd = 19;
 							break;
 						case "night":
-							conditionStart = 20;
-							conditionEnd = 7;
+							timeStart = 20;
+							timeEnd = 7;
 							break;
 					}
 				} else if (operator.equals("greater than")) {
-					conditionStart = Integer.parseInt(conditionText1.getText());
-					conditionEnd = -1;
+					timeStart = Integer.parseInt(conditionText1.getText());
+					timeEnd = -1;
 				} else {
-					conditionStart = -1;
-					conditionEnd = Integer.parseInt(conditionText1.getText());
+					timeStart = -1;
+					timeEnd = Integer.parseInt(conditionText1.getText());
 				}
 
-				Condition condition = new Condition("time", conditionStart, conditionEnd, negation);
-				conditionArray.set(0, condition);
-				conditions.addToSet(condition);
+				Condition condition = conditionArray.get(0);
+				condition.setTimeStart(timeStart);
+				condition.setTimeEnd(timeEnd);
+				condition.setTimeNegation(timeNegation);
+//				conditionArray.set(0, condition);
 
 				incrConditionCount();
 				operatorDropdown1.setDisable(true);
@@ -394,33 +395,35 @@ public class Controller {
 					&& (conditionText2.getText() != null || operandDropdown2.getValue() != null)) {
 
 				String operator = operatorDropdown2.getValue();
-				int conditionStart = -1;
-				int conditionEnd = -1;
-				boolean negation = false;
+				int dayStart = -1;
+				int dayEnd = -1;
+				boolean dayNegation = false;
 
 				if (operator.equals("equal") || operator.equals("not equal")) {
 
 					if (operator.equals("not equal")) {
-						negation = true;
+						dayNegation = true;
 					}
 
 					switch (operandDropdown2.getValue()) {
 						case "weekend":
-							conditionStart = 7;
-							conditionEnd = 1;
+							dayStart = 7;
+							dayEnd = 1;
 							break;
 					}
 				} else if (operator.equals("greater than")) {
-					conditionStart = Integer.parseInt(conditionText2.getText());
-					conditionEnd = -1;
+					dayStart = Integer.parseInt(conditionText2.getText());
+					dayEnd = -1;
 				} else {
-					conditionStart = -1;
-					conditionEnd = Integer.parseInt(conditionText2.getText());
+					dayStart = -1;
+					dayEnd = Integer.parseInt(conditionText2.getText());
 				}
 
-				Condition condition = new Condition("day", conditionStart, conditionEnd, negation);
+				Condition condition = conditionArray.get(0);
+				condition.setDayStart(dayStart);
+				condition.setDayEnd(dayEnd);
+				condition.setDayNegation(dayNegation);
 				conditionArray.set(0, condition);
-				conditions.addToSet(condition);
 
 				incrConditionCount();
 				operatorDropdown2.setDisable(true);

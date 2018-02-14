@@ -108,12 +108,21 @@ public class RuleHandler {
 
 		for (Rule r : rules) {
 
-			String conditions = r.getCondition().toString();
-			System.out.println(conditions);
+			String timeCondition = r.getCondition().timeString();
+			String dayCondition = r.getCondition().dayString();
+			Boolean isValidTime = true; // default to true
+			Boolean isValidDay = true;  // default to true
 
-			Expression exp = parser.parseExpression(conditions);
-			// defaults to true if conditions are empty; otherwise, checks if conditions are valid
-			boolean isValidCond = r.getCondition().toString().equals("") || exp.getValue(env, Boolean.class);
+			// feed conditions to SPEL to check validity
+			if (!timeCondition.equals("")) {
+				Expression exp = parser.parseExpression(timeCondition);
+				isValidTime = exp.getValue(env, Boolean.class);
+			}
+			if (!dayCondition.equals("")) {
+				Expression exp = parser.parseExpression(dayCondition);
+				isValidDay = exp.getValue(env, Boolean.class);
+			}
+
 			String regex = r.getRegex().getRegexString();
 			String scope = r.getScope();
 			boolean isValidRegex;
@@ -130,7 +139,7 @@ public class RuleHandler {
 						|| historyHandler.regexMatch24Hours(regex, individual, r.getInfo(), scope);
 			}
 
-			if (isValidCond && isValidRegex) {
+			if (isValidTime && isValidDay && isValidRegex) {
 				result.add(r);
 			}
 

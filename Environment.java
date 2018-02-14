@@ -3,9 +3,9 @@ import java.util.Calendar;
 public class Environment {
 
 	// environmental variables
-	int time;
-	int day;
-	Calendar current;
+	private int time;
+	private int day;
+	private Calendar current;
 
 	public Environment() {
 		current = Calendar.getInstance();
@@ -47,10 +47,20 @@ public class Environment {
 		time = hour;
 	}
 
+
+	/**
+	 * Getter for the time; necessary for SPEL to fill in the variable "time."
+	 *
+	 * @return the time
+	 */
 	public int getTime() {
 		return time;
 	}
 
+	/**
+	 * Getter for the day; necessary for SPEL to fill in the variable "day."
+	 * @return the day
+	 */
 	public int getDay() {
 		return day;
 	}

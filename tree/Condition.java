@@ -8,63 +8,126 @@ package tree;
  */
 public class Condition {
 
-	private String conditionType;
-	private int conditionStart;
-	private int conditionEnd;
-	private boolean negation;
+	private int timeStart;
+	private int timeEnd;
+	private boolean timeNegation;
+	private int dayStart;
+	private int dayEnd;
+	private boolean dayNegation;
 
 	/**
-	 * The constructor. Creates a new condition with a given condition type,
-	 * start time, and end time. If one of the times is unused, pass it in
-	 * with a value of -1.
-	 * @param conditionType the condition type
-	 * @param conditionStart the start time
-	 * @param conditionEnd the end time
-	 * @param negation whether the condition should be true or not
+	 * The constructor. Creates a new condition with a given time start, time end,
+	 * day start, day end, and negation values for both. If one of the ends/starts
+	 * is unused, pass it in with a value of -1.
 	 */
-	public Condition(String conditionType, int conditionStart, int conditionEnd, boolean negation) {
-		this.conditionType = conditionType;
-		this.conditionStart = conditionStart;
-		this.conditionEnd = conditionEnd;
-		this.negation = negation;
+	public Condition(int timeStart, int timeEnd, boolean timeNegation, int dayStart, int dayEnd, boolean dayNegation) {
+		this.timeStart = timeStart;
+		this.timeEnd = timeEnd;
+		this.timeNegation = timeNegation;
+		this.dayStart = dayStart;
+		this.dayEnd = dayEnd;
+		this.dayNegation = dayNegation;
 	}
 
-	public String getConditionType() {
-		return conditionType;
+	public int getTimeStart() {
+		return timeStart;
 	}
 
-	public int getConditionStart() {
-		return conditionStart;
+	public int getTimeEnd() {
+		return timeEnd;
 	}
 
-	public int getConditionEnd() {
-		return conditionEnd;
+	public boolean isTimeNegation() {
+		return timeNegation;
 	}
 
-	public boolean getNegation() {
-		return negation;
+	public int getDayStart() {
+		return dayStart;
 	}
 
-	public String toString() {
+	public int getDayEnd() {
+		return dayEnd;
+	}
+
+	public boolean isDayNegation() {
+		return dayNegation;
+	}
+
+	public void setTimeStart(int timeStart) {
+		this.timeStart = timeStart;
+	}
+
+	public void setTimeEnd(int timeEnd) {
+		this.timeEnd = timeEnd;
+	}
+
+	public void setTimeNegation(boolean timeNegation) {
+		this.timeNegation = timeNegation;
+	}
+
+	public void setDayStart(int dayStart) {
+		this.dayStart = dayStart;
+	}
+
+	public void setDayEnd(int dayEnd) {
+		this.dayEnd = dayEnd;
+	}
+
+	public void setDayNegation(boolean dayNegation) {
+		this.dayNegation = dayNegation;
+	}
+
+	public String timeString() {
+
+		if (timeStart == -1 && timeEnd == -1) {
+			return "";
+		}
 
 		String str = "";
 
-		if (negation) {
+		if (timeNegation) {
 			str = "!";
 		}
 
-		if (conditionStart == -1 && conditionEnd == -1) {
-			return "(true)";
-		} else if (conditionStart == -1) {
-			return str += "(" + conditionType + " <= " + conditionEnd + ")";
-		} else if (conditionEnd == -1) {
-			return str += "(" + conditionStart + " <= " + conditionType + ")";
+		if (timeStart == -1) {
+			return str + "(time <= " + timeEnd + ")";
+		} else if (timeEnd == -1) {
+			return str + "(" + timeStart + " <= time)";
 		} else {
-			if (conditionStart <= conditionEnd) {
-				return str += "((" + conditionStart + " <= " + conditionType + ") AND (" + conditionType + " <= " + conditionEnd + "))";
+			if (timeStart <= timeEnd) {
+				return str + "((" + timeStart + " <= time) AND (time <= " + timeEnd + "))";
 			} else {
-				return str += "((" + conditionStart + " <= " + conditionType + ") OR (" + conditionType + " <= " + conditionEnd + "))";
+				return str + "((" + timeStart + " <= time) OR (time <= " + timeEnd + "))";
 			}
 		}
+	}
+
+	public String dayString() {
+
+		if (dayStart == -1 && dayEnd == -1) {
+			return "";
+		}
+
+		String str = "";
+
+		if (dayNegation) {
+			str = "!";
+		}
+
+		if (dayStart == -1) {
+			return str + "(day <= " + dayEnd + ")";
+		} else if (dayEnd == -1) {
+			return str + "(" + dayStart + " <= day)";
+		} else {
+			if (dayStart <= dayEnd) {
+				return str + "((" + dayStart + " <= day) AND (day <= " + dayEnd + "))";
+			} else {
+				return str + "((" + dayStart + " <= day) OR (day <= " + dayEnd + "))";
+			}
+		}
+	}
+
+	public String toString() {
+		return "time: " + timeString() + " day: " + dayString();
 	}
 }
