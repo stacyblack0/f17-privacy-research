@@ -256,6 +256,44 @@ public class DataAccess {
 		return null;
 	}
 
+	public int selectHistoryIndi(String individualShare, Calendar cal) {
+		try {
+			createConnection();
+			preparedStatement = connect.prepareStatement("SELECT * FROM History WHERE IndividualShare=? AND TimeInMillis>=?;");
+			preparedStatement.setString(1, individualShare);
+			preparedStatement.setLong(2, cal.getTimeInMillis());
+			resultSet = preparedStatement.executeQuery();
+			int count = 0;
+			while (resultSet.next()) {
+				count++;
+			}
+			connect.close();
+			return count;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return 0;
+	}
+
+	public int selectHistoryGroup(String groupShare, Calendar cal) {
+		try {
+			createConnection();
+			preparedStatement = connect.prepareStatement("SELECT * FROM History WHERE GroupShare=? AND TimeInMillis>=?;");
+			preparedStatement.setString(1, groupShare);
+			preparedStatement.setLong(2, cal.getTimeInMillis());
+			resultSet = preparedStatement.executeQuery();
+			int count = 0;
+			while (resultSet.next()) {
+				count++;
+			}
+			connect.close();
+			return count;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return 0;
+	}
+
 	public ObservableList<Metadata> selectMetadata() {
 		try {
 			createConnection();

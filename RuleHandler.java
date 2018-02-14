@@ -123,23 +123,34 @@ public class RuleHandler {
 				isValidDay = exp.getValue(env, Boolean.class);
 			}
 
-			String regex = r.getRegex().getRegexString();
+			Regex regex = r.getRegex();
+			String regexString = regex.getRegexString();
+			String regexInterval = regex.getInterval();
+			String recipientSet = r.getRecipientSet();
+			String info = r.getInfo();
 			String scope = r.getScope();
 			boolean isValidRegex;
+			boolean isValidRepetition;
 
 			if (scope.equals("g")) { // group scope
 				// defaults to true if regex is empty; otherwise, checks if regex is valid
-				isValidRegex = r.getRegex().getRegexString().equals("")
-						|| historyHandler.regexMatch24Hours(regex, r.getRecipientSet(), r.getInfo(), scope);
+				isValidRegex = regexString.equals("")
+						|| historyHandler.regexMatch24Hours(regexString, recipientSet, info, scope);
+				// checks if repetition is valid
+				isValidRepetition = regexInterval.equals("")
+						|| historyHandler.regexMatchRepetition(regexInterval, regex.getFrequency(), recipientSet, info, scope);
 			} else {                 // individual scope
 				// replaces instances of the recipient set name with the name of the individual
-				regex = regex.replaceAll(r.getRecipientSet(), individual);
+				regexString = regexString.replaceAll(recipientSet, individual);
 				// defaults to true if regex is empty; otherwise, checks if regex is valid
-				isValidRegex = r.getRegex().getRegexString().equals("")
-						|| historyHandler.regexMatch24Hours(regex, individual, r.getInfo(), scope);
+				isValidRegex = regexString.equals("")
+						|| historyHandler.regexMatch24Hours(regexString, individual, r.getInfo(), scope);
+				// defaults to true if interval is empty; otherwise, checks if repetition is valid
+				isValidRepetition = regexInterval.equals("")
+						|| historyHandler.regexMatchRepetition(regexInterval, regex.getFrequency(), individual, info, scope);
 			}
 
-			if (isValidTime && isValidDay && isValidRegex) {
+			if (isValidTime && isValidDay && isValidRegex && isValidRepetition) {
 				result.add(r);
 			}
 

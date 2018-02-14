@@ -87,4 +87,28 @@ public class HistoryHandler {
 
 		return string.matches(regex);
 	}
+
+	public boolean regexMatchRepetition(String interval, int frequency, String name, String info, String scope) {
+
+		Calendar current = Calendar.getInstance(); // the current time
+
+		if (interval.equals("year")) {
+			current.add(Calendar.YEAR, -1);  // roll calendar back one year
+		}
+		if (interval.equals("month")) {
+			current.add(Calendar.MONTH, -1); // roll calendar back one month
+		}
+		if (interval.equals("day")) {
+			current.add(Calendar.HOUR, -24); // roll calendar back one day
+		}
+		if (interval.equals("hour")) {
+			current.add(Calendar.HOUR, -1);  // roll calendar back one hour
+		}
+
+		if (scope.equals("g")) {
+			return dataAccess.selectHistoryGroup(name + " K " + info, current) < frequency;
+		} else {
+			return dataAccess.selectHistoryIndi(name + " K " + info, current) < frequency;
+		}
+	}
 }
