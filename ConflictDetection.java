@@ -26,12 +26,34 @@ public class ConflictDetection {
 	private final ProverEnvironment prover;
 	private final SolverContext context;
 
+	public ConflictDetection() throws InvalidConfigurationException {
+
+		Configuration config = Configuration.defaultConfiguration();
+		LogManager logger = BasicLogManager.create(config);
+		ShutdownNotifier notifier = ShutdownNotifier.createDummy();
+		SolverContextFactory.Solvers[] values = SolverContextFactory.Solvers.values();
+
+//		for (SolverContextFactory.Solvers solvers : values) {
+//			System.out.println(solvers);
+//		}
+
+		SolverContextFactory.Solvers solver = values[2];
+		System.out.println("\nUsing solver " + solver);
+		SolverContext context = SolverContextFactory.createSolverContext(config, logger, notifier, solver);
+		ProverEnvironment prover = context.newProverEnvironment(SolverContext.ProverOptions.GENERATE_MODELS);
+
+		this.bfmgr = context.getFormulaManager().getBooleanFormulaManager();
+		this.ifmgr = context.getFormulaManager().getIntegerFormulaManager();
+		this.prover = prover;
+		this.context = context;
+	}
+
 	public ConflictDetection(SolverContext pContext, ProverEnvironment pProver) throws InvalidConfigurationException {
 		this.bfmgr = pContext.getFormulaManager().getBooleanFormulaManager();
 		this.ifmgr = pContext.getFormulaManager().getIntegerFormulaManager();
 		this.prover = pProver;
 		this.context = pContext;
-		init();
+//		init();
 	}
 
 	private void init() throws InvalidConfigurationException {
@@ -52,17 +74,16 @@ public class ConflictDetection {
 	 * Determines if a set of rules contains a conflict.
 	 *
 	 * @param ruleList the set of rules
-	 * @param type what type of conflict to check for - time, or day
 	 */
-	public boolean hasConflict(ArrayList<Rule> ruleList, String type) throws Exception {
+	public boolean hasConflict(ArrayList<Rule> ruleList) throws Exception {
 		Throwable var9 = null;
 		try {
-			ProverEnvironment prover = context.newProverEnvironment(new SolverContext.ProverOptions[]{SolverContext.ProverOptions.GENERATE_MODELS});
+			ProverEnvironment prover = context.newProverEnvironment(SolverContext.ProverOptions.GENERATE_MODELS);
 			Throwable var11 = null;
 
 			try {
 				prover.push();
-				System.out.println(createSATModel(ruleList, type));
+				System.out.println(createSATModel(ruleList));
 				prover.pop();
 			} catch (Throwable var23) {
 				var11 = var23;
@@ -87,81 +108,66 @@ public class ConflictDetection {
 
 	/**
 	 * @param ruleList the set of rules to check for a conflict
-	 * @param type what type of conflict to check for - time, or day
 	 */
-	private List<List<org.sosy_lab.java_smt.api.Model.ValueAssignment>> createSATModel(ArrayList<Rule> ruleList, String type) throws InterruptedException, SolverException {
+	private List<List<org.sosy_lab.java_smt.api.Model.ValueAssignment>> createSATModel(ArrayList<Rule> ruleList) throws InterruptedException, SolverException {
 
 		for (Rule r : ruleList) {
 
 			System.out.println(r.toString());
 
-//			int timeStart = r.getCondition().getTimeStart();
-//			int timeEnd = r.getCondition().getTimeEnd();
-//			int dayStart = r.getCondition().getTimeStart();
-//			int dayEnd = r.getCondition().getTimeEnd();
+			int timeStart = r.getCondition().getTimeStart();
+			int timeEnd = r.getCondition().getTimeEnd();
+			int dayStart = r.getCondition().getDayStart();
+			int dayEnd = r.getCondition().getDayEnd();
 
-			int start;
-			int end;
+//			int start;
+//			int end;
 
-			if (type.equals("time")) {
-				start = r.getCondition().getTimeStart();
-				end = r.getCondition().getTimeEnd();
-			} else {
-				start = r.getCondition().getDayStart();
-				end = r.getCondition().getDayEnd();
-			}
-
-			// in the database, null values for start/end times have been stored as -1
-//			if (timeStart == -1) {
-//				timeStart = 0;
-//			}
-//			if (timeEnd == -1) {
-//				timeEnd = 23;
-//			}
-//			if (dayStart == -1) {
-//				dayStart = 1;
-//			}
-//			if (dayEnd == -1) {
-//				dayEnd = 7;
-//			}
-			if (start == -1 && type.equals("time")) {
-				start = 0;
-			} else if (start == -1 && type.equals("day")) {
-				start = 1;
-			}
-
-			if (end == -1 && type.equals("time")) {
-				end = 23;
-			} else if (end == -1 && type.equals("day")) {
-				end = 7;
-			}
-
-			System.out.println(start + " " + end);
-			NumeralFormula.IntegerFormula a = this.ifmgr.makeVariable("a");
-//			NumeralFormula.IntegerFormula b = this.ifmgr.makeVariable("b");
-			// if condition specifies the weekend
-//			if (dayStart == 7 && dayEnd == 1) {
-////				NumeralFormula.IntegerFormula temp = this.ifmgr.makeVariable("a");
-//				this.prover.addConstraint(this.ifmgr.equal(this.num(dayStart), a));
-//				this.prover.addConstraint(this.ifmgr.equal(this.num(dayEnd), a));
-////				NumeralFormula.IntegerFormula temp2 = this.ifmgr.makeVariable("b");
-//				this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(dayStart), b));
-//				this.prover.addConstraint(this.ifmgr.lessOrEquals(b, this.num(dayEnd)));
+//			if (type.equals("time")) {
+//				start = r.getCondition().getTimeStart();
+//				end = r.getCondition().getTimeEnd();
 //			} else {
-////				NumeralFormula.IntegerFormula temp = this.ifmgr.makeVariable("a");
-//				this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(timeStart), a));
-//				this.prover.addConstraint(this.ifmgr.lessOrEquals(a, this.num(timeEnd)));
-////				NumeralFormula.IntegerFormula temp2 = this.ifmgr.makeVariable("b");
-//				this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(dayStart), b));
-//				this.prover.addConstraint(this.ifmgr.lessOrEquals(b, this.num(dayEnd)));
+//				start = r.getCondition().getDayStart();
+//				end = r.getCondition().getDayEnd();
 //			}
-			if (start == 7 && end == 1) {
-				NumeralFormula.IntegerFormula b = this.ifmgr.makeVariable("b");
-				this.prover.addConstraint(this.ifmgr.equal(a, this.num(start)));
-				this.prover.addConstraint(this.ifmgr.equal(b, this.num(end)));
+
+//			 in the database, null values for start/end times have been stored as -1
+			if (timeStart == -1) {
+				timeStart = 0;
+			}
+			if (timeEnd == -1) {
+				timeEnd = 23;
+			}
+			if (dayStart == -1) {
+				dayStart = 1;
+			}
+			if (dayEnd == -1) {
+				dayEnd = 7;
+			}
+//			if (start == -1 && type.equals("time")) {
+//				start = 0;
+//			} else if (start == -1 && type.equals("day")) {
+//				start = 1;
+//			}
+//
+//			if (end == -1 && type.equals("time")) {
+//				end = 23;
+//			} else if (end == -1 && type.equals("day")) {
+//				end = 7;
+//			}
+
+			System.out.println("Time: " + timeStart + " " + timeEnd);
+			System.out.println("Day: " + dayStart + " " + dayEnd);
+			NumeralFormula.IntegerFormula t = this.ifmgr.makeVariable("t"); // time
+			NumeralFormula.IntegerFormula d = this.ifmgr.makeVariable("d"); // day
+			// if condition specifies the weekend
+			if (dayStart == 7 && dayEnd == 1) {
+				this.prover.addConstraint(this.bfmgr.or(this.ifmgr.equal(d, this.num(dayStart)), this.ifmgr.equal(d, this.num(dayEnd))));
 			} else {
-				this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(start), a));
-				this.prover.addConstraint(this.ifmgr.lessOrEquals(a, this.num(end)));
+				this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(timeStart), t));
+				this.prover.addConstraint(this.ifmgr.lessOrEquals(t, this.num(timeEnd)));
+				this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(dayStart), d));
+				this.prover.addConstraint(this.ifmgr.lessOrEquals(d, this.num(dayEnd)));
 			}
 		}
 

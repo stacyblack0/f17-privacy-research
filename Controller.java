@@ -4,13 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import org.sosy_lab.common.ShutdownNotifier;
-import org.sosy_lab.common.configuration.Configuration;
-import org.sosy_lab.common.log.BasicLogManager;
-import org.sosy_lab.common.log.LogManager;
-import org.sosy_lab.java_smt.SolverContextFactory;
-import org.sosy_lab.java_smt.api.ProverEnvironment;
-import org.sosy_lab.java_smt.api.SolverContext;
 import tree.Condition;
 import tree.Regex;
 import tree.Rule;
@@ -253,65 +246,33 @@ public class Controller {
 			} catch (NullPointerException e) {
 				// figure this out
 			}
-
 		});
 
 		// disable condition options depending on the operator
 		operatorDropdown2.valueProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue.equals("not equal") || newValue.equals("equal")) {
-				conditionText2.setDisable(true);
-				operandDropdown2.setDisable(false);
-			} else {
-				conditionText2.setDisable(false);
-				operandDropdown2.setDisable(true);
+			try {
+				if (newValue.equals("not equal") || newValue.equals("equal")) {
+					conditionText2.setDisable(true);
+					operandDropdown2.setDisable(false);
+				} else {
+					conditionText2.setDisable(false);
+					operandDropdown2.setDisable(true);
+				}
+			} catch (NullPointerException e) {
+				// figure this out
 			}
 		});
 
-		// save all data gathered so far into a new rule
+		// save all data gathered so far into a new rule if it does not intersect with other rules
 		saveButton.setOnAction(event -> {
 
-			// determine conflicts; put in new class/method?
-			try {
-
-				Configuration config = Configuration.defaultConfiguration();
-				LogManager logger = BasicLogManager.create(config);
-				ShutdownNotifier notifier = ShutdownNotifier.createDummy();
-				SolverContextFactory.Solvers[] values = SolverContextFactory.Solvers.values();
-
-//				for (SolverContextFactory.Solvers solvers : values) {
-//					System.out.println(solvers);
-//				}
-
-				SolverContextFactory.Solvers solver = values[2];
-				System.out.println("\nUsing solver " + solver);
-				SolverContext context = SolverContextFactory.createSolverContext(config, logger, notifier, solver);
-				ProverEnvironment prover = context.newProverEnvironment(SolverContext.ProverOptions.GENERATE_MODELS);
-
-				// get intersecting rules
-				ObservableList<Rule> data = dataAccess.selectIntByRecsetInfo(
-						recipientDropdown1.getValue(), informationDropdown1.getValue());
-				ArrayList<Rule> rules = new ArrayList<>(data); // convert to array list to pass into function
-
-				ConflictDetection cDetect = new ConflictDetection(context, prover);
-				boolean timeConflict = false; //cDetect.hasConflict(rules, "time");
-				boolean dayConflict = cDetect.hasConflict(rules, "day");
-
-				if (timeConflict || dayConflict) {
-					conflictWarning();
-					enableConditionBoxes();
-					enableRegexBoxes();
-					clearSaveTabBoxes();
-					conditionCount.setText("0");
-					return;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
+			String information = informationDropdown1.getValue();
+			String recipientSet = recipientDropdown1.getValue();
 			Condition condition = conditionArray.get(0);
 			Regex regex = regexArray.get(0);
 			String scope = scopeArray.get(0);
 
+			// if no conditions or regex were saved, generate empty ones
 			if (condition == null) {
 				condition = new Condition(-1, -1, false, -1, -1, false);
 			}
@@ -323,7 +284,35 @@ public class Controller {
 			scopeArray.set(0, "g");
 			conditionArray.set(0, null);
 
-			Rule rule = ruleHandler.addRule(informationDropdown1.getValue(), recipientDropdown1.getValue(), condition, regex, scope);
+			// get intersecting rules
+			ObservableList<Rule> data = dataAccess.selectIntByRecsetInfo(recipientSet, information);
+			ArrayList<Rule> rules = new ArrayList<>(data); // convert to array list to pass into function
+
+			// if intersecting rules found
+			if (rules.size() > 0) {
+				try {
+
+					// add new rule so that it can be checked with existing ones
+					Rule rule = new Rule(information, recipientSet, condition, regex, scope);
+					rules.add(rule);
+
+					ConflictDetection cDetect = new ConflictDetection();
+					boolean conflict = cDetect.hasConflict(rules);
+
+					if (conflict) {
+						conflictWarning();
+						enableConditionBoxes();
+						enableRegexBoxes();
+						clearSaveTabBoxes();
+						conditionCount.setText("0");
+						return;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			Rule rule = ruleHandler.addRule(information, recipientSet, condition, regex, scope);
 
 			if (rule != null) {
 				incrRuleCount();
@@ -502,6 +491,8 @@ public class Controller {
 			// if there are valid rules that allow info-sharing, add info-sharing to history
 			if (rules2.size() > 0) {
 				historyHandler.addHistory(recipientSet, individual, info, cal.getTimeInMillis());
+			} else if (rules1.size() > 0) { // display popup if rules found, but none were valid
+				inconsistencyWarning(new ArrayList<>(rules1));
 			}
 
 			populateValidPane(rules1, rules2);
@@ -843,8 +834,9 @@ public class Controller {
 
 		Alert alert = new Alert(Alert.AlertType.WARNING);
 		alert.setTitle("Inconsistency Detected");
-		alert.setHeaderText("The Rule you Defined in inconsistent with your policy ");
-		alert.setContentText("There is a inconsistency between the following Rule Which one has a priority?");
+		alert.setHeaderText("This action violates your privacy policy");
+		alert.setContentText("The action you are attempting to take violates one or more of your defined rules. " +
+				"Do you wish to proceed?");
 
 		ArrayList<Label> label = new ArrayList<>();
 		ArrayList<RadioButton> radioButtons = new ArrayList<>();
