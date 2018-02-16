@@ -271,6 +271,7 @@ public class Controller {
 			Condition condition = conditionArray.get(0);
 			Regex regex = regexArray.get(0);
 			String scope = scopeArray.get(0);
+			boolean nullRegex = false;
 
 			// if no conditions or regex were saved, generate empty ones
 			if (condition == null) {
@@ -278,6 +279,7 @@ public class Controller {
 			}
 			if (regex == null) {
 				regex = new Regex("");
+				nullRegex = true;
 			}
 
 			regexArray.set(0, null);
@@ -314,6 +316,20 @@ public class Controller {
 
 			Rule rule = ruleHandler.addRule(information, recipientSet, condition, regex, scope);
 
+			// if a prior knowledge regex was set
+			if (!nullRegex) {
+
+				String trackedInfo1 = information;
+				String trackedInfo2 = regexInfoDropdown.getValue();
+
+				if (!dataAccess.hasTrackedInfo(trackedInfo1)) {
+					dataAccess.addTrackedInfo(trackedInfo1);
+				}
+				if (!dataAccess.hasTrackedInfo(trackedInfo2)) {
+					dataAccess.addTrackedInfo(trackedInfo2);
+				}
+			}
+
 			if (rule != null) {
 				incrRuleCount();
 			}
@@ -343,16 +359,16 @@ public class Controller {
 
 					switch (operandDropdown1.getValue()) {
 						case "business hours":
-							timeStart = 8;
-							timeEnd = 16;
+							timeStart = 800;
+							timeEnd = 1659;
 							break;
 						case "day":
-							timeStart = 8;
-							timeEnd = 19;
+							timeStart = 800;
+							timeEnd = 1959;
 							break;
 						case "night":
-							timeStart = 20;
-							timeEnd = 7;
+							timeStart = 1800;
+							timeEnd = 2359;
 							break;
 					}
 				} else if (operator.equals("greater than")) {
@@ -489,7 +505,7 @@ public class Controller {
 			Calendar cal = Calendar.getInstance();
 
 			// if there are valid rules that allow info-sharing, add info-sharing to history
-			if (rules2.size() > 0) {
+			if (rules2.size() > 0 && dataAccess.hasTrackedInfo(info)) {
 				historyHandler.addHistory(recipientSet, individual, info, cal.getTimeInMillis());
 			} else if (rules1.size() > 0) { // display popup if rules found, but none were valid
 				inconsistencyWarning(new ArrayList<>(rules1));

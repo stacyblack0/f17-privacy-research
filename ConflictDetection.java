@@ -120,23 +120,17 @@ public class ConflictDetection {
 			int dayStart = r.getCondition().getDayStart();
 			int dayEnd = r.getCondition().getDayEnd();
 
-//			int start;
-//			int end;
-
-//			if (type.equals("time")) {
-//				start = r.getCondition().getTimeStart();
-//				end = r.getCondition().getTimeEnd();
-//			} else {
-//				start = r.getCondition().getDayStart();
-//				end = r.getCondition().getDayEnd();
-//			}
+			int startHour = timeStart / 100;
+			int endHour = timeEnd / 100;
+//			int startMinute = timeStart - (startHour * 100);
+//			int endMinute = timeEnd - (endHour * 100);
 
 //			 in the database, null values for start/end times have been stored as -1
 			if (timeStart == -1) {
 				timeStart = 0;
 			}
 			if (timeEnd == -1) {
-				timeEnd = 23;
+				timeEnd = 2300;
 			}
 			if (dayStart == -1) {
 				dayStart = 1;
@@ -144,31 +138,29 @@ public class ConflictDetection {
 			if (dayEnd == -1) {
 				dayEnd = 7;
 			}
-//			if (start == -1 && type.equals("time")) {
-//				start = 0;
-//			} else if (start == -1 && type.equals("day")) {
-//				start = 1;
-//			}
-//
-//			if (end == -1 && type.equals("time")) {
-//				end = 23;
-//			} else if (end == -1 && type.equals("day")) {
-//				end = 7;
-//			}
 
-			System.out.println("Time: " + timeStart + " " + timeEnd);
+			System.out.println("Time: " + startHour + " " + endHour);
 			System.out.println("Day: " + dayStart + " " + dayEnd);
+
 			NumeralFormula.IntegerFormula t = this.ifmgr.makeVariable("t"); // time
 			NumeralFormula.IntegerFormula d = this.ifmgr.makeVariable("d"); // day
+			NumeralFormula.IntegerFormula h = this.ifmgr.makeVariable("h"); // hour
+			NumeralFormula.IntegerFormula m = this.ifmgr.makeVariable("m"); // minute
+
 			// if condition specifies the weekend
 			if (dayStart == 7 && dayEnd == 1) {
 				this.prover.addConstraint(this.bfmgr.or(this.ifmgr.equal(d, this.num(dayStart)), this.ifmgr.equal(d, this.num(dayEnd))));
 			} else {
-				this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(timeStart), t));
-				this.prover.addConstraint(this.ifmgr.lessOrEquals(t, this.num(timeEnd)));
 				this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(dayStart), d));
 				this.prover.addConstraint(this.ifmgr.lessOrEquals(d, this.num(dayEnd)));
 			}
+
+//			this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(timeStart), t));
+//			this.prover.addConstraint(this.ifmgr.lessOrEquals(t, this.num(timeEnd)));
+			this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(startHour), h));
+			this.prover.addConstraint(this.ifmgr.lessOrEquals(h, this.num(endHour)));
+			this.prover.addConstraint(this.ifmgr.lessOrEquals(this.num(0), m));
+			this.prover.addConstraint(this.ifmgr.lessOrEquals(m, this.num(59)));
 		}
 
 		ArrayList models = new ArrayList();

@@ -528,4 +528,33 @@ public class DataAccess {
 		}
 		return null;
 	}
+
+	public void addTrackedInfo(String trackedInfo) {
+		try {
+			createConnection();
+			preparedStatement = connect.prepareStatement("INSERT INTO TrackedInfo (InformationID) " +
+					"VALUES ((SELECT InformationID FROM Information WHERE InformationName=?));");
+			preparedStatement.setString(1, trackedInfo);
+			resultSet = preparedStatement.executeQuery();
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	public boolean hasTrackedInfo(String information) {
+		try {
+
+			createConnection();
+			preparedStatement = connect.prepareStatement("INSERT INTO TrackedInfo (InformationID) " +
+					"VALUES ((SELECT InformationID FROM Information WHERE InformationName=?));");
+			preparedStatement.setString(1, information);
+			resultSet = preparedStatement.executeQuery();
+
+			return resultSet.next();
+
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return false;
+	}
 }

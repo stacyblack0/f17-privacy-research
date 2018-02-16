@@ -108,7 +108,7 @@ public class RuleHandler {
 
 		for (Rule r : rules) {
 
-			String timeCondition = r.getCondition().timeString();
+			String timeCondition = r.getCondition().spelTimeString();
 			String dayCondition = r.getCondition().dayString();
 			Boolean isValidTime = true; // default to true
 			Boolean isValidDay = true;  // default to true

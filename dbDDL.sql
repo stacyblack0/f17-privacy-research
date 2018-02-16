@@ -67,3 +67,10 @@ CREATE TABLE Priorities (
 	FOREIGN KEY (RuleID)
 		REFERENCES Rules (RuleID)
 );
+
+CREATE TABLE TrackedInfo (
+	TrackedInfoID INT auto_increment NOT NULL PRIMARY KEY,
+	InformationID INT NOT NULL,
+	FOREIGN KEY (InformationID)
+		REFERENCES Information (InformationID)
+);

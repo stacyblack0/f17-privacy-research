@@ -77,6 +77,34 @@ public class Condition {
 		this.dayNegation = dayNegation;
 	}
 
+	public String spelTimeString() {
+
+		if (timeStart == -1 && timeEnd == -1) {
+			return "";
+		}
+
+		String str = "";
+
+		if (timeNegation) {
+			str = "!";
+		}
+
+		int startDigit = timeStart / 100;
+		int endDigit = timeEnd / 100;
+
+		if (timeStart == -1) {
+			return str + "(time <= " + endDigit + ")";
+		} else if (timeEnd == -1) {
+			return str + "(" + startDigit + " <= time)";
+		} else {
+			if (timeStart <= timeEnd) {
+				return str + "((" + startDigit + " <= time) AND (time <= " + endDigit + "))";
+			} else {
+				return str + "((" + startDigit + " <= time) OR (time <= " + endDigit + "))";
+			}
+		}
+	}
+
 	public String timeString() {
 
 		if (timeStart == -1 && timeEnd == -1) {
