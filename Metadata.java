@@ -1,7 +1,5 @@
 /**
  * This class specifies a span of time.
- *
- * @author Stacy Black
  */
 public class Metadata {
 

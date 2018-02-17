@@ -1,8 +1,5 @@
 import java.util.Calendar;
 
-/**
- * @author Stacy Black
- */
 public class HistoryNode {
 
 	private String recipientSet;

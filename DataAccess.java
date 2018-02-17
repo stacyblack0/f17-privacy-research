@@ -414,11 +414,16 @@ public class DataAccess {
 		try {
 
 			createConnection();
-			preparedStatement = connect.prepareStatement("SELECT * FROM Individuals i " +
-					"JOIN Rules r ON i.RecipientSetID=r.RecipientSetID " +
-					"WHERE IndividualName=ANY(SELECT IndividualName FROM Individuals WHERE RecipientSetID=" +
-					"(SELECT RecipientSetID FROM RecipientSets rs WHERE rs.RecipientSetName=?)) " +
-					"AND r.Info=? " +
+			preparedStatement = connect.prepareStatement("SELECT *\n" +
+					"FROM Individuals i\n" +
+					"JOIN Rules r ON i.RecipientSetID=r.RecipientSetID join RecipientSets g on i.RecipientSetID=g.RecipientSetID\n" +
+					"WHERE IndividualName= ANY(\n" +
+					"SELECT IndividualName\n" +
+					"FROM Individuals\n" +
+					"WHERE RecipientSetID=(\n" +
+					"SELECT RecipientSetID\n" +
+					"FROM RecipientSets rs\n" +
+					"WHERE rs.RecipientSetName=?)) AND r.Info=? \n" +
 					"GROUP BY RuleID;");
 			preparedStatement.setString(1, recipientSet);
 			preparedStatement.setString(2, information);
@@ -428,6 +433,7 @@ public class DataAccess {
 
 			while (resultSet.next()) {
 
+				String rec = resultSet.getString("RecipientSetName");
 				int timeStart = resultSet.getInt("TimeStart");
 				int timeEnd = resultSet.getInt("TimeEnd");
 				boolean timeNegation = resultSet.getBoolean("TimeNegation");
@@ -443,7 +449,7 @@ public class DataAccess {
 
 				String scope = resultSet.getString("Scope");
 
-				Rule rule = new Rule(information, recipientSet, condition, regex, scope);
+				Rule rule = new Rule(information, rec, condition, regex, scope);
 				data.add(rule);
 			}
 			connect.close();
@@ -545,8 +551,7 @@ public class DataAccess {
 		try {
 
 			createConnection();
-			preparedStatement = connect.prepareStatement("INSERT INTO TrackedInfo (InformationID) " +
-					"VALUES ((SELECT InformationID FROM Information WHERE InformationName=?));");
+			preparedStatement = connect.prepareStatement("select * from TrackedInfo where InformationID= ((SELECT InformationID FROM Information WHERE InformationName=?));");
 			preparedStatement.setString(1, information);
 			resultSet = preparedStatement.executeQuery();
 

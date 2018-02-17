@@ -10,8 +10,6 @@ import tree.Rule;
 
 /**
  * This class handles the creation and checking of rules.
- *
- * @author Stacy Black
  */
 public class RuleHandler {
 

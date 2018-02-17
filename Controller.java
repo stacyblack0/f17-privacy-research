@@ -284,7 +284,7 @@ public class Controller {
 
 			regexArray.set(0, null);
 			scopeArray.set(0, "g");
-			conditionArray.set(0, null);
+			conditionArray.set(0, new Condition(-1, -1, false, -1, -1, false));
 
 			// get intersecting rules
 			ObservableList<Rule> data = dataAccess.selectIntByRecsetInfo(recipientSet, information);

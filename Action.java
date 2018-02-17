@@ -1,6 +1,3 @@
-/**
- * @author Stacy Black
- */
 public class Action {
 
 	String recipientSet;

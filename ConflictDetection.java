@@ -109,7 +109,7 @@ public class ConflictDetection {
 	/**
 	 * @param ruleList the set of rules to check for a conflict
 	 */
-	private List<List<org.sosy_lab.java_smt.api.Model.ValueAssignment>> createSATModel(ArrayList<Rule> ruleList) throws InterruptedException, SolverException {
+	private List<List<Model.ValueAssignment>> createSATModel(ArrayList<Rule> ruleList) throws InterruptedException, SolverException {
 
 		for (Rule r : ruleList) {
 
@@ -172,7 +172,7 @@ public class ConflictDetection {
 			UnmodifiableIterator var7 = modelAssignments.iterator();
 
 			while (var7.hasNext()) {
-				org.sosy_lab.java_smt.api.Model.ValueAssignment va = (org.sosy_lab.java_smt.api.Model.ValueAssignment)var7.next();
+				Model.ValueAssignment va = (Model.ValueAssignment)var7.next();
 				modelAssignmentsAsFormulas.add(va.getAssignmentAsFormula());
 			}
 
@@ -190,7 +190,7 @@ public class ConflictDetection {
 		return (NumeralFormula.IntegerFormula)this.ifmgr.makeNumber(number);
 	}
 
-	private static void $closeResource(java.lang.Throwable t, java.lang.AutoCloseable a) throws Exception {
+	private static void $closeResource(Throwable t, AutoCloseable a) throws Exception {
 		if (t == null) {
 			a.close();
 			return;

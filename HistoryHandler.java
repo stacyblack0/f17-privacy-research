@@ -2,9 +2,6 @@ import javafx.collections.ObservableList;
 
 import java.util.Calendar;
 
-/**
- * @author Stacy Black
- */
 public class HistoryHandler {
 
 	private DataAccess dataAccess;

@@ -306,7 +306,7 @@ INSERT INTO Rules (Info,TimeStart,TimeEnd,TimeNegation,DayStart,DayEnd,DayNegati
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='acquaintances' AND Type='people'));
 
 INSERT INTO Rules (Info,TimeStart,TimeEnd,TimeNegation,DayStart,DayEnd,DayNegation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('photos','8','1959','0','-1','-1','0','','','0','g',
+	VALUES ('photos','800','1959','0','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='friends' AND Type='people'));
 INSERT INTO Rules (Info,TimeStart,TimeEnd,TimeNegation,DayStart,DayEnd,DayNegation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
 	VALUES ('phone number','000','2359','0','1','7','0','','','0','g',
@@ -316,7 +316,7 @@ INSERT INTO Rules (Info,TimeStart,TimeEnd,TimeNegation,DayStart,DayEnd,DayNegati
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='friends' AND Type='people'));
 
 INSERT INTO Rules (Info,TimeStart,TimeEnd,TimeNegation,DayStart,DayEnd,DayNegation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
-	VALUES ('location','8','1959','0','-1','-1','0','','','0','g',
+	VALUES ('location','800','1959','0','-1','-1','0','','','0','g',
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='instagram friends' AND Type='people'));
 INSERT INTO Rules (Info,TimeStart,TimeEnd,TimeNegation,DayStart,DayEnd,DayNegation,Regex,RegexInterval,RegexFrequency,Scope,RecipientSetID)
 	VALUES ('photos','000','2359','0','1','7','0','','','0','g',
@@ -398,14 +398,14 @@ INSERT INTO Rules (Info,TimeStart,TimeEnd,TimeNegation,DayStart,DayEnd,DayNegati
 INSERT INTO History (IndividualShare,GroupShare,TimeInMillis) VALUES ('Adela Jones K location','friends K location','14568465');
 INSERT INTO History (IndividualShare,GroupShare,TimeInMillis) VALUES ('Rick Sanchez K location','extended family K location','24568455');
 
--- 11 = Calendar.HOUR_OF_DAY, 8 = 8AM, 16 = 4:59PM
-INSERT INTO Metadata (MetadataName,Field,Start,End) VALUES ('business hours','11','8','16');
+-- 11 = Calendar.HOUR_OF_DAY
+INSERT INTO Metadata (MetadataName,Field,Start,End) VALUES ('business hours','11','800','1659');
 -- 7 = Calendar.DAY_OF_WEEK, 7 = Calendar.SATURDAY, 1 = Calendar.SUNDAY
 INSERT INTO Metadata (MetadataName,Field,Start,End) VALUES ('weekend','7','7','1');
--- 11 = Calendar.HOUR_OF_DAY, 8 = 8AM, 19 = 7:59PM
-INSERT INTO Metadata (MetadataName,Field,Start,End) VALUES ('day','11','8','19');
--- 11 = Calendar.HOUR_OF_DAY, 20 = 8PM, 7 = 7:59AM
-INSERT INTO Metadata (MetadataName,Field,Start,End) VALUES ('night','11','20','7');
+-- 11 = Calendar.HOUR_OF_DAY
+INSERT INTO Metadata (MetadataName,Field,Start,End) VALUES ('day','11','800','1959');
+-- 11 = Calendar.HOUR_OF_DAY
+INSERT INTO Metadata (MetadataName,Field,Start,End) VALUES ('night','11','1700','2359');
 
 INSERT INTO Information (InformationName) VALUES ('location');
 INSERT INTO Information (InformationName) VALUES ('health information');
