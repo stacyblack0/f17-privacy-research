@@ -54,7 +54,7 @@ public class Rule {
 
 	public String toString() {
 		return recipientSet + " E " + information + " and ( " + condition.toString() + " ) " +
-				"and { regex: " + regex.getRegexString() + " " + regex.getInterval() + "=" +
+				"and { regex: " + regex.getRegexString() + " counting: " + regex.getInterval() + "=" +
 				regex.getFrequency() + " } and [ scope: " + scope + " ]\n";
 	}
 }

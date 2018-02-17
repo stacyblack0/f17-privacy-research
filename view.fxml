@@ -105,8 +105,8 @@
 									  strokeWidth="0.0" text="0"/>
 								<Text layoutX="503.0" layoutY="194.0" strokeType="OUTSIDE" strokeWidth="0.0"
 									  text="Rules found:"/>
-								<Button fx:id="checkButton" layoutX="323.0" layoutY="181.0" mnemonicParsing="false"
-										text="Check"/>
+								<Button fx:id="shareButton" layoutX="323.0" layoutY="181.0" mnemonicParsing="false"
+										text="Share"/>
 								<Text layoutX="75.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0"
 									  text="Simulate sharing action:"/>
 								<Text fill="#a4a4a4" layoutX="75.0" layoutY="138.0" strokeType="OUTSIDE"
@@ -125,8 +125,8 @@
 										  prefWidth="625.0" showRoot="false"/>
 								<Text fill="#a4a4a4" layoutX="75.0" layoutY="83.0" strokeType="OUTSIDE"
 									  strokeWidth="0.0" text="Custom Time ----------------------------------"/>
-								<Button fx:id="checkCustomButton" layoutX="383.0" layoutY="181.0"
-										mnemonicParsing="false" text="Check Custom"/>
+								<Button fx:id="shareCustomButton" layoutX="383.0" layoutY="181.0"
+										mnemonicParsing="false" text="Share Custom"/>
 								<TextField fx:id="yearTextField" layoutX="75.0" layoutY="95.0" prefHeight="25.0"
 										   prefWidth="71.0" promptText="Year"/>
 								<TextField fx:id="monthTextField" layoutX="158.0" layoutY="95.0" prefHeight="25.0"

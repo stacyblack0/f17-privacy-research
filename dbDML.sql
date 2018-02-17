@@ -395,8 +395,8 @@ INSERT INTO Rules (Info,TimeStart,TimeEnd,TimeNegation,DayStart,DayEnd,DayNegati
 	(SELECT RecipientSetID FROM RecipientSets WHERE RecipientSetName='google services' AND Type='services'));
 
 
-INSERT INTO History (IndividualShare,GroupShare,TimeInMillis) VALUES ('Adela Jones K location','friends K location','14568465');
-INSERT INTO History (IndividualShare,GroupShare,TimeInMillis) VALUES ('Rick Sanchez K location','extended family K location','24568455');
+INSERT INTO History (IndividualShare,GroupShare,TimeInMillis) VALUES ('Adela Jones K location','friends K location','1518824581157');
+INSERT INTO History (IndividualShare,GroupShare,TimeInMillis) VALUES ('Rick Sanchez K location','extended family K location','1518831682829');
 
 -- 11 = Calendar.HOUR_OF_DAY
 INSERT INTO Metadata (MetadataName,Field,Start,End) VALUES ('business hours','11','800','1659');

@@ -27,7 +27,7 @@ public class Controller {
 	private ChoiceBox<String> regexFreqDropdown;
 
 	@FXML
-	private Button checkButton;
+	private Button shareButton;
 
 	@FXML
 	private Button findButton;
@@ -93,7 +93,7 @@ public class Controller {
 	private TextField minuteTextField;
 
 	@FXML
-	private Button checkCustomButton;
+	private Button shareCustomButton;
 
 	@FXML
 	private Button regexAddButton1;
@@ -147,7 +147,7 @@ public class Controller {
 		assert recipientDropdown1 != null : "fx:id=\"recipientDropdown1\" was not injected: check your FXML file 'view.fxml'.";
 		assert yearTextField != null : "fx:id=\"yearTextField\" was not injected: check your FXML file 'view.fxml'.";
 		assert regexFreqDropdown != null : "fx:id=\"regexFreqDropdown\" was not injected: check your FXML file 'view.fxml'.";
-		assert checkButton != null : "fx:id=\"checkButton\" was not injected: check your FXML file 'view.fxml'.";
+		assert shareButton != null : "fx:id=\"checkButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert findButton != null : "fx:id=\"findButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert validCount != null : "fx:id=\"validCount\" was not injected: check your FXML file 'view.fxml'.";
 		assert recipientDropdown2 != null : "fx:id=\"recipientDropdown2\" was not injected: check your FXML file 'view.fxml'.";
@@ -169,7 +169,7 @@ public class Controller {
 		assert dayTextField != null : "fx:id=\"dayTextField\" was not injected: check your FXML file 'view.fxml'.";
 		assert nameDropdown2 != null : "fx:id=\"nameDropdown2\" was not injected: check your FXML file 'view.fxml'.";
 		assert minuteTextField != null : "fx:id=\"minuteTextField\" was not injected: check your FXML file 'view.fxml'.";
-		assert checkCustomButton != null : "fx:id=\"checkCustomButton\" was not injected: check your FXML file 'view.fxml'.";
+		assert shareCustomButton != null : "fx:id=\"checkCustomButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert regexAddButton1 != null : "fx:id=\"regexAddButton1\" was not injected: check your FXML file 'view.fxml'.";
 		assert showAllButton != null : "fx:id=\"showAllButton\" was not injected: check your FXML file 'view.fxml'.";
 		assert regexAddButton2 != null : "fx:id=\"regexAddButton2\" was not injected: check your FXML file 'view.fxml'.";
@@ -301,6 +301,7 @@ public class Controller {
 					ConflictDetection cDetect = new ConflictDetection();
 					boolean conflict = cDetect.hasConflict(rules);
 
+					// if there is a conflict, clear inputs and exit method
 					if (conflict) {
 						conflictWarning();
 						enableConditionBoxes();
@@ -314,24 +315,25 @@ public class Controller {
 				}
 			}
 
-			Rule rule = ruleHandler.addRule(information, recipientSet, condition, regex, scope);
-
-			// if a prior knowledge regex was set
+			// if a regex was set
 			if (!nullRegex) {
 
 				String trackedInfo1 = information;
-				String trackedInfo2 = regexInfoDropdown.getValue();
+				String trackedInfo2 = regexInfoDropdown.getValue(); // may be null if counting regex was set
 
 				if (!dataAccess.hasTrackedInfo(trackedInfo1)) {
 					dataAccess.addTrackedInfo(trackedInfo1);
 				}
-				if (!dataAccess.hasTrackedInfo(trackedInfo2)) {
+				if (trackedInfo2 != null && !dataAccess.hasTrackedInfo(trackedInfo2)) {
 					dataAccess.addTrackedInfo(trackedInfo2);
 				}
 			}
 
+			Rule rule = ruleHandler.addRule(information, recipientSet, condition, regex, scope);
+
 			if (rule != null) {
 				incrRuleCount();
+				System.out.println("Rule added: " + rule.toString());
 			}
 
 			enableConditionBoxes();
@@ -492,31 +494,31 @@ public class Controller {
 			clearFindTabBoxes();
 		});
 
-		// checks if rules matching a given individual and info are valid, and displays them
-		checkButton.setOnAction(event -> {
+		// checks if rules when sharing with a given individual and info are valid, and displays them
+		shareButton.setOnAction(event -> {
 
 			String recipientSet = recipientDropdown3.getValue();
 			String individual = nameDropdown2.getValue();
 			String info = informationDropdown3.getValue();
 			Action action = new Action(recipientSet, individual, info);
 
-			ObservableList<Rule> rules1 = ruleHandler.findAllRules(action);
-			ObservableList<Rule> rules2 = ruleHandler.findValidRules(rules1, new Environment(), individual);
+			ObservableList<Rule> allRules = ruleHandler.findAllRules(action);
+			ObservableList<Rule> validRules = ruleHandler.findValidRules(allRules, new Environment(), individual);
 			Calendar cal = Calendar.getInstance();
 
 			// if there are valid rules that allow info-sharing, add info-sharing to history
-			if (rules2.size() > 0 && dataAccess.hasTrackedInfo(info)) {
+			if (validRules.size() > 0 && dataAccess.hasTrackedInfo(info)) {
 				historyHandler.addHistory(recipientSet, individual, info, cal.getTimeInMillis());
-			} else if (rules1.size() > 0) { // display popup if rules found, but none were valid
-				inconsistencyWarning(new ArrayList<>(rules1));
+			} else if (validRules.size() == 0 && allRules.size() > 0) { // display popup if rules found, but none were valid
+				inconsistencyWarning(new ArrayList<>(allRules));
 			}
 
-			populateValidPane(rules1, rules2);
+			populateValidPane(allRules, validRules);
 			clearCheckTabBoxes();
 		});
 
-		// checks if rules matching a given individual and info are valid given a custom time, and displays them
-		checkCustomButton.setOnAction(event -> {
+		// checks if rules when sharing with a given individual and info are valid given a custom time, and displays them
+		shareCustomButton.setOnAction(event -> {
 
 			String recipientSet = recipientDropdown3.getValue();
 			String individual = nameDropdown2.getValue();
@@ -540,10 +542,18 @@ public class Controller {
 				env = new Environment();
 			}
 
-			ObservableList<Rule> rules1 = ruleHandler.findAllRules(action);
-			ObservableList<Rule> rules2 = ruleHandler.findValidRules(rules1, env, individual);
+			ObservableList<Rule> allRules = ruleHandler.findAllRules(action);
+			ObservableList<Rule> validRules = ruleHandler.findValidRules(allRules, env, individual);
+			Calendar cal = env.getCalendar();
 
-			populateValidPane(rules1, rules2);
+			// if there are valid rules that allow info-sharing, add info-sharing to history
+			if (validRules.size() > 0 && dataAccess.hasTrackedInfo(info)) {
+				historyHandler.addHistory(recipientSet, individual, info, cal.getTimeInMillis());
+			} else if (validRules.size() == 0 && allRules.size() > 0) { // display popup if rules found, but none were valid
+				inconsistencyWarning(new ArrayList<>(allRules));
+			}
+
+			populateValidPane(allRules, validRules);
 			clearCheckTabBoxes();
 		});
 
@@ -743,10 +753,10 @@ public class Controller {
 	/**
 	 * Given a list of rules and valid rules, displays them all in the GUI.
 	 *
-	 * @param rules1 the list of rules
-	 * @param rules2 the list of valid rules
+	 * @param allRules the list of all rules
+	 * @param validRules the list of valid rules
 	 */
-	private void populateValidPane(ObservableList<Rule> rules1, ObservableList<Rule> rules2) {
+	private void populateValidPane(ObservableList<Rule> allRules, ObservableList<Rule> validRules) {
 
 		TreeItem<String> rootNode = new TreeItem<>("Rules");
 		rootNode.setExpanded(true);
@@ -757,18 +767,18 @@ public class Controller {
 		rootNode.getChildren().add(allRulesNode);
 		rootNode.getChildren().add(validRulesNode);
 
-		for (Rule r : rules1) {
+		for (Rule r : allRules) {
 			TreeItem<String> leaf = new TreeItem<>(r.toString());
 			allRulesNode.getChildren().add(leaf);
 		}
 
-		for (Rule r : rules2) {
+		for (Rule r : validRules) {
 			TreeItem<String> leaf = new TreeItem<>(r.toString());
 			validRulesNode.getChildren().add(leaf);
 		}
 
-		foundCount2.setText("" + rules1.size());
-		validCount.setText("" + rules2.size());
+		foundCount2.setText("" + allRules.size());
+		validCount.setText("" + validRules.size());
 	}
 
 	/**

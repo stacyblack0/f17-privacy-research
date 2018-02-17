@@ -7,6 +7,9 @@ public class Environment {
 	private int day;
 	private Calendar current;
 
+	/**
+	 * Default constructor.
+	 */
 	public Environment() {
 		current = Calendar.getInstance();
 		time = current.get(Calendar.HOUR_OF_DAY);
@@ -63,6 +66,10 @@ public class Environment {
 	 */
 	public int getDay() {
 		return day;
+	}
+
+	public Calendar getCalendar() {
+		return current;
 	}
 
 	public boolean isWeekend() {
